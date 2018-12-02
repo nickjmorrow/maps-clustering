@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.11.1/build/netcoreapp1.0/nunit.engine.netstandard.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.11.1/build/netcoreapp1.0/NUnit3.TestAdapter.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.11.1/build/netcoreapp1.0/NUnit3.TestAdapter.pdb" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.reporters.netcoreapp10.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.utility.netcoreapp10.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
+    <e p="$USER_HOME$/Library/Caches/Rider2018.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2018.2/resharper-host/local/Transient/ReSharperHost/v182/SolutionCaches/_WebApp.-1703348551.00" t="ExcludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p=".git/info/exclude" t="IncludeRecursive" />
+      <e p=".gitignore" t="Include" />
+      <e p="appsettings.Development.json" t="Include" />
+      <e p="appsettings.json" t="Include" />
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="Calc" t="IncludeRecursive">
+        <e p="AgglomerativeHierarchicalClusteringService.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Calc.csproj" t="IncludeRecursive" />
+        <e p="helpers" t="Include">
+          <e p="ListComparer.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="AgglomerativeHierarchicalCluster.cs" t="Include" />
+          <e p="AgglomerativeHierarchicalClusterInfo.cs" t="Include" />
+          <e p="AgglomerativeHierarchicalClusterPoint.cs" t="Include" />
+          <e p="Cluster.cs" t="Include" />
+          <e p="ClusterDistance.cs" t="Include" />
+          <e p="Point.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.1" t="Include">
+              <e p="Calc.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Startup.cs" t="Include" />
+      </e>
+      <e p="CalcTests" t="IncludeRecursive">
+        <e p="AgglomerativeHierarchicalClusteringServiceTest.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CalcTests.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.1" t="Include">
+              <e p="CalcTests.AssemblyInfo.cs" t="Include" />
+              <e p="CalcTests.Program.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="ClientApp" t="Include">
+        <e p=".git" t="Include">
+          <e p="COMMIT_EDITMSG" t="Include" />
+          <e p="config" t="Include" />
+          <e p="description" t="Include" />
+          <e p="HEAD" t="Include" />
+          <e p="hooks" t="Include">
+            <e p="applypatch-msg.sample" t="Include" />
+            <e p="commit-msg.sample" t="Include" />
+            <e p="post-update.sample" t="Include" />
+            <e p="pre-applypatch.sample" t="Include" />
+            <e p="pre-commit.sample" t="Include" />
+            <e p="pre-push.sample" t="Include" />
+            <e p="pre-rebase.sample" t="Include" />
+            <e p="pre-receive.sample" t="Include" />
+            <e p="prepare-commit-msg.sample" t="Include" />
+            <e p="update.sample" t="Include" />
+          </e>
+          <e p="index" t="Include" />
+          <e p="info" t="Include">
+            <e p="exclude" t="Include" />
+          </e>
+          <e p="logs" t="Include">
+            <e p="HEAD" t="Include" />
+            <e p="refs" t="Include">
+              <e p="heads" t="Include">
+                <e p="master" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="objects" t="Include">
+            <e p="00" t="Include">
+              <e p="af05280d3428ebadd8fc95bd18f2f56a8436dc" t="Include" />
+            </e>
+            <e p="09" t="Include">
+              <e p="dd1953d5bccc5e878fdd61d0ab27fb6a7f73eb" t="Include" />
+            </e>
+            <e p="1c" t="Include">
+              <e p="eb9f9f284b5e7aa2a423c6ee2fde15f8e4a49b" t="Include" />
+            </e>
+            <e p="27" t="Include">
+              <e p="e97d37a28eb75fd56ec016dc9911e5c34c161d" t="Include" />
+            </e>
+            <e p="28" t="Include">
+              <e p="c89f7b6814e633d691a50673f9924cfd4bd79e" t="Include" />
+            </e>
+            <e p="2a" t="Include">
+              <e p="0d8cf454f8452378c46e35aa429a48fb6431cf" t="Include" />
+            </e>
+            <e p="31" t="Include">
+              <e p="6470779f254d7a126a288805cb02878396675c" t="Include" />
+            </e>
+            <e p="3a" t="Include">
+              <e p="841df943031ae793d381ff9c1f50c6d1bcf3e7" t="Include" />
+            </e>
+            <e p="3e" t="Include">
+              <e p="2588bf7aac76ab2f1d6d81fea336c096bcd14e" t="Include" />
+            </e>
+            <e p="41" t="Include">
+              <e p="44216dd1adbe16cc82c4ee364d8139adb0bca8" t="Include" />
+            </e>
+            <e p="42" t="Include">
+              <e p="ee23d35a4485a0b922e42ea5e9c96298ef43cc" t="Include" />
+            </e>
+            <e p="47" t="Include">
+              <e p="bebc0cad04b0c8dabec17721ed1e35624186ef" t="Include" />
+            </e>
+            <e p="48" t="Include">
+              <e p="63d0b54c0b569339e1f5393872162dfc65f4a2" t="Include" />
+            </e>
+            <e p="5f" t="Include">
+              <e p="eb3a52d925648c651e7109ff2248480605060d" t="Include" />
+            </e>
+            <e p="62" t="Include">
+              <e p="a3240be0d9282089b3ecb8ded375ca24624bc2" t="Include" />
+            </e>
+            <e p="65" t="Include">
+              <e p="ffdd493929cf996f7f185609fb9f3f7f14184b" t="Include" />
+            </e>
+            <e p="66" t="Include">
+              <e p="f05b42a042337a6aba4acd7d2470b639900436" t="Include" />
+            </e>
+            <e p="6b" t="Include">
+              <e p="60c1042f58d9fabb75485aa3624dddcf633b5c" t="Include" />
+            </e>
+            <e p="6e" t="Include">
+              <e p="1b57af60be7a0836ce00890ccaf41a993582d3" t="Include" />
+            </e>
+            <e p="72" t="Include">
+              <e p="37e420b4ad96a106afcb00b1019b4b872fd49f" t="Include" />
+            </e>
+            <e p="73" t="Include">
+              <e p="25c01561639b6caf3585cc3e44bf703bfb4ac2" t="Include" />
+            </e>
+            <e p="8a" t="Include">
+              <e p="8e7ac035b1cabb5418346a81ed713137dd8d64" t="Include" />
+            </e>
+            <e p="9b" t="Include">
+              <e p="f4b59028e2565dc1e705abb8014f997b6692e9" t="Include" />
+            </e>
+            <e p="a1" t="Include">
+              <e p="1777cc471a4344702741ab1c8a588998b1311a" t="Include" />
+            </e>
+            <e p="aa" t="Include">
+              <e p="74a9827405d13c154e8c5de61ec364329219f7" t="Include" />
+            </e>
+            <e p="af" t="Include">
+              <e p="dafa0a3fffeb56bddd2a44b53743af7df13e88" t="Include" />
+            </e>
+            <e p="b2" t="Include">
+              <e p="1bffa8c949e1437dfab0443c001a16e1db880a" t="Include" />
+              <e p="5187eef656d05e98167c1e504fcaba4748a695" t="Include" />
+            </e>
+            <e p="b4" t="Include">
+              <e p="cc7250b98cb3f1a2dd5bec134296c6942344d9" t="Include" />
+            </e>
+            <e p="b5" t="Include">
+              <e p="8909f589d91e25a0c823edee9bed363549203c" t="Include" />
+            </e>
+            <e p="bb" t="Include">
+              <e p="4d16967413bcf304da4f913241ca595e11bab4" t="Include" />
+            </e>
+            <e p="c3" t="Include">
+              <e p="402631470f8cfd102552dc1213ef0194836d41" t="Include" />
+            </e>
+            <e p="c5" t="Include">
+              <e p="0cd4bb48cd374d3dd5f3c749f6b0f5afd89a30" t="Include" />
+              <e p="c6e8a68adcb5249ebdf283ffb34b8531d8b1f0" t="Include" />
+            </e>
+            <e p="ce" t="Include">
+              <e p="01977a601a2317acb4b4cfd36a68921ccfac97" t="Include" />
+            </e>
+            <e p="d2" t="Include">
+              <e p="f036ed5c5a430f76d622dc3af8b10762135e76" t="Include" />
+            </e>
+            <e p="d5" t="Include">
+              <e p="cd4d81c81155be6291afe5b0bbe9370f60e048" t="Include" />
+            </e>
+            <e p="da" t="Include">
+              <e p="2b58c9b170ed08e2e31ebde5d770d7168326a5" t="Include" />
+            </e>
+            <e p="e1" t="Include">
+              <e p="ba0361af3e5a4b4341e8aa02db75a22a149812" t="Include" />
+            </e>
+            <e p="e4" t="Include">
+              <e p="0b8caddd0c63b0684c242da753ae37c990151a" t="Include" />
+            </e>
+            <e p="e6" t="Include">
+              <e p="9de29bb2d1d6434b8b29ae775ad8c2e48c5391" t="Include" />
+            </e>
+            <e p="ef" t="Include">
+              <e p="19ec243e739479802a5553d0b38a18ed845307" t="Include" />
+            </e>
+            <e p="f9" t="Include">
+              <e p="101655f66f98b56b508af009ee77cf2dd47592" t="Include" />
+            </e>
+            <e p="fc" t="Include">
+              <e p="8bf7e26b902ddf28e2f84d6f2a8449af90a147" t="Include" />
+              <e p="9e0098f9a20efaf1ffdc152caab944aae8843b" t="Include" />
+            </e>
+          </e>
+          <e p="refs" t="Include">
+            <e p="heads" t="Include">
+              <e p="master" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p=".gitignore" t="Include" />
+        <e p=".vscode" t="Include">
+          <e p="settings.json" t="Include" />
+        </e>
+        <e p="config" t="Include">
+          <e p="env.js" t="Include" />
+          <e p="jest" t="Include">
+            <e p="cssTransform.js" t="Include" />
+            <e p="fileTransform.js" t="Include" />
+            <e p="typescriptTransform.js" t="Include" />
+          </e>
+          <e p="paths.js" t="Include" />
+          <e p="polyfills.js" t="Include" />
+          <e p="webpack.config.dev.js" t="Include" />
+          <e p="webpack.config.prod.js" t="Include" />
+          <e p="webpackDevServer.config.js" t="Include" />
+        </e>
+        <e p="node_modules" t="ExcludeRecursive">
+          <e p="@fortawesome/fontawesome-svg-core" t="IncludeRecursive" />
+          <e p="@fortawesome/free-solid-svg-icons" t="IncludeRecursive" />
+          <e p="@fortawesome/react-fontawesome" t="IncludeRecursive" />
+          <e p="@types" t="IncludeRecursive">
+            <e p="history" t="IncludeRecursive" />
+            <e p="jest" t="IncludeRecursive" />
+            <e p="node" t="IncludeRecursive" />
+            <e p="prop-types" t="IncludeRecursive" />
+            <e p="react" t="IncludeRecursive" />
+            <e p="react-dom" t="IncludeRecursive" />
+            <e p="react-modal" t="IncludeRecursive" />
+            <e p="react-redux" t="IncludeRecursive" />
+            <e p="react-router" t="IncludeRecursive" />
+            <e p="react-router-dom" t="IncludeRecursive" />
+            <e p="react-router-redux" t="IncludeRecursive" />
+            <e p="react-select" t="IncludeRecursive" />
+            <e p="react-transition-group" t="IncludeRecursive" />
+          </e>
+          <e p="autoprefixer" t="IncludeRecursive" />
+          <e p="axios" t="IncludeRecursive" />
+          <e p="babel-jest" t="IncludeRecursive" />
+          <e p="babel-loader" t="IncludeRecursive" />
+          <e p="babel-preset-react-app" t="IncludeRecursive" />
+          <e p="case-sensitive-paths-webpack-plugin" t="IncludeRecursive" />
+          <e p="chalk" t="IncludeRecursive" />
+          <e p="css-loader" t="IncludeRecursive" />
+          <e p="csstype" t="IncludeRecursive" />
+          <e p="dotenv" t="IncludeRecursive" />
+          <e p="dotenv-expand" t="IncludeRecursive" />
+          <e p="extract-text-webpack-plugin" t="IncludeRecursive" />
+          <e p="file-loader" t="IncludeRecursive" />
+          <e p="fork-ts-checker-webpack-plugin" t="IncludeRecursive" />
+          <e p="fs-extra" t="IncludeRecursive" />
+          <e p="html-webpack-plugin" t="IncludeRecursive" />
+          <e p="i" t="IncludeRecursive" />
+          <e p="jest" t="IncludeRecursive" />
+          <e p="njm-react-component-library" t="IncludeRecursive" />
+          <e p="npm" t="IncludeRecursive" />
+          <e p="object-assign" t="IncludeRecursive" />
+          <e p="postcss-flexbugs-fixes" t="IncludeRecursive" />
+          <e p="postcss-loader" t="IncludeRecursive" />
+          <e p="promise" t="IncludeRecursive" />
+          <e p="raf" t="IncludeRecursive" />
+          <e p="react" t="IncludeRecursive" />
+          <e p="react-dev-utils" t="IncludeRecursive" />
+          <e p="react-dom" t="IncludeRecursive" />
+          <e p="react-modal" t="IncludeRecursive" />
+          <e p="react-redux" t="IncludeRecursive" />
+          <e p="react-router-dom" t="IncludeRecursive" />
+          <e p="react-router-redux" t="IncludeRecursive" />
+          <e p="react-select" t="IncludeRecursive" />
+          <e p="redux" t="IncludeRecursive" />
+          <e p="redux-saga" t="IncludeRecursive" />
+          <e p="resolve" t="IncludeRecursive" />
+          <e p="source-map-loader" t="IncludeRecursive" />
+          <e p="style-loader" t="IncludeRecursive" />
+          <e p="styled-components" t="IncludeRecursive" />
+          <e p="sw-precache-webpack-plugin" t="IncludeRecursive" />
+          <e p="ts-jest" t="IncludeRecursive" />
+          <e p="ts-loader" t="IncludeRecursive" />
+          <e p="tsconfig-paths-webpack-plugin" t="IncludeRecursive" />
+          <e p="tslint" t="IncludeRecursive" />
+          <e p="tslint-config-prettier" t="IncludeRecursive" />
+          <e p="tslint-react" t="IncludeRecursive" />
+          <e p="typesafe-actions" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.dom.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.dom.iterable.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.collection.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.core.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.generator.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.iterable.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.promise.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.proxy.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.reflect.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.symbol.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2015.symbol.wellknown.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2016.array.include.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2016.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2016.full.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2017.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2017.full.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2017.intl.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2017.object.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2017.sharedmemory.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2017.string.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2017.typedarrays.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2018.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2018.full.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2018.intl.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2018.promise.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es2018.regexp.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es5.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.es6.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.esnext.array.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.esnext.asynciterable.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.esnext.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.esnext.full.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.esnext.intl.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.esnext.symbol.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.scripthost.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.webworker.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.webworker.importscripts.d.ts" t="IncludeRecursive" />
+          <e p="uglifyjs-webpack-plugin" t="IncludeRecursive" />
+          <e p="url-loader" t="IncludeRecursive" />
+          <e p="utility-types" t="IncludeRecursive" />
+          <e p="webpack" t="IncludeRecursive" />
+          <e p="webpack-dev-server" t="IncludeRecursive" />
+          <e p="webpack-manifest-plugin" t="IncludeRecursive" />
+          <e p="whatwg-fetch" t="IncludeRecursive" />
+        </e>
+        <e p="package-lock.json" t="Include" />
+        <e p="package.json" t="Include" />
+        <e p="public" t="Include">
+          <e p="favicon.ico" t="Include" />
+          <e p="index.html" t="Include" />
+          <e p="manifest.json" t="Include" />
+        </e>
+        <e p="README.md" t="Include" />
+        <e p="scripts" t="Include">
+          <e p="build.js" t="Include" />
+          <e p="start.js" t="Include" />
+          <e p="test.js" t="Include" />
+        </e>
+        <e p="src" t="Include">
+          <e p="actions" t="Include">
+            <e p="index.ts" t="Include" />
+            <e p="reduxTypes.ts" t="Include" />
+          </e>
+          <e p="App.css" t="Include" />
+          <e p="App.test.tsx" t="Include" />
+          <e p="App.tsx" t="Include" />
+          <e p="components" t="Include" />
+          <e p="core" t="Include">
+            <e p="components" t="Include">
+              <e p="Button.tsx" t="Include" />
+              <e p="Card.tsx" t="Include" />
+              <e p="DescriptorCard.tsx" t="Include" />
+              <e p="Error.tsx" t="Include" />
+              <e p="Form.tsx" t="Include" />
+              <e p="IconLabel.tsx" t="Include" />
+              <e p="index.ts" t="Include" />
+              <e p="Input.tsx" t="Include" />
+              <e p="InvisibleInput.tsx" t="Include" />
+              <e p="Link.tsx" t="Include" />
+              <e p="NavItem.tsx" t="Include" />
+              <e p="Option.tsx" t="Include" />
+              <e p="Select.tsx" t="Include" />
+              <e p="SideNav.tsx" t="Include" />
+              <e p="Typography.tsx" t="Include" />
+              <e p="WithDefaultProps.ts" t="Include" />
+            </e>
+            <e p="index.ts" t="Include" />
+            <e p="styleConstants.ts" t="Include" />
+            <e p="types.ts" t="Include" />
+          </e>
+          <e p="Home" t="Include">
+            <e p="components" t="Include">
+              <e p="index.ts" t="Include" />
+              <e p="Landing.tsx" t="Include" />
+            </e>
+            <e p="index.ts" t="Include" />
+          </e>
+          <e p="index.css" t="Include" />
+          <e p="index.ts" t="Include" />
+          <e p="index.tsx" t="Include" />
+          <e p="Items" t="Include">
+            <e p="actions.ts" t="Include" />
+            <e p="components" t="Include">
+              <e p="index.ts" t="Include" />
+              <e p="ItemCard.tsx" t="Include" />
+              <e p="ItemList.tsx" t="Include" />
+            </e>
+            <e p="constants.ts" t="Include" />
+            <e p="index.ts" t="Include" />
+            <e p="reducer.ts" t="Include" />
+            <e p="sagas.ts" t="Include" />
+            <e p="selectors.ts" t="Include" />
+            <e p="types.ts" t="Include" />
+          </e>
+          <e p="logo.svg" t="Include" />
+          <e p="reducer.ts" t="Include" />
+          <e p="reduxTypes.ts" t="Include" />
+          <e p="registerServiceWorker.ts" t="Include" />
+          <e p="sagas.ts" t="Include" />
+          <e p="Spells" t="Include">
+            <e p="actions.ts" t="Include" />
+            <e p="components" t="Include">
+              <e p="index.ts" t="Include" />
+              <e p="SpellCard.tsx" t="Include" />
+              <e p="SpellList.tsx" t="Include" />
+            </e>
+            <e p="constants.ts" t="Include" />
+            <e p="index.ts" t="Include" />
+            <e p="reducer.ts" t="Include" />
+            <e p="sagas.ts" t="Include" />
+            <e p="selectors.ts" t="Include" />
+            <e p="types.ts" t="Include" />
+          </e>
+          <e p="store.ts" t="Include" />
+          <e p="types.ts" t="Include" />
+          <e p="Wizards" t="Include">
+            <e p="actions.ts" t="Include" />
+            <e p="components" t="Include">
+              <e p="index.ts" t="Include" />
+              <e p="WizardCard.tsx" t="Include" />
+              <e p="WizardList.tsx" t="Include" />
+            </e>
+            <e p="constants.ts" t="Include" />
+            <e p="index.ts" t="Include" />
+            <e p="reducer.ts" t="Include" />
+            <e p="sagas.ts" t="Include" />
+            <e p="selectors.ts" t="Include" />
+            <e p="types.ts" t="Include" />
+          </e>
+        </e>
+        <e p="tsconfig.json" t="Include" />
+        <e p="tsconfig.prod.json" t="Include" />
+        <e p="tsconfig.test.json" t="Include" />
+        <e p="tslint.json" t="Include" />
+      </e>
+      <e p="Controllers" t="Include">
+        <e p="CalcController.cs" t="Include" />
+        <e p="HomeController.cs" t="Include" />
+        <e p="MagicItemController.cs" t="Include" />
+        <e p="SpellController.cs" t="Include" />
+        <e p="WizardController.cs" t="Include" />
+      </e>
+      <e p="DatabaseContext.cs" t="Include" />
+      <e p="helpers" t="Include">
+        <e p="AppSettings.cs" t="Include" />
+      </e>
+      <e p="Models" t="Include">
+        <e p="File.cs" t="Include" />
+        <e p="FileUploadViewModel.cs" t="Include" />
+        <e p="MagicItem.cs" t="Include" />
+        <e p="Spell.cs" t="Include" />
+        <e p="SpellType.cs" t="Include" />
+        <e p="Wizard.cs" t="Include" />
+        <e p="WizardSpell.cs" t="Include" />
+      </e>
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netcoreapp2.1" t="Include">
+            <e p="WebApplication.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Pages" t="Include">
+        <e p="_ViewImports.cshtml" t="Include" />
+        <e p="Error.cshtml" t="Include" />
+        <e p="Error.cshtml.cs" t="Include" />
+      </e>
+      <e p="Program.cs" t="Include" />
+      <e p="Properties" t="Include">
+        <e p="launchSettings.json" t="Include" />
+      </e>
+      <e p="Services" t="Include">
+        <e p="FileHandlerService.cs" t="Include" />
+        <e p="MagicItemService.cs" t="Include" />
+        <e p="SpellService.cs" t="Include" />
+        <e p="WizardService.cs" t="Include" />
+      </e>
+      <e p="Startup.cs" t="Include" />
+      <e p="WebApp.sln" t="IncludeFlat" />
+      <e p="WebApplication.csproj" t="IncludeRecursive" />
+    </e>
+  </component>
+</project>
