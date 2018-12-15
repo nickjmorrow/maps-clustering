@@ -25,14 +25,18 @@ namespace Calc
             IEnumerable<AgglomerativeHierarchicalCluster> initialClusters, int minimumClusters)
         {
             // calculate distance between each pair of clusters by their centers
-            var clusterDistances = GetClusterDistances(initialClusters);
+            var clusterDistances =
+                GetClusterDistances<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>(
+                    initialClusters);
             
             // determine closest clusters
+//            var minimumDistance = clusterDistances.Min(cd => cd.Distance);
             var minimumDistance = clusterDistances.Min(cd => cd.Distance);
             var closestClusterPair = clusterDistances.FirstOrDefault(cd => cd.Distance == minimumDistance);
             
             // merge the pair
-            var mergedClusters = MergeClusters(initialClusters, closestClusterPair.StartingCluster,
+            var mergedClusters = MergeClusters<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>(
+                initialClusters, closestClusterPair.StartingCluster,
                 closestClusterPair.EndingCluster);
 
             // record the new clusterId of all the points at the current cluster count
@@ -75,15 +79,17 @@ namespace Calc
 
         }
     
-        internal static IEnumerable<AgglomerativeHierarchicalCluster> MergeClusters(
-            IEnumerable<AgglomerativeHierarchicalCluster> unmergedClusters, 
-            AgglomerativeHierarchicalCluster clusterOne, 
-            AgglomerativeHierarchicalCluster clusterTwo)
+        internal static IEnumerable<T> MergeClusters<T, U>(
+            IEnumerable<T> unmergedClusters, 
+            T clusterOne, 
+            T clusterTwo) 
+            where T : Cluster<U>
+            where U : Point
         {
             var primaryCluster = clusterOne.ClusterId < clusterTwo.ClusterId ? clusterOne : clusterTwo;
             var secondaryCluster = clusterOne.ClusterId < clusterTwo.ClusterId ? clusterTwo : clusterOne;
             
-            var mergedCluster = new AgglomerativeHierarchicalCluster()
+            var mergedCluster = (T) new Cluster<U>()
             {
                 ClusterId = primaryCluster.ClusterId,
                 Points = primaryCluster.Points.Concat(secondaryCluster.Points)
@@ -91,15 +97,17 @@ namespace Calc
 
             return unmergedClusters
                 .Where(uc => uc.ClusterId != primaryCluster.ClusterId && uc.ClusterId != secondaryCluster.ClusterId)
-                .Concat(new List<AgglomerativeHierarchicalCluster> {mergedCluster});
+                .Concat(new List<T> { mergedCluster });
         }
 
-        internal static IEnumerable<ClusterDistance> GetClusterDistances<T>(IEnumerable<T> clusters) where T : Cluster
+        internal static IEnumerable<ClusterDistance<T, U>> GetClusterDistances<T, U>(IEnumerable<T> clusters) 
+            where T : Cluster<U>
+            where U : Point
         {
             return clusters
                 .SelectMany(c => clusters, (c1, c2) => new {c1, c2})
                 .Where(c => c.c1.ClusterId != c.c2.ClusterId)
-                .Select(c => new ClusterDistance()
+                .Select(c => new ClusterDistance<T, U>()
                 {
                     StartingCluster = c.c1,
                     EndingCluster = c.c2,

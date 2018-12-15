@@ -3,21 +3,21 @@ using System.Linq;
 
 namespace Calc.Models
 {
-    public class Cluster
+    public class Cluster<T> where T : Point
     {
         public int ClusterId { get; set; }
-        public IEnumerable<Point> Points { get; set; }
+        public virtual IEnumerable<T> Points { get; set; }
         
-        public Point GetCenter()
+        public T GetCenter()
         {
             var horizontalCenter = this.Points.Average(p => p.HorizontalDisplacement);
             var verticalCenter = this.Points.Average(p => p.VerticalDisplacement);
-
-            return new Point()
+            var point = new Point()
             {
                 HorizontalDisplacement = horizontalCenter,
                 VerticalDisplacement = verticalCenter
             };
+            return (T) point;
         }
     }
 }

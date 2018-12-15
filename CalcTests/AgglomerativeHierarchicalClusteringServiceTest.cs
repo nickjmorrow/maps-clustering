@@ -219,7 +219,9 @@ namespace CalcTests
             };
 
             var mergedClusters =
-                AgglomerativeHierarchicalClusteringService.MergeClusters(clusters, secondCluster, thirdCluster)
+                AgglomerativeHierarchicalClusteringService
+                    .MergeClusters<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>(clusters,
+                        secondCluster, thirdCluster)
                     .ToList();
 
             var expectedMergedClusters = new List<AgglomerativeHierarchicalCluster>()
@@ -275,27 +277,28 @@ namespace CalcTests
                 }
             };
 
-            var actualClusterDistances = AgglomerativeHierarchicalClusteringService.GetClusterDistances(
-                new List<AgglomerativeHierarchicalCluster>()
-                {
-                    firstCluster, secondCluster, thirdCluster
-                }).ToList();
+            var actualClusterDistances = AgglomerativeHierarchicalClusteringService
+                .GetClusterDistances<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>(
+                    new List<AgglomerativeHierarchicalCluster>()
+                    {
+                        firstCluster, secondCluster, thirdCluster
+                    }).ToList();
 
-            var expectedClusterDistances = new List<ClusterDistance>()
+            var expectedClusterDistances = new List<ClusterDistance<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>>()
             {
-                new ClusterDistance()
+                new ClusterDistance<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>()
                 {
                     StartingCluster = firstCluster,
                     EndingCluster = secondCluster,
                     Distance = 4.243,
                 },
-                new ClusterDistance()
+                new ClusterDistance<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>()
                 {
                     StartingCluster = firstCluster,
                     EndingCluster = thirdCluster,
                     Distance = 2.236,
                 },
-                new ClusterDistance()
+                new ClusterDistance<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>()
                 {
                     StartingCluster = secondCluster,
                     EndingCluster = thirdCluster,

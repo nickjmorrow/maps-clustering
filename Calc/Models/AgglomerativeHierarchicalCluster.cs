@@ -6,9 +6,9 @@ using Calc.Helpers;
 
 namespace Calc.Models
 {
-    public class AgglomerativeHierarchicalCluster : Cluster
+    public class AgglomerativeHierarchicalCluster : Cluster<AgglomerativeHierarchicalClusterPoint>
     {
-        public new IEnumerable<AgglomerativeHierarchicalClusterPoint> Points { get; set; }
+        public override IEnumerable<AgglomerativeHierarchicalClusterPoint> Points { get; set; }
 
         public override bool Equals(Object obj)
         {
