@@ -65,7 +65,7 @@ namespace WebApplication.Controllers
         
         [HttpPost]
         [Route("upload")]
-        public async Task<IActionResult> Upload(IFormFile file) {
+        public IActionResult Upload(IFormFile file) {
             if (file.Length == 0)
             {
                 return BadRequest();

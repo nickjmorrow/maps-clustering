@@ -4,8 +4,8 @@ namespace Calc.Models
 {
     public class ClusterDistance
     {
-        public AgglomerativeHierarchicalCluster StartingCluster { get; set; }
-        public AgglomerativeHierarchicalCluster EndingCluster { get; set; }
+        public Cluster StartingCluster { get; set; }
+        public Cluster EndingCluster { get; set; }
         public double Distance { get; set; }
 
         public override bool Equals(object obj)

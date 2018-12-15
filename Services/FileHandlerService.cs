@@ -38,7 +38,7 @@ namespace WebApplication.Services
 
         private IEnumerable<Point> ParseJsonToPoints(JObject json)
         {
-            return json["kml"]["Document"]["Folder"]["Placemark"].Select((p, i) =>
+            return json["kml"]["Document"]["Placemark"].Select((p, i) =>
             {
                 var name = p["name"].ToString();
                 var coordinates = p["Point"]["coordinates"].ToString().Trim().Split(",");

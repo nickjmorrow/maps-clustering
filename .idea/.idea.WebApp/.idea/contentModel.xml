@@ -244,8 +244,11 @@
           <e p="@fortawesome/free-solid-svg-icons" t="IncludeRecursive" />
           <e p="@fortawesome/react-fontawesome" t="IncludeRecursive" />
           <e p="@types" t="IncludeRecursive">
+            <e p="google-maps" t="IncludeRecursive" />
+            <e p="googlemaps" t="IncludeRecursive" />
             <e p="history" t="IncludeRecursive" />
             <e p="jest" t="IncludeRecursive" />
+            <e p="markerclustererplus" t="IncludeRecursive" />
             <e p="node" t="IncludeRecursive" />
             <e p="prop-types" t="IncludeRecursive" />
             <e p="react" t="IncludeRecursive" />
@@ -257,6 +260,7 @@
             <e p="react-router-redux" t="IncludeRecursive" />
             <e p="react-select" t="IncludeRecursive" />
             <e p="react-transition-group" t="IncludeRecursive" />
+            <e p="recompose" t="IncludeRecursive" />
           </e>
           <e p="autoprefixer" t="IncludeRecursive" />
           <e p="axios" t="IncludeRecursive" />
@@ -286,11 +290,13 @@
           <e p="react" t="IncludeRecursive" />
           <e p="react-dev-utils" t="IncludeRecursive" />
           <e p="react-dom" t="IncludeRecursive" />
+          <e p="react-google-maps" t="IncludeRecursive" />
           <e p="react-modal" t="IncludeRecursive" />
           <e p="react-redux" t="IncludeRecursive" />
           <e p="react-router-dom" t="IncludeRecursive" />
           <e p="react-router-redux" t="IncludeRecursive" />
           <e p="react-select" t="IncludeRecursive" />
+          <e p="recompose" t="IncludeRecursive" />
           <e p="redux" t="IncludeRecursive" />
           <e p="redux-saga" t="IncludeRecursive" />
           <e p="resolve" t="IncludeRecursive" />
@@ -337,6 +343,7 @@
           <e p="typescript/lib/lib.es6.d.ts" t="IncludeRecursive" />
           <e p="typescript/lib/lib.esnext.array.d.ts" t="IncludeRecursive" />
           <e p="typescript/lib/lib.esnext.asynciterable.d.ts" t="IncludeRecursive" />
+          <e p="typescript/lib/lib.esnext.bigint.d.ts" t="IncludeRecursive" />
           <e p="typescript/lib/lib.esnext.d.ts" t="IncludeRecursive" />
           <e p="typescript/lib/lib.esnext.full.d.ts" t="IncludeRecursive" />
           <e p="typescript/lib/lib.esnext.intl.d.ts" t="IncludeRecursive" />
@@ -380,16 +387,17 @@
               <e p="Card.tsx" t="Include" />
               <e p="DescriptorCard.tsx" t="Include" />
               <e p="Error.tsx" t="Include" />
+              <e p="FileInput.tsx" t="Include" />
               <e p="Form.tsx" t="Include" />
               <e p="IconLabel.tsx" t="Include" />
               <e p="index.ts" t="Include" />
-              <e p="Input.tsx" t="Include" />
               <e p="InvisibleInput.tsx" t="Include" />
               <e p="Link.tsx" t="Include" />
               <e p="NavItem.tsx" t="Include" />
               <e p="Option.tsx" t="Include" />
               <e p="Select.tsx" t="Include" />
               <e p="SideNav.tsx" t="Include" />
+              <e p="TextInput.tsx" t="Include" />
               <e p="Typography.tsx" t="Include" />
               <e p="WithDefaultProps.ts" t="Include" />
             </e>
@@ -401,8 +409,11 @@
             <e p="components" t="Include">
               <e p="index.ts" t="Include" />
               <e p="Landing.tsx" t="Include" />
+              <e p="Map.tsx" t="Include" />
             </e>
+            <e p="constants.ts" t="Include" />
             <e p="index.ts" t="Include" />
+            <e p="services.ts" t="Include" />
           </e>
           <e p="index.css" t="Include" />
           <e p="index.ts" t="Include" />
@@ -426,6 +437,7 @@
           <e p="reduxTypes.ts" t="Include" />
           <e p="registerServiceWorker.ts" t="Include" />
           <e p="sagas.ts" t="Include" />
+          <e p="secrets.ts" t="Include" />
           <e p="Spells" t="Include">
             <e p="actions.ts" t="Include" />
             <e p="components" t="Include">

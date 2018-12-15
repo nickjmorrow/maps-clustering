@@ -9,18 +9,6 @@ namespace Calc.Models
     public class AgglomerativeHierarchicalCluster : Cluster
     {
         public new IEnumerable<AgglomerativeHierarchicalClusterPoint> Points { get; set; }
-        
-        public Point GetCenter()
-        {
-            var horizontalCenter = this.Points.Average(p => p.HorizontalDisplacement);
-            var verticalCenter = this.Points.Average(p => p.VerticalDisplacement);
-
-            return new Point()
-            {
-                HorizontalDisplacement = horizontalCenter,
-                VerticalDisplacement = verticalCenter
-            };
-        }
 
         public override bool Equals(Object obj)
         {

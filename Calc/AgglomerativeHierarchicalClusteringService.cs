@@ -94,7 +94,7 @@ namespace Calc
                 .Concat(new List<AgglomerativeHierarchicalCluster> {mergedCluster});
         }
 
-        internal static IEnumerable<ClusterDistance> GetClusterDistances(IEnumerable<AgglomerativeHierarchicalCluster> clusters)
+        internal static IEnumerable<ClusterDistance> GetClusterDistances<T>(IEnumerable<T> clusters) where T : Cluster
         {
             return clusters
                 .SelectMany(c => clusters, (c1, c2) => new {c1, c2})
