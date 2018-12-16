@@ -8,6 +8,11 @@ namespace Calc
     {
         public IEnumerable<AgglomerativeHierarchicalClusterInfo> AgglomerativeHierarchicalClusterInfos { get; set; }
 
+        public AgglomerativeHierarchicalClusterPoint() : base()
+        {
+            AgglomerativeHierarchicalClusterInfos = new List<AgglomerativeHierarchicalClusterInfo>() { };
+        }
+
         public override bool Equals(object obj)
         {
             var point = obj as Point;

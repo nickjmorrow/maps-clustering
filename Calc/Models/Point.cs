@@ -7,6 +7,15 @@
         public double HorizontalDisplacement { get; set; }
         public double VerticalDisplacement { get; set; }
 
+
+        public Point()
+        {
+            PointId = 0;
+            Name = "";
+            HorizontalDisplacement = 0;
+            VerticalDisplacement = 0;
+        }
+
         public override bool Equals(object obj)
         {
             var point = (Point) obj;

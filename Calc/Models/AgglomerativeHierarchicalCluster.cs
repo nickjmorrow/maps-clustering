@@ -6,20 +6,18 @@ using Calc.Helpers;
 
 namespace Calc.Models
 {
-    public class AgglomerativeHierarchicalCluster : Cluster<AgglomerativeHierarchicalClusterPoint>
-    {
-        public override IEnumerable<AgglomerativeHierarchicalClusterPoint> Points { get; set; }
-
-        public override bool Equals(Object obj)
-        {
-            var cluster = (AgglomerativeHierarchicalCluster) obj;
-            return cluster.ClusterId == this.ClusterId
-                   && ListComparer.Compare(cluster.Points, this.Points);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-    }
+//    public class AgglomerativeHierarchicalCluster : Cluster<AgglomerativeHierarchicalClusterPoint>
+//    {
+//        public override bool Equals(Object obj)
+//        {
+//            var cluster = (AgglomerativeHierarchicalCluster) obj;
+//            return cluster.ClusterId == this.ClusterId
+//                   && ListComparer.Compare(cluster.Points, this.Points);
+//        }
+//
+//        public override int GetHashCode()
+//        {
+//            return base.GetHashCode();
+//        }
+//    }
 }

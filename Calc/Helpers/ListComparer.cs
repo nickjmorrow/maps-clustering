@@ -8,6 +8,10 @@ namespace Calc.Helpers
     {
         public static bool Compare<T>(IEnumerable<T> firstList, IEnumerable<T> secondList)
         {
+            if (firstList.Count() != secondList.Count())
+            {
+                return false;
+            }
             var flag = true;
             for (var i = 0; i < firstList.Count(); i++)
             {

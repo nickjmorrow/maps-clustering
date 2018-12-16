@@ -145,9 +145,9 @@ namespace CalcTests
                 }
             };
             
-            var clusters = new List<AgglomerativeHierarchicalCluster>()
+            var clusters = new List<Cluster<AgglomerativeHierarchicalClusterPoint>>()
             {
-                new AgglomerativeHierarchicalCluster()
+                new Cluster<AgglomerativeHierarchicalClusterPoint>()
                 {
                     ClusterId = 1,
                     Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -156,7 +156,7 @@ namespace CalcTests
                         
                     }
                 },
-                new AgglomerativeHierarchicalCluster()
+                new Cluster<AgglomerativeHierarchicalClusterPoint>()
                 {
                     ClusterId = 2,
                     Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -174,7 +174,7 @@ namespace CalcTests
         [Test]
         public void MergeClusterTest()
         {
-            var firstCluster = new AgglomerativeHierarchicalCluster()
+            var firstCluster = new Cluster<AgglomerativeHierarchicalClusterPoint>()
             {
                 ClusterId = 1,
                 Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -187,7 +187,7 @@ namespace CalcTests
                     }
                 }
             };
-            var secondCluster = new AgglomerativeHierarchicalCluster()
+            var secondCluster = new Cluster<AgglomerativeHierarchicalClusterPoint>()
             {
                 ClusterId = 2,
                 Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -200,7 +200,7 @@ namespace CalcTests
                     }
                 }
             };
-            var thirdCluster = new AgglomerativeHierarchicalCluster()
+            var thirdCluster = new Cluster<AgglomerativeHierarchicalClusterPoint>()
             {
                 ClusterId = 3,
                 Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -213,24 +213,50 @@ namespace CalcTests
                     }
                 }
             };
-            var clusters = new List<AgglomerativeHierarchicalCluster>()
+            var clusters = new List<Cluster<AgglomerativeHierarchicalClusterPoint>>()
             {
                 firstCluster, secondCluster, thirdCluster
             };
 
             var mergedClusters =
                 AgglomerativeHierarchicalClusteringService
-                    .MergeClusters<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>(clusters,
+                    .MergeClusters<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>(clusters,
                         secondCluster, thirdCluster)
                     .ToList();
 
-            var expectedMergedClusters = new List<AgglomerativeHierarchicalCluster>()
+            var expectedMergedClusters = new List<Cluster<AgglomerativeHierarchicalClusterPoint>>()
             {
-                firstCluster,
-                new AgglomerativeHierarchicalCluster()
+                new Cluster<AgglomerativeHierarchicalClusterPoint>()
+                {
+                    ClusterId = 1,
+                    Points = new List<AgglomerativeHierarchicalClusterPoint>()
+                    {
+                        new AgglomerativeHierarchicalClusterPoint()
+                        {
+                            PointId = 10,
+                            HorizontalDisplacement = 1,
+                            VerticalDisplacement = 2
+                        }
+                    }
+                },
+                new Cluster<AgglomerativeHierarchicalClusterPoint>()
                 {
                     ClusterId = 2,
-                    Points = secondCluster.Points.Concat(thirdCluster.Points)
+                    Points = new List<AgglomerativeHierarchicalClusterPoint>()
+                    {
+                        new AgglomerativeHierarchicalClusterPoint()
+                        {
+                            PointId = 20,
+                            HorizontalDisplacement = 3,
+                            VerticalDisplacement = 4
+                        },
+                        new AgglomerativeHierarchicalClusterPoint()
+                        {
+                            PointId = 30,
+                            HorizontalDisplacement = 5,
+                            VerticalDisplacement = 6
+                        }
+                    }
                 }
             };
 
@@ -240,7 +266,7 @@ namespace CalcTests
         [Test]
         public void GetClusterDistancesTest()
         {
-            var firstCluster = new AgglomerativeHierarchicalCluster()
+            var firstCluster = new Cluster<AgglomerativeHierarchicalClusterPoint>()
                 {
                     ClusterId = 1,
                     Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -252,7 +278,7 @@ namespace CalcTests
                         }
                     }
                 };
-            var secondCluster = new AgglomerativeHierarchicalCluster()
+            var secondCluster = new Cluster<AgglomerativeHierarchicalClusterPoint>()
             {
                 ClusterId = 2,
                 Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -264,7 +290,7 @@ namespace CalcTests
                     }
                 }
             };
-            var thirdCluster = new AgglomerativeHierarchicalCluster()
+            var thirdCluster = new Cluster<AgglomerativeHierarchicalClusterPoint>()
             {
                 ClusterId = 3,
                 Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -278,27 +304,27 @@ namespace CalcTests
             };
 
             var actualClusterDistances = AgglomerativeHierarchicalClusteringService
-                .GetClusterDistances<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>(
-                    new List<AgglomerativeHierarchicalCluster>()
+                .GetClusterDistances<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>(
+                    new List<Cluster<AgglomerativeHierarchicalClusterPoint>>()
                     {
                         firstCluster, secondCluster, thirdCluster
                     }).ToList();
 
-            var expectedClusterDistances = new List<ClusterDistance<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>>()
+            var expectedClusterDistances = new List<ClusterDistance<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>>()
             {
-                new ClusterDistance<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>()
+                new ClusterDistance<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>()
                 {
                     StartingCluster = firstCluster,
                     EndingCluster = secondCluster,
                     Distance = 4.243,
                 },
-                new ClusterDistance<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>()
+                new ClusterDistance<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>()
                 {
                     StartingCluster = firstCluster,
                     EndingCluster = thirdCluster,
                     Distance = 2.236,
                 },
-                new ClusterDistance<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>()
+                new ClusterDistance<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>()
                 {
                     StartingCluster = secondCluster,
                     EndingCluster = thirdCluster,
@@ -321,9 +347,9 @@ namespace CalcTests
             };
 
             var actualClusters = AgglomerativeHierarchicalClusteringService.ConvertPointsToClusters(points).ToList();
-            var expectedClusters = new List<AgglomerativeHierarchicalCluster>()
+            var expectedClusters = new List<Cluster<AgglomerativeHierarchicalClusterPoint>>()
             {
-                new AgglomerativeHierarchicalCluster()
+                new Cluster<AgglomerativeHierarchicalClusterPoint>()
                 {
                     ClusterId = 1,
                     Points = new List<AgglomerativeHierarchicalClusterPoint>()
@@ -332,7 +358,7 @@ namespace CalcTests
                             {HorizontalDisplacement = 1, VerticalDisplacement = 1}
                     }
                 },
-                new AgglomerativeHierarchicalCluster()
+                new Cluster<AgglomerativeHierarchicalClusterPoint>()
                 {
                     ClusterId = 2,
                     Points = new List<AgglomerativeHierarchicalClusterPoint>()

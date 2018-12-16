@@ -22,11 +22,11 @@ namespace Calc
         }
 
         internal static IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModelInternal(
-            IEnumerable<AgglomerativeHierarchicalCluster> initialClusters, int minimumClusters)
+            IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> initialClusters, int minimumClusters)
         {
             // calculate distance between each pair of clusters by their centers
             var clusterDistances =
-                GetClusterDistances<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>(
+                GetClusterDistances<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>(
                     initialClusters);
             
             // determine closest clusters
@@ -35,7 +35,7 @@ namespace Calc
             var closestClusterPair = clusterDistances.FirstOrDefault(cd => cd.Distance == minimumDistance);
             
             // merge the pair
-            var mergedClusters = MergeClusters<AgglomerativeHierarchicalCluster, AgglomerativeHierarchicalClusterPoint>(
+            var mergedClusters = MergeClusters<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>(
                 initialClusters, closestClusterPair.StartingCluster,
                 closestClusterPair.EndingCluster);
 
@@ -51,11 +51,11 @@ namespace Calc
             return GetModelInternal(recordedClusters, minimumClusters);
         }
 
-        internal static IEnumerable<AgglomerativeHierarchicalCluster> RecordClusters(
-            IEnumerable<AgglomerativeHierarchicalCluster> clusters)
+        internal static IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> RecordClusters(
+            IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> clusters)
         {
             var clusterCount = clusters.Count();
-            return clusters.Select(c => new AgglomerativeHierarchicalCluster()
+            return clusters.Select(c => new Cluster<AgglomerativeHierarchicalClusterPoint>()
             {
                 ClusterId = c.ClusterId,
                 Points = c.Points.Select(p => new AgglomerativeHierarchicalClusterPoint()
@@ -78,29 +78,28 @@ namespace Calc
             });
 
         }
-    
+
         internal static IEnumerable<T> MergeClusters<T, U>(
-            IEnumerable<T> unmergedClusters, 
-            T clusterOne, 
+            IEnumerable<T> unmergedClusters,
+            T clusterOne,
             T clusterTwo) 
-            where T : Cluster<U>
+            where T : Cluster<U> 
             where U : Point
         {
             var primaryCluster = clusterOne.ClusterId < clusterTwo.ClusterId ? clusterOne : clusterTwo;
             var secondaryCluster = clusterOne.ClusterId < clusterTwo.ClusterId ? clusterTwo : clusterOne;
-            
-            var mergedCluster = (T) new Cluster<U>()
-            {
-                ClusterId = primaryCluster.ClusterId,
-                Points = primaryCluster.Points.Concat(secondaryCluster.Points)
-            };
+            var pointsToAdd = primaryCluster.Points.ToList().Concat(secondaryCluster.Points).ToList();
 
-            return unmergedClusters
-                .Where(uc => uc.ClusterId != primaryCluster.ClusterId && uc.ClusterId != secondaryCluster.ClusterId)
-                .Concat(new List<T> { mergedCluster });
+            var mergedClusters = unmergedClusters.Where(uc => uc.ClusterId != secondaryCluster.ClusterId)
+                .Select(c =>
+                {
+                    c.Points = c.ClusterId == primaryCluster.ClusterId ? pointsToAdd : c.Points;
+                    return c;
+                });
+            return mergedClusters;
         }
 
-        internal static IEnumerable<ClusterDistance<T, U>> GetClusterDistances<T, U>(IEnumerable<T> clusters) 
+        internal static IEnumerable<ClusterDistance<T, U>> GetClusterDistances<T, U>(IEnumerable<T> clusters)
             where T : Cluster<U>
             where U : Point
         {
@@ -117,11 +116,11 @@ namespace Calc
                 .Select(c => c.First());
         }
         
-        internal static IEnumerable<AgglomerativeHierarchicalCluster> ConvertPointsToClusters(
+        internal static IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> ConvertPointsToClusters(
             IEnumerable<Point> points)
         {
             var clusterCount = points.Count();
-            return points.Select((p, index) => new AgglomerativeHierarchicalCluster()
+            return points.Select((p, index) => new Cluster<AgglomerativeHierarchicalClusterPoint>()
             {
                 ClusterId = index + 1,
                 Points = new List<AgglomerativeHierarchicalClusterPoint>()

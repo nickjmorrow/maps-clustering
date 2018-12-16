@@ -9,7 +9,7 @@ namespace Calc.Models
         public T StartingCluster { get; set; }
         public T EndingCluster { get; set; }
         public double Distance { get; set; }
-
+        
         public override bool Equals(object obj)
         {
             var clusterDistance = (ClusterDistance<T, U>) obj;
