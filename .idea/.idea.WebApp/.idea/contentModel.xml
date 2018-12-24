@@ -251,6 +251,9 @@
             <e p="markerclustererplus" t="IncludeRecursive" />
             <e p="node" t="IncludeRecursive" />
             <e p="prop-types" t="IncludeRecursive" />
+            <e p="randomcolor" t="IncludeRecursive" />
+            <e p="rc-slider" t="IncludeRecursive" />
+            <e p="rc-tooltip" t="IncludeRecursive" />
             <e p="react" t="IncludeRecursive" />
             <e p="react-dom" t="IncludeRecursive" />
             <e p="react-modal" t="IncludeRecursive" />
@@ -287,6 +290,8 @@
           <e p="postcss-loader" t="IncludeRecursive" />
           <e p="promise" t="IncludeRecursive" />
           <e p="raf" t="IncludeRecursive" />
+          <e p="randomcolor" t="IncludeRecursive" />
+          <e p="rc-slider" t="IncludeRecursive" />
           <e p="react" t="IncludeRecursive" />
           <e p="react-dev-utils" t="IncludeRecursive" />
           <e p="react-dom" t="IncludeRecursive" />
@@ -397,6 +402,7 @@
               <e p="Option.tsx" t="Include" />
               <e p="Select.tsx" t="Include" />
               <e p="SideNav.tsx" t="Include" />
+              <e p="Slider.tsx" t="Include" />
               <e p="TextInput.tsx" t="Include" />
               <e p="Typography.tsx" t="Include" />
               <e p="WithDefaultProps.ts" t="Include" />
