@@ -2,12 +2,12 @@ import axios from 'axios';
 import {
 	AppBar,
 	Button,
+	Select,
 	Slider,
 	Typography
 } from 'njm-react-component-library';
-import { IInputInfo } from 'njm-react-component-library/lib/types';
+import { IInputInfo, IOption } from 'njm-react-component-library/lib/types';
 import * as React from 'react';
-import { useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { ModeledPoint } from 'src/types';
 import styled from 'styled-components';
@@ -16,25 +16,43 @@ import { Clusters } from './Clusters';
 import { Map } from './Map';
 import { MapForm } from './MapForm';
 
-export const Landing: React.SFC = () => {
-	const [modeledPoints, setModeledPoints] = useState([] as ModeledPoint[]);
-	const [value, setValue] = useState(0);
-	const [colors, setColors] = useState([] as string[]);
-	const min = 1;
-	const max = modeledPoints.length;
+const initialOptions: IOption[] = [
+	{ value: 'ahc', label: 'AHC' },
+	{ value: 'dbscan', label: 'DBSCAN' },
+	{ value: 'msc', label: 'Mean-Shift Clustering' },
+	{ value: 'kmc', label: 'K-Means Clustering' }
+];
 
-	// TODO: use effect?
-	if (localStorage.getItem('data') !== null && modeledPoints.length === 0) {
-		const data = JSON.parse(localStorage.getItem('data')!);
-		if (data.length > 0) {
-			setModeledPoints(data);
-			setValue(data.length);
-			setColors(getColors(data.length));
+const initialState = {
+	modeledPoints: [] as ModeledPoint[],
+	value: 0,
+	colors: [] as string[],
+	options: initialOptions,
+	currentOption: initialOptions[0]
+};
+
+type IState = typeof initialState;
+
+export class Landing extends React.Component<{}, IState> {
+	readonly state = initialState;
+
+	componentDidMount = () => {
+		if (
+			localStorage.getItem('data') !== null &&
+			this.state.modeledPoints.length === 0
+		) {
+			const data = JSON.parse(localStorage.getItem('data')!);
+			if (data.length > 0) {
+				this.setState({
+					modeledPoints: data,
+					value: data.length,
+					colors: getColors(data.length)
+				});
+			}
 		}
-	}
+	};
 
-	// TODO: use effect?
-	const handleClick = async (inputs: IInputInfo[]) => {
+	handleClick = async (inputs: IInputInfo[]) => {
 		const fileList = inputs.find(i => i.name === 'Map File')!
 			.value as FileList;
 		if (fileList.length) {
@@ -47,81 +65,109 @@ export const Landing: React.SFC = () => {
 					headers: { 'Content-Type': 'multipart/form-data' }
 				}
 			);
-			setModeledPoints(data);
-			setValue(data.length);
+
+			this.setState({
+				modeledPoints: data,
+				value: data.length
+			});
 			localStorage.setItem('data', JSON.stringify(data));
 		}
 	};
 
-	const handleSliderChange = (sliderValue: number) => setValue(sliderValue);
+	handleSliderChange = (value: number) => this.setState({ value });
 
-	const markers = getMarkers(modeledPoints, value, colors);
+	handleClusterTypeChange = (option: IOption) =>
+		this.setState({ currentOption: option });
 
-	return (
-		<BrowserRouter>
-			<Wrapper>
-				<AppBar>
-					<div>
-						<Typography variant="h2" color="light">
-							Location Clusterer
-						</Typography>
-					</div>
-					<ButtonWrapper>
-						<Button
-							path="/form"
-							onClick={() => {
-								return;
-							}}>
-							Upload File
-						</Button>
-						<Button
-							path="/map"
-							onClick={() => {
-								return;
-							}}>
-							View Map
-						</Button>
-					</ButtonWrapper>
-				</AppBar>
-				<Switch>
-					<Route
-						exact={true}
-						path="/form"
-						render={() => <MapForm onClick={handleClick} />}
-					/>
-					<Route
-						exact={true}
-						path="/map"
-						render={() => <Map markers={markers} />}
-					/>
-				</Switch>
-				<MapControls>
-					<InfoPanel>
-						<Typography variant="h1">Parameters</Typography>
-						<Typography variant="h2">Number of Clusters</Typography>
+	render() {
+		const {
+			modeledPoints,
+			value,
+			colors,
+			options,
+			currentOption
+		} = this.state;
+		const min = 1;
+		const max = modeledPoints.length;
+
+		const markers = getMarkers(modeledPoints, value, colors);
+
+		const linkButtons = [
+			{ path: '/form', label: 'Upload File' },
+			{ path: '/map', label: 'View Map' },
+			{ path: '/info', label: 'Info' }
+		].map(e => (
+			<Button
+				key={e.path}
+				path={e.path}
+				onClick={() => {
+					return;
+				}}>
+				{e.label}
+			</Button>
+		));
+		return (
+			<BrowserRouter>
+				<Wrapper>
+					<AppBar>
 						<div>
-							<Slider
-								min={min}
-								max={max}
-								value={value}
-								onChange={handleSliderChange}
-							/>
-							{value}
+							<Typography variant="h2" color="light">
+								Location Clusterer
+							</Typography>
 						</div>
-					</InfoPanel>
-					<InfoPanel>
-						<Typography variant="h1">Results</Typography>
-						<Typography variant="h2">Clusters</Typography>
-						<Clusters
-							modeledPoints={modeledPoints}
-							value={modeledPoints.length - value + 1}
+						<ButtonWrapper>{linkButtons}</ButtonWrapper>
+					</AppBar>
+					<Switch>
+						<Route
+							exact={true}
+							path="/form"
+							render={() => (
+								<MapForm onClick={this.handleClick} />
+							)}
 						/>
-					</InfoPanel>
-				</MapControls>
-			</Wrapper>
-		</BrowserRouter>
-	);
-};
+						<Route
+							exact={true}
+							path="/map"
+							render={() => <Map markers={markers} />}
+						/>
+					</Switch>
+					<MapControls>
+						<InfoPanel>
+							<Typography variant="h1">Parameters</Typography>
+							<Typography variant="h2">Cluster Type</Typography>
+							<Select
+								options={options}
+								onChange={this.handleClusterTypeChange}
+								currentOption={currentOption}
+								removeNoneOptionAfterSelection={true}
+							/>
+							<Typography variant="h2">
+								Number of Clusters
+							</Typography>
+							<div>
+								<Slider
+									min={min}
+									max={max}
+									value={value}
+									onChange={this.handleSliderChange}
+								/>
+								{value}
+							</div>
+						</InfoPanel>
+						<InfoPanel>
+							<Typography variant="h1">Results</Typography>
+							<Typography variant="h2">Clusters</Typography>
+							<Clusters
+								modeledPoints={modeledPoints}
+								value={modeledPoints.length - value + 1}
+							/>
+						</InfoPanel>
+					</MapControls>
+				</Wrapper>
+			</BrowserRouter>
+		);
+	}
+}
 
 const InfoPanel = styled.div`
 	margin: 0px 16px;
@@ -137,19 +183,6 @@ const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 `;
-
-// const SliderWrapper = styled.div`
-// 	position: absolute;
-// 	bottom: 0;
-// 	background-color: rgba(255, 255, 255, 50%);
-// 	z-index: 1;
-// 	left: 20%;
-// 	right: 20%;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-// 	padding: 1rem 0;
-// `;
 
 const getMarkers = (
 	modeledPoints: ModeledPoint[],
