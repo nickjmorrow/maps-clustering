@@ -9,6 +9,7 @@ import {
 import { IInputInfo, IOption } from 'njm-react-component-library/lib/types';
 import * as React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { labeledRoutes } from 'src/constants';
 import { ModeledPoint } from 'src/types';
 import styled from 'styled-components';
 import { getColors } from '../services';
@@ -16,19 +17,11 @@ import { Clusters } from './Clusters';
 import { Map } from './Map';
 import { MapForm } from './MapForm';
 
-const initialOptions: IOption[] = [
-	{ value: 'ahc', label: 'AHC' },
-	{ value: 'dbscan', label: 'DBSCAN' },
-	{ value: 'msc', label: 'Mean-Shift Clustering' },
-	{ value: 'kmc', label: 'K-Means Clustering' }
-];
-
 const initialState = {
 	modeledPoints: [] as ModeledPoint[],
-	value: 0,
+	value: 10,
 	colors: [] as string[],
-	options: initialOptions,
-	currentOption: initialOptions[0]
+	currentClusterOption: null as IClusterOption | null
 };
 
 type IState = typeof initialState;
@@ -41,12 +34,13 @@ export class Landing extends React.Component<{}, IState> {
 			localStorage.getItem('data') !== null &&
 			this.state.modeledPoints.length === 0
 		) {
-			const data = JSON.parse(localStorage.getItem('data')!);
-			if (data.length > 0) {
+			const modeledPoints = JSON.parse(localStorage.getItem('data')!);
+			const numModeledPoints = modeledPoints.length;
+			if (numModeledPoints > 0) {
 				this.setState({
-					modeledPoints: data,
-					value: data.length,
-					colors: getColors(data.length)
+					modeledPoints,
+					value: numModeledPoints,
+					colors: getColors(numModeledPoints)
 				});
 			}
 		}
@@ -74,29 +68,27 @@ export class Landing extends React.Component<{}, IState> {
 		}
 	};
 
-	handleSliderChange = (value: number) => this.setState({ value });
+	handleSliderChange = (value: number) => {
+		console.log('hi');
+		this.setState({ value });
+	};
 
-	handleClusterTypeChange = (option: IOption) =>
-		this.setState({ currentOption: option });
+	handleClusterTypeChange = (option: IClusterOption) =>
+		this.setState({ currentClusterOption: option });
 
 	render() {
 		const {
 			modeledPoints,
 			value,
 			colors,
-			options,
-			currentOption
+			currentClusterOption: currentOption
 		} = this.state;
 		const min = 1;
 		const max = modeledPoints.length;
 
 		const markers = getMarkers(modeledPoints, value, colors);
 
-		const linkButtons = [
-			{ path: '/form', label: 'Upload File' },
-			{ path: '/map', label: 'View Map' },
-			{ path: '/info', label: 'Info' }
-		].map(e => (
+		const linkButtons = labeledRoutes.map(e => (
 			<Button
 				key={e.path}
 				path={e.path}
@@ -106,6 +98,41 @@ export class Landing extends React.Component<{}, IState> {
 				{e.label}
 			</Button>
 		));
+
+		const handleSliderChange = this.handleSliderChange;
+
+		const ahcParameters = (
+			<div>
+				<Typography variant="h2">Number of Clusters</Typography>
+				<div>
+					<Slider
+						min={min}
+						max={max}
+						value={this.state.value}
+						onChange={handleSliderChange}
+					/>
+					{this.state.value}
+				</div>
+			</div>
+		);
+
+		const clusterOptions: IClusterOption[] = [
+			{ value: 'ahc', label: 'AHC', parameters: ahcParameters },
+			{ value: 'dbscan', label: 'DBSCAN', parameters: <div>Hello</div> },
+			{
+				value: 'msc',
+				label: 'Mean-Shift Clustering',
+				parameters: <div>Hello</div>
+			},
+			{
+				value: 'kmc',
+				label: 'K-Means Clustering',
+				parameters: <div>Hello</div>
+			}
+		];
+
+		// const clusterParameters = currentOption && currentOption.parameters;
+
 		return (
 			<BrowserRouter>
 				<Wrapper>
@@ -136,23 +163,14 @@ export class Landing extends React.Component<{}, IState> {
 							<Typography variant="h1">Parameters</Typography>
 							<Typography variant="h2">Cluster Type</Typography>
 							<Select
-								options={options}
+								options={clusterOptions}
 								onChange={this.handleClusterTypeChange}
 								currentOption={currentOption}
 								removeNoneOptionAfterSelection={true}
 							/>
-							<Typography variant="h2">
-								Number of Clusters
-							</Typography>
-							<div>
-								<Slider
-									min={min}
-									max={max}
-									value={value}
-									onChange={this.handleSliderChange}
-								/>
-								{value}
-							</div>
+							{currentOption &&
+								currentOption.value === 'ahc' &&
+								ahcParameters}
 						</InfoPanel>
 						<InfoPanel>
 							<Typography variant="h1">Results</Typography>
@@ -167,6 +185,10 @@ export class Landing extends React.Component<{}, IState> {
 			</BrowserRouter>
 		);
 	}
+}
+
+interface IClusterOption extends IOption {
+	parameters: React.ReactNode;
 }
 
 const InfoPanel = styled.div`
