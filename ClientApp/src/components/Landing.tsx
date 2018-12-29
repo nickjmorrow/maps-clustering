@@ -95,44 +95,61 @@ export const Landing: React.SFC = () => {
 						render={() => <Map markers={markers} />}
 					/>
 				</Switch>
-				<SliderWrapper>
-					<Slider
-						min={min}
-						max={max}
-						value={value}
-						onChange={handleSliderChange}
-					/>
-					{value}
-				</SliderWrapper>
-				<Results>
-					<Typography variant="h1">Results</Typography>
-					<Typography variant="h2">Clusters</Typography>
-					<Clusters modeledPoints={modeledPoints} value={value} />
-				</Results>
+				<MapControls>
+					<InfoPanel>
+						<Typography variant="h1">Parameters</Typography>
+						<Typography variant="h2">Number of Clusters</Typography>
+						<div>
+							<Slider
+								min={min}
+								max={max}
+								value={value}
+								onChange={handleSliderChange}
+							/>
+							{value}
+						</div>
+					</InfoPanel>
+					<InfoPanel>
+						<Typography variant="h1">Results</Typography>
+						<Typography variant="h2">Clusters</Typography>
+						<Clusters
+							modeledPoints={modeledPoints}
+							value={modeledPoints.length - value + 1}
+						/>
+					</InfoPanel>
+				</MapControls>
 			</Wrapper>
 		</BrowserRouter>
 	);
 };
 
-const Results = styled.div``;
+const InfoPanel = styled.div`
+	margin: 0px 16px;
+`;
+
+const MapControls = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+`;
 
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 `;
 
-const SliderWrapper = styled.div`
-	position: absolute;
-	bottom: 0;
-	background-color: rgba(255, 255, 255, 50%);
-	z-index: 1;
-	left: 20%;
-	right: 20%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 1rem 0;
-`;
+// const SliderWrapper = styled.div`
+// 	position: absolute;
+// 	bottom: 0;
+// 	background-color: rgba(255, 255, 255, 50%);
+// 	z-index: 1;
+// 	left: 20%;
+// 	right: 20%;
+// 	display: flex;
+// 	justify-content: center;
+// 	align-items: center;
+// 	padding: 1rem 0;
+// `;
 
 const getMarkers = (
 	modeledPoints: ModeledPoint[],

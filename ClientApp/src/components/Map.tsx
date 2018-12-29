@@ -8,7 +8,7 @@ import {
 } from 'react-google-maps';
 import { compose, withProps } from 'recompose';
 import { googleMapURL } from '../services';
-import { manhattanPosition } from '../constants';
+import { manhattanPosition, scale } from '../constants';
 
 interface Props {
 	markers?: MarkerProps[];
@@ -42,7 +42,7 @@ const renderMarkers = (markers: MarkerProps[]) =>
 			icon={{
 				// @ts-ignore
 				fillColor: marker.icon!.fillColor,
-				scale: 5,
+				scale,
 				path: google.maps.SymbolPath.CIRCLE,
 				fillOpacity: 0.9,
 				strokeOpacity: 0

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ModeledPoint } from 'src/types';
 import { Typography } from 'njm-react-component-library';
+import styled from 'styled-components';
 
 export const Clusters: React.SFC<IProps> = ({ modeledPoints, value }) => {
 	const clusterIds = modeledPoints.reduce(
@@ -15,7 +16,7 @@ export const Clusters: React.SFC<IProps> = ({ modeledPoints, value }) => {
 		[] as number[]
 	);
 	return (
-		<div>
+		<Wrapper>
 			{clusterIds
 				.sort((a, b) => a - b)
 				.map(c => {
@@ -25,17 +26,17 @@ export const Clusters: React.SFC<IProps> = ({ modeledPoints, value }) => {
 								.clusterId === c
 					);
 					return (
-						<div key={c}>
+						<Cluster key={c}>
 							<Typography variant="h3">{`Cluster ${c}`}</Typography>
 							{points.map(p => (
 								<div key={p.name}>
 									<Typography>{p.name}</Typography>
 								</div>
 							))}
-						</div>
+						</Cluster>
 					);
 				})}
-		</div>
+		</Wrapper>
 	);
 };
 
@@ -43,3 +44,14 @@ interface IProps {
 	modeledPoints: ModeledPoint[];
 	value: number;
 }
+
+const Cluster = styled.div`
+	width: 300px;
+`;
+
+const Wrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	min-height: 500px;
+`;
