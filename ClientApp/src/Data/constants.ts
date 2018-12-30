@@ -14,3 +14,12 @@ export enum localStorageKeys {
 export const formHeaders = {
 	headers: { 'Content-Type': 'multipart/form-data' }
 };
+
+export enum clusterTypes {
+	none = 'none',
+	agglomerativeHierarchicalClusters = 'agglomerativeHierarchicalClusters',
+	expectationMaximization = 'expectationMaximization',
+	dbscan = 'dbscan',
+	meanShift = 'meanShift',
+	kMeans = 'kMeans'
+}

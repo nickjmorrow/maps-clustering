@@ -274,8 +274,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Controllers/CalcController.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="27" column="13" lean-forward="true" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+            <state relative-caret-position="195">
+              <caret line="18" column="54" lean-forward="true" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
               <folding>
                 <marker date="1546150431242" expanded="false" signature="6:140" ph="..." />
                 <marker date="1546150431242" expanded="true" signature="178:950" ph="{...}" />
@@ -563,12 +563,12 @@
       <workItem from="1543186820455" duration="727000" />
       <workItem from="1543274381342" duration="12569000" />
       <workItem from="1544913445160" duration="13568000" />
-      <workItem from="1546146378015" duration="1266000" />
+      <workItem from="1546146378015" duration="1551000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91366000" />
+    <option name="totallyTimeSpent" value="91651000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -583,12 +583,12 @@
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22818312" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22818312" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.34096387" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34096387" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.44216868" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -1264,8 +1264,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Controllers/CalcController.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="27" column="13" lean-forward="true" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+        <state relative-caret-position="195">
+          <caret line="18" column="54" lean-forward="true" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
           <folding>
             <marker date="1546150431242" expanded="false" signature="6:140" ph="..." />
             <marker date="1546150431242" expanded="true" signature="178:950" ph="{...}" />
