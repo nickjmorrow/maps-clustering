@@ -10,7 +10,7 @@ import { getPoints } from 'src/Data/selectors';
 import { Point } from 'src/Data/types';
 import { ReduxState } from 'src/reducer';
 import { getColors } from 'src/services';
-import { IClusterOption } from 'src/types';
+import { IClusterOption } from '../types';
 import styled from 'styled-components';
 import { Map } from './Map';
 
@@ -195,6 +195,7 @@ interface IReduxProps {
 const InfoPanel = styled.div`
 	margin: 0px 16px;
 	min-width: 300px;
+	min-height: 300px;
 `;
 
 const MapControls = styled.div`

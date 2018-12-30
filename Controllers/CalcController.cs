@@ -16,7 +16,7 @@ namespace WebApplication.Controllers
         // TODO: Use a code generator or something to copy all this
         // TODO: consider implementing unit of work pattern
         [HttpPost("[action]")]
-        public IActionResult GetClusters([FromBody] IEnumerable<Point> points)
+        public IActionResult GetAgglomerativeHierarchicalClusters([FromBody] IEnumerable<Point> points)
         {
             try
             {

@@ -1,6 +1,10 @@
-export enum api {
+export enum fileApi {
 	get = '/api/data/get',
-	upload = '/api/home/upload'
+	upload = '/api/file/convertfiletopoints'
+}
+
+export enum calcApi {
+	getAgglomerativeHierarchicalClusters = '/api/calc/getAgglomerativeHierarchicalClusters'
 }
 
 export enum localStorageKeys {

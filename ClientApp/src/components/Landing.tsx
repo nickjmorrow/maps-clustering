@@ -3,31 +3,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
-import { ModeledPoint } from 'src/types';
 import styled from 'styled-components';
 import { getMapData } from '../Data';
 import { AppBar } from './AppBar';
 import { MapForm } from './MapForm';
-import { MapPage } from './MapPage';
+import { MapPage } from '../Data/components/MapPage';
 
-export class LandingInternal extends React.Component<IDispatchProps, IState> {
-	readonly state = initialState;
-
-	componentDidMount = () => {
-		if (
-			localStorage.getItem('data') !== null &&
-			this.state.modeledPoints.length === 0
-		) {
-			const modeledPoints = JSON.parse(localStorage.getItem('data')!);
-			const numModeledPoints = modeledPoints.length;
-			if (numModeledPoints > 0) {
-				this.setState({
-					modeledPoints
-				});
-			}
-		}
-	};
-
+export class LandingInternal extends React.Component<IDispatchProps, {}> {
 	handleClick = async (inputs: IInputInfo[]) => {
 		const fileList = inputs.find(i => i.name === 'Map File')!
 			.value as FileList;
@@ -35,13 +17,6 @@ export class LandingInternal extends React.Component<IDispatchProps, IState> {
 			const formData = new FormData();
 			formData.append('file', fileList[0]);
 			this.props.getMapData(formData);
-			// const { data }: { data: ModeledPoint[] } = await axios.post(
-			// 	'/api/home/upload',
-			// 	formData,
-			// 	{
-			// 		headers: { 'Content-Type': 'multipart/form-data' }
-			// 	}
-			// );
 		}
 	};
 
@@ -87,12 +62,6 @@ export const Landing = connect(
 interface IDispatchProps {
 	getMapData(payload: FormData): void;
 }
-
-const initialState = {
-	modeledPoints: [] as ModeledPoint[]
-};
-
-type IState = typeof initialState;
 
 // css
 const Wrapper = styled.div`

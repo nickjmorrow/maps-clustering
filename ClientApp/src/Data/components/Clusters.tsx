@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ModeledPoint } from 'src/types';
+import { ModeledPoint } from '../types';
 import { Typography } from 'njm-react-component-library';
 import styled from 'styled-components';
 

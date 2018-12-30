@@ -7,8 +7,8 @@ import {
 	MarkerProps
 } from 'react-google-maps';
 import { compose, withProps } from 'recompose';
-import { googleMapURL } from '../services';
-import { manhattanPosition, scale } from '../constants';
+import { googleMapURL } from '../../services';
+import { manhattanPosition, scale } from '../../constants';
 
 interface Props {
 	markers?: MarkerProps[];
