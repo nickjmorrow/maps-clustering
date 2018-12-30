@@ -1,10 +1,4 @@
-import {
-	Button,
-	IOption,
-	Select,
-	Slider,
-	Typography
-} from 'njm-react-component-library';
+import { IOption, Select, Typography } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -12,12 +6,14 @@ import { ReduxState } from 'src/reducer';
 import { getColors } from 'src/services';
 import styled from 'styled-components';
 import { getAgglomerativeHierarchicalClusters } from '../actions';
+import { clusterOptions, clusterTypes } from '../constants';
 import {
 	getAgglomerativeHierarchicalClustersFromState,
 	getPoints
 } from '../selectors';
 import { IClusterOption, ModeledPoint, Point } from '../types';
 import { Map } from './Map';
+import { AhcParameters, DbscanParameters } from './parameters';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
@@ -45,11 +41,17 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 		const { points } = this.props;
 		const {
 			currentClusterOption,
-			value,
+			value: clusterCount,
 			colors,
 			distanceBetweenPoints,
 			minimumPoints
 		} = this.state;
+		const minClusters = 1;
+		const maxClusters = points.length;
+		const minDistanceBetweenPoints = 1;
+		const maxDistanceBetweenPoints = 5;
+		const minMinimumPoints = 1;
+		const maxMinimumPoints = 10;
 
 		// TODO: revisit, this can be made cleaner
 		const getParameters = (option: IOption | null) => {
@@ -57,73 +59,46 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 				return;
 			}
 			switch (option.value) {
-				case 'ahc':
-					const min = 1;
-					const max = points.length;
+				case clusterTypes.agglomerativeHierarchicalClusters:
 					return (
-						<div>
-							<Typography variant="h2">
-								Number of Clusters
-							</Typography>
-							<Slider
-								min={min}
-								max={max}
-								value={value}
-								onChange={this.handleSliderChange}
-							/>
-							<Button
-								onClick={
-									this
-										.handleGetAgglomerativeHierarchicalClusters
-								}>
-								Load AHCs
-							</Button>
-						</div>
+						<AhcParameters
+							min={minClusters}
+							max={maxClusters}
+							clusterCount={clusterCount}
+							onDistanceBetweenPointsChange={
+								this.handleDistanceBetweenPointsChange
+							}
+							onGetAgglomerativeHierarchicalClusters={
+								this.handleGetAgglomerativeHierarchicalClusters
+							}
+						/>
 					);
-				case 'dbscan':
+				case clusterTypes.dbscan:
 					return (
-						<div>
-							<Typography variant="h2">
-								Distance between Points
-							</Typography>
-							<Slider
-								min={1}
-								max={5}
-								value={distanceBetweenPoints}
-								onChange={
-									this.handleDistanceBetweenPointsChange
-								}
-							/>
-							<Typography variant="h2">Minimum Points</Typography>
-							<Slider
-								min={1}
-								max={10}
-								value={minimumPoints}
-								onChange={this.handleMinimumPointsChange}
-							/>
-						</div>
+						<DbscanParameters
+							minDistanceBetweenPoints={minDistanceBetweenPoints}
+							maxDistanceBetweenPoints={maxDistanceBetweenPoints}
+							maxMinimumPoints={maxMinimumPoints}
+							minMinimumPoints={minMinimumPoints}
+							distanceBetweenPoints={distanceBetweenPoints}
+							minimumPoints={minimumPoints}
+							onDistanceBetweenPointsChange={
+								this.handleDistanceBetweenPointsChange
+							}
+							onMinimumPointsChange={
+								this.handleMinimumPointsChange
+							}
+						/>
 					);
 				default:
 					return <div>Hello</div>;
 			}
 		};
-		const clusterOptions: IOption[] = [
-			{ value: 'ahc', label: 'AHC' },
-			{ value: 'dbscan', label: 'DBSCAN' },
-			{
-				value: 'msc',
-				label: 'Mean-Shift Clustering'
-			},
-			{
-				value: 'kmc',
-				label: 'K-Means Clustering'
-			}
-		];
 
 		const pointsForMap = getPointsForMap(this.state, this.props);
 		const markers = getMarkers(
 			pointsForMap,
-			value,
+			clusterCount,
 			colors,
 			currentClusterOption
 		);
@@ -188,7 +163,7 @@ const getPointsForMap = (
 	}
 	const { currentClusterOption } = state;
 	switch (currentClusterOption.value) {
-		case 'ahc':
+		case clusterTypes.agglomerativeHierarchicalClusters:
 			return props.agglomerativeHierarchicalClusters.length > 0
 				? props.agglomerativeHierarchicalClusters
 				: props.points;
@@ -206,7 +181,7 @@ const getFillColorFunc = (
 		return defaultFillColorFunc;
 	}
 	switch (currentClusterOption.value) {
-		case 'ahc':
+		case clusterTypes.agglomerativeHierarchicalClusters:
 			return (p: ModeledPoint) =>
 				colors[
 					p.agglomerativeHierarchicalClusterInfos[value - 1].clusterId

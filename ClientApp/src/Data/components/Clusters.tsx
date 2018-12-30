@@ -3,11 +3,15 @@ import { ModeledPoint } from '../types';
 import { Typography } from 'njm-react-component-library';
 import styled from 'styled-components';
 
-export const Clusters: React.SFC<IProps> = ({ modeledPoints, value }) => {
+export const Clusters: React.SFC<IProps> = ({
+	modeledPoints,
+	clusterCount
+}) => {
 	const clusterIds = modeledPoints.reduce(
 		(agg, mp) => {
 			const clusterId =
-				mp.agglomerativeHierarchicalClusterInfos[value - 1].clusterId;
+				mp.agglomerativeHierarchicalClusterInfos[clusterCount - 1]
+					.clusterId;
 			if (!agg.find(x => x === clusterId)) {
 				agg.push(clusterId);
 			}
@@ -22,8 +26,9 @@ export const Clusters: React.SFC<IProps> = ({ modeledPoints, value }) => {
 				.map(c => {
 					const points = modeledPoints.filter(
 						mp =>
-							mp.agglomerativeHierarchicalClusterInfos[value - 1]
-								.clusterId === c
+							mp.agglomerativeHierarchicalClusterInfos[
+								clusterCount - 1
+							].clusterId === c
 					);
 					return (
 						<Cluster key={c}>
@@ -42,7 +47,7 @@ export const Clusters: React.SFC<IProps> = ({ modeledPoints, value }) => {
 
 interface IProps {
 	modeledPoints: ModeledPoint[];
-	value: number;
+	clusterCount: number;
 }
 
 const Cluster = styled.div`
