@@ -5,7 +5,7 @@ export const AhcParameters: React.SFC<IProps> = ({
 	min,
 	max,
 	clusterCount,
-	onDistanceBetweenPointsChange: handleDistanceBetweenPointsChange,
+	onClusterCountChange: handleClusterCountChange,
 	onGetAgglomerativeHierarchicalClusters: handleGetAgglomerativeHierarchicalClusters
 }) => (
 	<div>
@@ -14,7 +14,7 @@ export const AhcParameters: React.SFC<IProps> = ({
 			min={min}
 			max={max}
 			value={clusterCount}
-			onChange={handleDistanceBetweenPointsChange}
+			onChange={handleClusterCountChange}
 		/>
 		<Button onClick={handleGetAgglomerativeHierarchicalClusters}>
 			Load AHCs
@@ -26,6 +26,6 @@ interface IProps {
 	min: number;
 	max: number;
 	clusterCount: number;
-	onDistanceBetweenPointsChange(value: number): void;
+	onClusterCountChange(value: number): void;
 	onGetAgglomerativeHierarchicalClusters(): void;
 }

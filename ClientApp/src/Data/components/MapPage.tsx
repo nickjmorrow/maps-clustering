@@ -21,7 +21,8 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	componentWillReceiveProps = (nextProps: IProps) =>
 		this.setState({ colors: getColors(nextProps.points.length) });
 
-	handleSliderChange = (value: number) => this.setState({ value });
+	handleClusterCountChange = (clusterCount: number) =>
+		this.setState({ clusterCount });
 
 	handleClusterTypeChange = (currentClusterOption: IClusterOption) =>
 		this.setState({ currentClusterOption });
@@ -41,7 +42,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 		const { points } = this.props;
 		const {
 			currentClusterOption,
-			value: clusterCount,
+			clusterCount: clusterCount,
 			colors,
 			distanceBetweenPoints,
 			minimumPoints
@@ -65,9 +66,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 							min={minClusters}
 							max={maxClusters}
 							clusterCount={clusterCount}
-							onDistanceBetweenPointsChange={
-								this.handleDistanceBetweenPointsChange
-							}
+							onClusterCountChange={this.handleClusterCountChange}
 							onGetAgglomerativeHierarchicalClusters={
 								this.handleGetAgglomerativeHierarchicalClusters
 							}
@@ -216,7 +215,7 @@ const getMarkers = (
 
 // types
 const initialState = {
-	value: 30,
+	clusterCount: 30,
 	currentClusterOption: null as IOption | null,
 	colors: [] as string[],
 	minimumPoints: 1,
