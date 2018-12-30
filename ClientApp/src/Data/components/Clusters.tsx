@@ -1,17 +1,12 @@
-import * as React from 'react';
-import { ModeledPoint } from '../types';
 import { Typography } from 'njm-react-component-library';
+import * as React from 'react';
 import styled from 'styled-components';
+import { ClusteredPoint } from '../types';
 
-export const Clusters: React.SFC<IProps> = ({
-	modeledPoints,
-	clusterCount
-}) => {
-	const clusterIds = modeledPoints.reduce(
-		(agg, mp) => {
-			const clusterId =
-				mp.agglomerativeHierarchicalClusterInfos[clusterCount - 1]
-					.clusterId;
+export const Clusters: React.SFC<IProps> = ({ clusteredPoints }) => {
+	const clusterIds = clusteredPoints.reduce(
+		(agg, cp) => {
+			const clusterId = cp.clusterId;
 			if (!agg.find(x => x === clusterId)) {
 				agg.push(clusterId);
 			}
@@ -19,35 +14,35 @@ export const Clusters: React.SFC<IProps> = ({
 		},
 		[] as number[]
 	);
+	const includeClusterLabelling =
+		clusterIds.length !== clusteredPoints.length;
+	const asRenderedPoints = (p: ClusteredPoint) => (
+		<Typography key={p.pointId}>{p.name}</Typography>
+	);
+	const renderedUnclusteredPoints = clusteredPoints.map(asRenderedPoints);
+	const renderedClusteredPoints = clusterIds
+		.sort((a: number, b: number) => a - b)
+		.map((c: number) => {
+			const points = clusteredPoints.filter(p => p.clusterId === c);
+			const renderedPoints = points.map(asRenderedPoints);
+			return (
+				<Cluster key={c}>
+					<Typography variant="h3">{`Cluster ${c}`}</Typography>
+					{renderedPoints}
+				</Cluster>
+			);
+		});
 	return (
 		<Wrapper>
-			{clusterIds
-				.sort((a, b) => a - b)
-				.map(c => {
-					const points = modeledPoints.filter(
-						mp =>
-							mp.agglomerativeHierarchicalClusterInfos[
-								clusterCount - 1
-							].clusterId === c
-					);
-					return (
-						<Cluster key={c}>
-							<Typography variant="h3">{`Cluster ${c}`}</Typography>
-							{points.map(p => (
-								<div key={p.name}>
-									<Typography>{p.name}</Typography>
-								</div>
-							))}
-						</Cluster>
-					);
-				})}
+			{includeClusterLabelling
+				? renderedClusteredPoints
+				: renderedUnclusteredPoints}
 		</Wrapper>
 	);
 };
 
 interface IProps {
-	modeledPoints: ModeledPoint[];
-	clusterCount: number;
+	clusteredPoints: ClusteredPoint[];
 }
 
 const Cluster = styled.div`

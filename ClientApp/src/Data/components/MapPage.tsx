@@ -11,9 +11,10 @@ import {
 	getAgglomerativeHierarchicalClustersFromState,
 	getPoints
 } from '../selectors';
-import { IClusterOption, ModeledPoint, Point } from '../types';
+import { IClusterOption, ModeledPoint, Point, ClusteredPoint } from '../types';
 import { Map } from './Map';
-import { AhcParameters, DbscanParameters } from './parameters';
+import { Parameters } from './parameters';
+import { Clusters } from './Clusters';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
@@ -47,56 +48,9 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 			distanceBetweenPoints,
 			minimumPoints
 		} = this.state;
-		const minClusters = 1;
-		const maxClusters = points.length;
-		const minDistanceBetweenPoints = 1;
-		const maxDistanceBetweenPoints = 5;
-		const minMinimumPoints = 1;
-		const maxMinimumPoints = 10;
 
-		// TODO: revisit, this can be made cleaner
-		const getParameters = (option: IOption | null) => {
-			if (!option) {
-				return;
-			}
-			switch (option.value) {
-				case clusterTypes.agglomerativeHierarchicalClusters:
-					return (
-						<AhcParameters
-							min={minClusters}
-							max={maxClusters}
-							clusterCount={clusterCount}
-							onClusterCountChange={this.handleClusterCountChange}
-							onGetAgglomerativeHierarchicalClusters={
-								this.handleGetAgglomerativeHierarchicalClusters
-							}
-						/>
-					);
-				case clusterTypes.dbscan:
-					return (
-						<DbscanParameters
-							minDistanceBetweenPoints={minDistanceBetweenPoints}
-							maxDistanceBetweenPoints={maxDistanceBetweenPoints}
-							maxMinimumPoints={maxMinimumPoints}
-							minMinimumPoints={minMinimumPoints}
-							distanceBetweenPoints={distanceBetweenPoints}
-							minimumPoints={minimumPoints}
-							onDistanceBetweenPointsChange={
-								this.handleDistanceBetweenPointsChange
-							}
-							onMinimumPointsChange={
-								this.handleMinimumPointsChange
-							}
-						/>
-					);
-				default:
-					return <div>Hello</div>;
-			}
-		};
-
-		const pointsForMap = getPointsForMap(this.state, this.props);
 		const markers = getMarkers(
-			pointsForMap,
+			getPointsForMap(this.state, this.props),
 			clusterCount,
 			colors,
 			currentClusterOption
@@ -115,15 +69,34 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 							currentOption={currentClusterOption}
 							removeNoneOptionAfterSelection={true}
 						/>
-						{getParameters(currentClusterOption)}
+						<Parameters
+							currentClusterOption={currentClusterOption}
+							points={points}
+							clusterCount={clusterCount}
+							distanceBetweenPoints={distanceBetweenPoints}
+							minimumPoints={minimumPoints}
+							onClusterCountChange={this.handleClusterCountChange}
+							onGetAgglomerativeHierarchicalClusters={
+								this.handleGetAgglomerativeHierarchicalClusters
+							}
+							onDistanceBetweenPointsChange={
+								this.handleDistanceBetweenPointsChange
+							}
+							onMinimumPointsChange={
+								this.handleMinimumPointsChange
+							}
+						/>
 					</InfoPanel>
 					<InfoPanel>
 						<Typography variant="h1">Results</Typography>
 						<Typography variant="h2">Clusters</Typography>
-						{/* <Clusters
-							modeledPoints={points}
-							value={points.length - value + 1}
-						/> */}
+						<Clusters
+							clusteredPoints={getClusters(
+								currentClusterOption,
+								clusterCount,
+								this.props
+							)}
+						/>
 					</InfoPanel>
 				</MapControls>
 			</div>
@@ -153,21 +126,52 @@ export const MapPage = connect(
 )(MapPageInternal);
 
 // helpers
+const getClusters = (
+	currentClusterOption: IOption | null,
+	clusterCount: number,
+	props: IProps
+): ClusteredPoint[] => {
+	const unclusteredPoints = props.points.map(p => ({
+		...p,
+		clusterId: p.pointId
+	}));
+	if (!currentClusterOption) {
+		return unclusteredPoints;
+	}
+	switch (currentClusterOption.value) {
+		case clusterTypes.agglomerativeHierarchicalClusters:
+			return props.agglomerativeHierarchicalClusters.map(ahc => {
+				return {
+					...ahc,
+					clusterId:
+						ahc.agglomerativeHierarchicalClusterInfos[
+							clusterCount - 1
+						].clusterId
+				};
+			});
+		default:
+			return unclusteredPoints;
+	}
+};
+
 const getPointsForMap = (
 	state: IState,
 	props: IProps
 ): Point[] | ModeledPoint[] => {
-	if (state.currentClusterOption === null) {
-		return props.points;
-	}
 	const { currentClusterOption } = state;
+	const { agglomerativeHierarchicalClusters, points } = props;
+	if (currentClusterOption === null) {
+		return points;
+	}
+	const canShowAgglomerativeHierarchicalClusters =
+		props.agglomerativeHierarchicalClusters.length > 0;
 	switch (currentClusterOption.value) {
 		case clusterTypes.agglomerativeHierarchicalClusters:
-			return props.agglomerativeHierarchicalClusters.length > 0
-				? props.agglomerativeHierarchicalClusters
-				: props.points;
+			return canShowAgglomerativeHierarchicalClusters
+				? agglomerativeHierarchicalClusters
+				: points;
 		default:
-			return props.points;
+			return points;
 	}
 };
 const getFillColorFunc = (

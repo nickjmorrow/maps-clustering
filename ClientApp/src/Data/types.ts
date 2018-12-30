@@ -7,6 +7,10 @@ export interface Point {
 	verticalDisplacement: number;
 }
 
+export interface ClusteredPoint extends Point {
+	clusterId: number;
+}
+
 export interface ModeledPoint extends Point {
 	agglomerativeHierarchicalClusterInfos: ClusterInfo[];
 }
