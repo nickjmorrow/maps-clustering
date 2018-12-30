@@ -183,6 +183,7 @@ type IState = typeof initialState;
 // css
 const InfoPanel = styled.div`
 	margin: 0px 16px;
+	min-width: 300px;
 `;
 
 const MapControls = styled.div`
