@@ -1,15 +1,14 @@
-import axios from 'axios';
 import { IInputInfo } from 'njm-react-component-library/lib/types';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { bindActionCreators, Dispatch } from 'redux';
 import { ModeledPoint } from 'src/types';
 import styled from 'styled-components';
+import { getMapData } from '../Data';
 import { AppBar } from './AppBar';
 import { MapForm } from './MapForm';
 import { MapPage } from './MapPage';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { getMapData } from '../Data';
 
 export class LandingInternal extends React.Component<IDispatchProps, IState> {
 	readonly state = initialState;
@@ -36,24 +35,17 @@ export class LandingInternal extends React.Component<IDispatchProps, IState> {
 			const formData = new FormData();
 			formData.append('file', fileList[0]);
 			this.props.getMapData(formData);
-			const { data }: { data: ModeledPoint[] } = await axios.post(
-				'/api/home/upload',
-				formData,
-				{
-					headers: { 'Content-Type': 'multipart/form-data' }
-				}
-			);
-
-			this.setState({
-				modeledPoints: data
-			});
-			localStorage.setItem('data', JSON.stringify(data));
+			// const { data }: { data: ModeledPoint[] } = await axios.post(
+			// 	'/api/home/upload',
+			// 	formData,
+			// 	{
+			// 		headers: { 'Content-Type': 'multipart/form-data' }
+			// 	}
+			// );
 		}
 	};
 
 	render() {
-		const { modeledPoints } = this.state;
-
 		return (
 			<BrowserRouter>
 				<Wrapper>
@@ -69,9 +61,7 @@ export class LandingInternal extends React.Component<IDispatchProps, IState> {
 						<Route
 							exact={true}
 							path="/map"
-							render={() => (
-								<MapPage modeledPoints={modeledPoints} />
-							)}
+							render={() => <MapPage />}
 						/>
 					</Switch>
 				</Wrapper>

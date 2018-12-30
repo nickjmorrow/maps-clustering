@@ -29,14 +29,6 @@ namespace WebApplication.Controllers
         {
             return new List<int>() {2, 3, 4};
         }
-
-//        [HttpPost("[action]")]
-//        public IActionResult ReceiveFile(FileUploadViewModel file)
-//        {
-//            
-//            var otherFiles = Request.Form.Files;
-//            return Ok(new {Size = file.Size, Count = otherFiles.Count()});
-//        }
         
         [HttpPost("[action]")]
         public async Task<IActionResult> ReceiveFile(List<IFormFile> files)
@@ -57,9 +49,6 @@ namespace WebApplication.Controllers
                 }
             }
 
-            // process uploaded files
-            // Don't rely on or trust the FileName property without validation.
-
             return Ok(new { count = files.Count, size, filePath});
         }
         
@@ -72,9 +61,9 @@ namespace WebApplication.Controllers
             }
 
             var points = this._fileHandlerService.ConvertFileToPoints(file);
-            var clusterPoints = AgglomerativeHierarchicalClusteringService.GetModel(points);
+//            var clusterPoints = AgglomerativeHierarchicalClusteringService.GetModel(points);
 
-            return Ok(clusterPoints);
+            return Ok(points);
         }
     }
 }

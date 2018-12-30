@@ -1,11 +1,13 @@
-import { ActionTypes } from './actions';
+import { ActionTypes, dataTypeKeys } from './actions';
 
 export interface DataState {
-	readonly data: any[];
+	readonly points: any[];
+	readonly error: string;
 }
 
 const initialState: DataState = {
-	data: [] as any[]
+	points: [] as any[],
+	error: ''
 };
 
 export const dataReducer = (
@@ -15,6 +17,10 @@ export const dataReducer = (
 	state = state || initialState;
 
 	switch (action.type) {
+		case dataTypeKeys.GET_DATA_SUCCEEDED:
+			return { ...state, points: action.payload };
+		case dataTypeKeys.GET_DATA_FAILED:
+			return { ...state, error: action.payload };
 		default:
 			return state;
 	}

@@ -5,17 +5,20 @@ import {
 	Typography
 } from 'njm-react-component-library';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { getPoints } from 'src/Data/selectors';
+import { Point } from 'src/Data/types';
+import { ReduxState } from 'src/reducer';
 import { getColors } from 'src/services';
-import { IClusterOption, ModeledPoint } from 'src/types';
+import { IClusterOption } from 'src/types';
 import styled from 'styled-components';
-import { Clusters } from './Clusters';
 import { Map } from './Map';
 
-export class MapPage extends React.Component<IProps, IState> {
+export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
 
 	componentWillReceiveProps = (nextProps: IProps) =>
-		this.setState({ colors: getColors(nextProps.modeledPoints.length) });
+		this.setState({ colors: getColors(nextProps.points.length) });
 
 	handleSliderChange = (value: number) => this.setState({ value });
 
@@ -30,7 +33,7 @@ export class MapPage extends React.Component<IProps, IState> {
 	};
 
 	render() {
-		const { modeledPoints } = this.props;
+		const { points } = this.props;
 		const {
 			currentClusterOption,
 			value,
@@ -47,7 +50,7 @@ export class MapPage extends React.Component<IProps, IState> {
 			switch (option.value) {
 				case 'ahc':
 					const min = 1;
-					const max = modeledPoints.length;
+					const max = points.length;
 					return (
 						<div>
 							<Typography variant="h2">
@@ -104,7 +107,7 @@ export class MapPage extends React.Component<IProps, IState> {
 			}
 		];
 
-		const markers = getMarkers(modeledPoints, value, colors);
+		const markers = getMarkers(points, value, colors);
 
 		return (
 			<div>
@@ -124,10 +127,10 @@ export class MapPage extends React.Component<IProps, IState> {
 					<InfoPanel>
 						<Typography variant="h1">Results</Typography>
 						<Typography variant="h2">Clusters</Typography>
-						<Clusters
-							modeledPoints={modeledPoints}
-							value={modeledPoints.length - value + 1}
-						/>
+						{/* <Clusters
+							modeledPoints={points}
+							value={points.length - value + 1}
+						/> */}
 					</InfoPanel>
 				</MapControls>
 			</div>
@@ -135,16 +138,22 @@ export class MapPage extends React.Component<IProps, IState> {
 	}
 }
 
+// redux
+const mapStateToProps = (state: ReduxState): IReduxProps => ({
+	points: getPoints(state)
+});
+export const MapPage = connect(
+	mapStateToProps,
+	null
+)(MapPageInternal);
+
 // helpers
 const getMarkers = (
-	modeledPoints: ModeledPoint[],
+	modeledPoints: Point[],
 	value: number,
 	colors: string[]
 ) => {
 	if (!modeledPoints.length) {
-		return [];
-	}
-	if (colors.length < value - 1) {
 		return [];
 	}
 	return modeledPoints.map(mp => ({
@@ -156,19 +165,17 @@ const getMarkers = (
 			text: mp.name
 		},
 		icon: {
-			fillColor:
-				colors[
-					mp.agglomerativeHierarchicalClusterInfos[value - 1]
-						.clusterId
-				]
+			fillColor: 'red'
+			// colors[
+			// 	mp.agglomerativeHierarchicalClusterInfos[value - 1]
+			// 		.clusterId
+			// ]
 		}
 	}));
 };
 
 // types
-interface IProps {
-	modeledPoints: ModeledPoint[];
-}
+type IProps = IReduxProps;
 
 const initialState = {
 	value: 30,
@@ -179,6 +186,10 @@ const initialState = {
 };
 
 type IState = typeof initialState;
+
+interface IReduxProps {
+	points: Point[];
+}
 
 // css
 const InfoPanel = styled.div`
