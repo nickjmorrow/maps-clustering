@@ -1,20 +1,16 @@
 import { IOption, Select, Typography } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
 import { ReduxState } from 'src/reducer';
 import { getColors } from 'src/services';
 import styled from 'styled-components';
-import { getAgglomerativeHierarchicalClusters } from '../actions';
+import { Clusters, Map, Parameters } from '../';
 import { clusterOptions, clusterTypes } from '../constants';
 import {
 	getAgglomerativeHierarchicalClustersFromState,
 	getPoints
 } from '../selectors';
-import { IClusterOption, ModeledPoint, Point, ClusteredPoint } from '../types';
-import { Map } from './Map';
-import { Parameters } from './parameters';
-import { Clusters } from './Clusters';
+import { ClusteredPoint, IClusterOption, ModeledPoint, Point } from '../types';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
@@ -28,25 +24,12 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	handleClusterTypeChange = (currentClusterOption: IClusterOption) =>
 		this.setState({ currentClusterOption });
 
-	handleDistanceBetweenPointsChange = (distanceBetweenPoints: number) =>
-		this.setState({ distanceBetweenPoints });
-
-	handleMinimumPointsChange = (minimumPoints: number) => {
-		this.setState({ minimumPoints });
-	};
-
-	handleGetAgglomerativeHierarchicalClusters = () => {
-		this.props.getAgglomerativeHierarchicalClusters(this.props.points);
-	};
-
 	render() {
 		const { points } = this.props;
 		const {
 			currentClusterOption,
 			clusterCount: clusterCount,
-			colors,
-			distanceBetweenPoints,
-			minimumPoints
+			colors
 		} = this.state;
 
 		const markers = getMarkers(
@@ -73,18 +56,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 							currentClusterOption={currentClusterOption}
 							points={points}
 							clusterCount={clusterCount}
-							distanceBetweenPoints={distanceBetweenPoints}
-							minimumPoints={minimumPoints}
 							onClusterCountChange={this.handleClusterCountChange}
-							onGetAgglomerativeHierarchicalClusters={
-								this.handleGetAgglomerativeHierarchicalClusters
-							}
-							onDistanceBetweenPointsChange={
-								this.handleDistanceBetweenPointsChange
-							}
-							onMinimumPointsChange={
-								this.handleMinimumPointsChange
-							}
 						/>
 					</InfoPanel>
 					<InfoPanel>
@@ -112,17 +84,9 @@ const mapStateToProps = (state: ReduxState): IReduxProps => ({
 	)
 });
 
-const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
-	bindActionCreators(
-		{
-			getAgglomerativeHierarchicalClusters
-		},
-		dispatch
-	);
-
 export const MapPage = connect(
 	mapStateToProps,
-	mapDispatchToProps
+	null
 )(MapPageInternal);
 
 // helpers
@@ -202,7 +166,6 @@ const getMarkers = (
 	if (!modeledPoints.length) {
 		return [];
 	}
-	const fillColorFunc = getFillColorFunc(currentClusterOption, colors, value);
 	return modeledPoints.map(mp => ({
 		position: {
 			lat: mp.verticalDisplacement,
@@ -212,7 +175,7 @@ const getMarkers = (
 			text: mp.name
 		},
 		icon: {
-			fillColor: fillColorFunc(mp)
+			fillColor: getFillColorFunc(currentClusterOption, colors, value)(mp)
 		}
 	}));
 };
@@ -221,9 +184,7 @@ const getMarkers = (
 const initialState = {
 	clusterCount: 30,
 	currentClusterOption: null as IOption | null,
-	colors: [] as string[],
-	minimumPoints: 1,
-	distanceBetweenPoints: 1
+	colors: [] as string[]
 };
 
 type IState = typeof initialState;
@@ -233,11 +194,7 @@ interface IReduxProps {
 	agglomerativeHierarchicalClusters: ModeledPoint[];
 }
 
-interface IDispatchProps {
-	getAgglomerativeHierarchicalClusters(points: Point[]): void;
-}
-
-type IProps = IReduxProps & IDispatchProps;
+type IProps = IReduxProps;
 
 // css
 const InfoPanel = styled.div`
