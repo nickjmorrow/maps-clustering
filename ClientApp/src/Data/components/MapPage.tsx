@@ -1,4 +1,5 @@
 import {
+	Button,
 	IOption,
 	Select,
 	Slider,
@@ -6,12 +7,16 @@ import {
 } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getPoints } from 'src/Data/selectors';
-import { Point } from 'src/Data/types';
+import { bindActionCreators, Dispatch } from 'redux';
 import { ReduxState } from 'src/reducer';
 import { getColors } from 'src/services';
-import { IClusterOption } from '../types';
 import styled from 'styled-components';
+import { getAgglomerativeHierarchicalClusters } from '../actions';
+import {
+	getPoints,
+	getAgglomerativeHierarchicalClustersFromState
+} from '../selectors';
+import { IClusterOption, Point, ModeledPoint } from '../types';
 import { Map } from './Map';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
@@ -30,6 +35,10 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 
 	handleMinimumPointsChange = (minimumPoints: number) => {
 		this.setState({ minimumPoints });
+	};
+
+	handleGetAgglomerativeHierarchicalClusters = () => {
+		this.props.getAgglomerativeHierarchicalClusters(this.props.points);
 	};
 
 	render() {
@@ -56,15 +65,19 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 							<Typography variant="h2">
 								Number of Clusters
 							</Typography>
-							<div>
-								<Slider
-									min={min}
-									max={max}
-									value={value}
-									onChange={this.handleSliderChange}
-								/>
-								{value}
-							</div>
+							<Slider
+								min={min}
+								max={max}
+								value={value}
+								onChange={this.handleSliderChange}
+							/>
+							<Button
+								onClick={
+									this
+										.handleGetAgglomerativeHierarchicalClusters
+								}>
+								Load AHCs
+							</Button>
 						</div>
 					);
 				case 'dbscan':
@@ -107,7 +120,8 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 			}
 		];
 
-		const markers = getMarkers(points, value, colors);
+		const pointsForMap = getPointsForMap(this.state, this.props);
+		const markers = getMarkers(pointsForMap, value, colors);
 
 		return (
 			<div>
@@ -140,14 +154,40 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 
 // redux
 const mapStateToProps = (state: ReduxState): IReduxProps => ({
-	points: getPoints(state)
+	points: getPoints(state),
+	agglomerativeHierarchicalClusters: getAgglomerativeHierarchicalClustersFromState(
+		state
+	)
 });
+
+const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
+	bindActionCreators(
+		{
+			getAgglomerativeHierarchicalClusters
+		},
+		dispatch
+	);
+
 export const MapPage = connect(
 	mapStateToProps,
-	null
+	mapDispatchToProps
 )(MapPageInternal);
 
 // helpers
+const getPointsForMap = (state: IState, props: IProps) => {
+	if (state.currentClusterOption === null) {
+		return props.points;
+	}
+	const { currentClusterOption } = state;
+	switch (currentClusterOption.value) {
+		case 'ahc':
+			return props.agglomerativeHierarchicalClusters.length > 0
+				? props.agglomerativeHierarchicalClusters
+				: props.points;
+		default:
+			return props.points;
+	}
+};
 const getMarkers = (
 	modeledPoints: Point[],
 	value: number,
@@ -156,6 +196,12 @@ const getMarkers = (
 	if (!modeledPoints.length) {
 		return [];
 	}
+
+	// const fillColorFunc = (mp: ModeledPoint) : string => colors.length ?
+	//     colors[
+	//     mp.agglomerativeHierarchicalClusterInfos[value - 1]
+	//         .clusterId
+	//     ] : 'red';
 	return modeledPoints.map(mp => ({
 		position: {
 			lat: mp.verticalDisplacement,
@@ -166,17 +212,11 @@ const getMarkers = (
 		},
 		icon: {
 			fillColor: 'red'
-			// colors[
-			// 	mp.agglomerativeHierarchicalClusterInfos[value - 1]
-			// 		.clusterId
-			// ]
 		}
 	}));
 };
 
 // types
-type IProps = IReduxProps;
-
 const initialState = {
 	value: 30,
 	currentClusterOption: null as IClusterOption | null,
@@ -189,7 +229,14 @@ type IState = typeof initialState;
 
 interface IReduxProps {
 	points: Point[];
+	agglomerativeHierarchicalClusters: ModeledPoint[];
 }
+
+interface IDispatchProps {
+	getAgglomerativeHierarchicalClusters(points: Point[]): void;
+}
+
+type IProps = IReduxProps & IDispatchProps;
 
 // css
 const InfoPanel = styled.div`

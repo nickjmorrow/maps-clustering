@@ -1,6 +1,9 @@
 import { all } from 'redux-saga/effects';
-import { watchGetMapData } from './Data';
+import {
+	watchGetMapData,
+	watchGetAgglomerativeHierarchicalClusters
+} from './Data';
 
 export function* rootSaga() {
-	yield all([watchGetMapData()]);
+	yield all([watchGetMapData(), watchGetAgglomerativeHierarchicalClusters()]);
 }

@@ -217,16 +217,19 @@
           <e p="App.tsx" t="Include" />
           <e p="components" t="Include">
             <e p="AppBar.tsx" t="Include" />
-            <e p="Clusters.tsx" t="Include" />
             <e p="index.ts" t="Include" />
             <e p="Landing.tsx" t="Include" />
-            <e p="Map.tsx" t="Include" />
             <e p="MapForm.tsx" t="Include" />
-            <e p="MapPage.tsx" t="Include" />
           </e>
           <e p="constants.ts" t="Include" />
           <e p="Data" t="Include">
             <e p="actions.ts" t="Include" />
+            <e p="components" t="Include">
+              <e p="Clusters.tsx" t="Include" />
+              <e p="index.ts" t="Include" />
+              <e p="Map.tsx" t="Include" />
+              <e p="MapPage.tsx" t="Include" />
+            </e>
             <e p="constants.ts" t="Include" />
             <e p="index.ts" t="Include" />
             <e p="reducer.ts" t="Include" />
