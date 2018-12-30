@@ -7,14 +7,11 @@ import styled from 'styled-components';
 import { AppBar } from './AppBar';
 import { MapForm } from './MapForm';
 import { MapPage } from './MapPage';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { getMapData } from '../Data';
 
-const initialState = {
-	modeledPoints: [] as ModeledPoint[]
-};
-
-type IState = typeof initialState;
-
-export class Landing extends React.Component<{}, IState> {
+export class LandingInternal extends React.Component<IDispatchProps, IState> {
 	readonly state = initialState;
 
 	componentDidMount = () => {
@@ -38,6 +35,7 @@ export class Landing extends React.Component<{}, IState> {
 		if (fileList.length) {
 			const formData = new FormData();
 			formData.append('file', fileList[0]);
+			this.props.getMapData(formData);
 			const { data }: { data: ModeledPoint[] } = await axios.post(
 				'/api/home/upload',
 				formData,
@@ -82,6 +80,31 @@ export class Landing extends React.Component<{}, IState> {
 	}
 }
 
+// redux
+const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
+	bindActionCreators(
+		{
+			getMapData
+		},
+		dispatch
+	);
+export const Landing = connect(
+	null,
+	mapDispatchToProps
+)(LandingInternal);
+
+// types
+interface IDispatchProps {
+	getMapData(payload: FormData): void;
+}
+
+const initialState = {
+	modeledPoints: [] as ModeledPoint[]
+};
+
+type IState = typeof initialState;
+
+// css
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;

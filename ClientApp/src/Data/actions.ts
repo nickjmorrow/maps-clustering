@@ -6,20 +6,22 @@ export enum dataTypeKeys {
 	GET_DATA_FAILED = 'GET_DATA_FAILED'
 }
 
-export const getData = (): GetDataAction => action(dataTypeKeys.GET_DATA);
+export const getMapData = (payload: FormData): GetMapDataAction =>
+	action(dataTypeKeys.GET_DATA, payload);
 // TODO
-export const getDataSucceeded = (payload: []): GetDataSucceededAction =>
+export const getMapDataSucceeded = (payload: []): GetDataSucceededAction =>
 	action(dataTypeKeys.GET_DATA_SUCCEEDED, payload);
-export const getDataFailed = (payload: string): GetDataFailedAction =>
+export const getMapDataFailed = (payload: string): GetDataFailedAction =>
 	action(dataTypeKeys.GET_DATA_FAILED, payload);
 
 export type ActionTypes =
-	| GetDataAction
+	| GetMapDataAction
 	| GetDataSucceededAction
 	| GetDataFailedAction;
 
-export interface GetDataAction {
+export interface GetMapDataAction {
 	type: dataTypeKeys.GET_DATA;
+	payload: FormData;
 }
 
 export interface GetDataSucceededAction {
