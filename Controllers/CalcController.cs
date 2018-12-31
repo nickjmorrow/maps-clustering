@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Calc;
 using Calc.Models;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
@@ -35,9 +36,9 @@ namespace WebApplication.Controllers
         }
         
         [HttpPost("[action]")]
-        public IActionResult GetDBSCANClusters(IEnumerable<Point> points)
+        public IActionResult GetDBSCANClusters([FromBody] DbscanConfig dbscanConfig)
         {
-            return BadRequest();
+            return Ok(dbscanConfig);
         }
         
         [HttpPost("[action]")]
