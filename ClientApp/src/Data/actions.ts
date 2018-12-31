@@ -1,5 +1,11 @@
 import { action } from 'typesafe-actions';
-import { Point, ModeledPoint } from './types';
+import {
+	Point,
+	AgglomerativeHierarchicalClusterPoint,
+	AgglomerativeHierarchicalClusterConfig,
+	DbscanConfig,
+	ClusteredPoint
+} from './types';
 
 export enum dataTypeKeys {
 	GET_DATA = 'GET_DATA',
@@ -7,14 +13,19 @@ export enum dataTypeKeys {
 	GET_DATA_FAILED = 'GET_DATA_FAILED',
 	GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS',
 	GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED',
-	GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED'
+	GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED',
+	GET_DBSCAN = 'GET_DBSCAN',
+	GET_DBSCAN_SUCCEEDED = 'GET_DBSCAN_SUCCEEDED',
+	GET_DBSCAN_FAILED = 'GET_DBSCAN_FAILED'
 }
 
-export const getMapData = (payload: FormData): GetMapDataAction =>
+export const getMapData = (payload: FormData): GetMapPointsAction =>
 	action(dataTypeKeys.GET_DATA, payload);
-export const getMapDataSucceeded = (payload: Point[]): GetDataSucceededAction =>
+export const getMapDataSucceeded = (
+	payload: Point[]
+): GetMapPointsSucceededAction =>
 	action(dataTypeKeys.GET_DATA_SUCCEEDED, payload);
-export const getMapDataFailed = (payload: string): GetDataFailedAction =>
+export const getMapDataFailed = (payload: string): GetMapPointsFailedAction =>
 	action(dataTypeKeys.GET_DATA_FAILED, payload);
 
 export const getAgglomerativeHierarchicalClusters = (
@@ -22,7 +33,7 @@ export const getAgglomerativeHierarchicalClusters = (
 ): GetAgglomerativeHierarchicalClustersAction =>
 	action(dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS, payload);
 export const getAgglomerativeHierarchicalClustersSucceeded = (
-	payload: ModeledPoint[]
+	payload: AgglomerativeHierarchicalClusterPoint[]
 ): GetAgglomerativeHierarchicalClustersSucceededAction =>
 	action(
 		dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED,
@@ -36,40 +47,64 @@ export const getAgglomerativeHierarchicalClustersFailed = (
 		payload
 	);
 
+export const getDbscan = {
+	request: (payload: DbscanConfig): GetDbscanAction =>
+		action(dataTypeKeys.GET_DBSCAN, payload),
+	success: (payload: ClusteredPoint[]): GetDbscanSucceededAction =>
+		action(dataTypeKeys.GET_DBSCAN_SUCCEEDED, payload),
+	failure: (payload: string): GetDbscanFailedAction =>
+		action(dataTypeKeys.GET_DBSCAN_FAILED, payload)
+};
+
 export type ActionTypes =
-	| GetMapDataAction
-	| GetDataSucceededAction
-	| GetDataFailedAction
+	| GetMapPointsAction
+	| GetMapPointsSucceededAction
+	| GetMapPointsFailedAction
 	| GetAgglomerativeHierarchicalClustersAction
 	| GetAgglomerativeHierarchicalClustersSucceededAction
 	| GetAgglomerativeHierarchicalClustersFailedAction;
 
-export interface GetMapDataAction {
+export interface GetMapPointsAction {
 	type: dataTypeKeys.GET_DATA;
 	payload: FormData;
 }
 
-export interface GetDataSucceededAction {
+export interface GetMapPointsSucceededAction {
 	type: dataTypeKeys.GET_DATA_SUCCEEDED;
 	payload: any; // TODO
 }
 
-export interface GetDataFailedAction {
+export interface GetMapPointsFailedAction {
 	type: dataTypeKeys.GET_DATA_FAILED;
 	payload: string;
 }
 
 export interface GetAgglomerativeHierarchicalClustersAction {
 	type: dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS;
-	payload: Point[];
+	payload: AgglomerativeHierarchicalClusterConfig;
 }
 
 export interface GetAgglomerativeHierarchicalClustersSucceededAction {
 	type: dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED;
-	payload: ModeledPoint[];
+	payload: AgglomerativeHierarchicalClusterPoint[];
 }
 
 export interface GetAgglomerativeHierarchicalClustersFailedAction {
 	type: dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED;
+	payload: string;
+}
+
+export interface GetDbscanAction {
+	type: dataTypeKeys.GET_DBSCAN;
+	payload: DbscanConfig;
+}
+
+export interface GetDbscanSucceededAction {
+	type: dataTypeKeys.GET_DBSCAN_SUCCEEDED;
+	payload: ClusteredPoint[];
+}
+
+export interface GetDbscanFailedAction {
+	type: dataTypeKeys.GET_DBSCAN_FAILED;
 	payload: string;
 }

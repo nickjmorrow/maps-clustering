@@ -1,15 +1,15 @@
 import { ActionTypes, dataTypeKeys } from './actions';
-import { Point, ModeledPoint } from './types';
+import { Point, AgglomerativeHierarchicalClusterPoint } from './types';
 
 export interface DataState {
 	readonly points: Point[];
 	readonly error: string;
-	readonly agglomerativeHierarchicalClusters: ModeledPoint[];
+	readonly agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
 }
 
 const initialState: DataState = {
 	points: [] as Point[],
-	agglomerativeHierarchicalClusters: [] as ModeledPoint[],
+	agglomerativeHierarchicalClusters: [] as AgglomerativeHierarchicalClusterPoint[],
 	error: ''
 };
 

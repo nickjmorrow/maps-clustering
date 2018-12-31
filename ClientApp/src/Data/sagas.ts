@@ -3,16 +3,17 @@ import { action as typesafeAction } from 'typesafe-actions';
 import { takeLatest, put, call } from 'redux-saga/effects';
 import {
 	dataTypeKeys,
-	GetMapDataAction,
-	GetAgglomerativeHierarchicalClustersAction
+	GetMapPointsAction,
+	GetAgglomerativeHierarchicalClustersAction,
+	GetDbscanAction
 } from './actions';
 import { fileApi, localStorageKeys, formHeaders, calcApi } from './constants';
 
-export function* watchGetMapData() {
+function* watchGetMapData() {
 	yield takeLatest(dataTypeKeys.GET_DATA, getMapDataAsync);
 }
 
-function* getMapDataAsync(action: GetMapDataAction) {
+function* getMapDataAsync(action: GetMapPointsAction) {
 	try {
 		const { data } = yield call(
 			axios.post,
@@ -29,7 +30,7 @@ function* getMapDataAsync(action: GetMapDataAction) {
 	}
 }
 
-export function* watchGetAgglomerativeHierarchicalClusters() {
+function* watchGetAgglomerativeHierarchicalClusters() {
 	yield takeLatest(
 		dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS,
 		getAgglomerativeHierarchicalClustersAsync
@@ -60,3 +61,28 @@ function* getAgglomerativeHierarchicalClustersAsync(
 		);
 	}
 }
+
+function* watchGetDbscan() {
+	yield takeLatest(dataTypeKeys.GET_DBSCAN, getDbscanAsync);
+}
+
+function* getDbscanAsync(action: GetDbscanAction) {
+	try {
+		const { data } = yield call(
+			axios.post,
+			calcApi.getDbscan,
+			action.payload
+		);
+		yield put(typesafeAction(dataTypeKeys.GET_DBSCAN_SUCCEEDED, data));
+	} catch (error) {
+		yield put(
+			typesafeAction(dataTypeKeys.GET_DBSCAN_FAILED, error.response.data)
+		);
+	}
+}
+
+export const sagas = [
+	watchGetMapData,
+	watchGetAgglomerativeHierarchicalClusters,
+	watchGetDbscan
+];

@@ -6,16 +6,12 @@ export enum fileApi {
 }
 
 export enum calcApi {
-	getAgglomerativeHierarchicalClusters = '/api/calc/getAgglomerativeHierarchicalClusters'
+	getAgglomerativeHierarchicalClusters = '/api/calc/getAgglomerativeHierarchicalClusters',
+	getExpectationMaximizationClusters = '/api/calc/getExpectationMaximizationClusters',
+	getDbscan = '/api/calc/getDBSCANClusters',
+	getMeanShiftClusters = '/api/calc/getMeanShiftClusters',
+	getKMeansClusters = '/api/calc/getKMeansClusters'
 }
-
-export enum localStorageKeys {
-	points = 'points'
-}
-
-export const formHeaders = {
-	headers: { 'Content-Type': 'multipart/form-data' }
-};
 
 export enum clusterTypes {
 	none = 'none',
@@ -45,3 +41,11 @@ export const clusterOptions: IOption[] = [
 		label: 'Expectation Maximization'
 	}
 ];
+
+export enum localStorageKeys {
+	points = 'points'
+}
+
+export const formHeaders = {
+	headers: { 'Content-Type': 'multipart/form-data' }
+};

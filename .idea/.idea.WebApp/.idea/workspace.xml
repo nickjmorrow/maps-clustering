@@ -108,13 +108,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cs" value="17251" />
+          <entry key="cs" value="17297" />
           <entry key="csproj" value="22" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="C#" value="17251" />
+          <entry key="C#" value="17297" />
           <entry key="Csproj" value="22" />
         </counts>
       </usages-collector>
@@ -274,16 +274,16 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Controllers/CalcController.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="18" column="54" lean-forward="true" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
+            <state relative-caret-position="390">
+              <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
               <folding>
-                <marker date="1546150431242" expanded="false" signature="6:140" ph="..." />
-                <marker date="1546150431242" expanded="true" signature="178:950" ph="{...}" />
-                <marker date="1546150431242" expanded="true" signature="257:948" ph="{...}" />
-                <marker date="1546150431242" expanded="true" signature="272:557" ph="/* TODO: Add other async methods ... */" />
-                <marker date="1546150431242" expanded="true" signature="692:942" ph="{...}" />
-                <marker date="1546150431242" expanded="true" signature="718:834" ph="{...}" />
-                <marker date="1546150431242" expanded="true" signature="866:932" ph="{...}" />
+                <marker date="1546213226924" expanded="false" signature="6:140" ph="..." />
+                <marker date="1546213226924" expanded="true" signature="178:1023" ph="{...}" />
+                <marker date="1546213226924" expanded="true" signature="257:1021" ph="{...}" />
+                <marker date="1546213226924" expanded="true" signature="272:557" ph="/* TODO: Add other async methods ... */" />
+                <marker date="1546213226924" expanded="true" signature="692:942" ph="{...}" />
+                <marker date="1546213226924" expanded="true" signature="718:834" ph="{...}" />
+                <marker date="1546213226924" expanded="true" signature="866:932" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -440,8 +440,7 @@
       <path value="$PROJECT_DIR$/ClientApp/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
-    <option name="x" value="720" />
+  <component name="ProjectFrameBounds">
     <option name="width" value="720" />
     <option name="height" value="900" />
   </component>
@@ -563,12 +562,12 @@
       <workItem from="1543186820455" duration="727000" />
       <workItem from="1543274381342" duration="12569000" />
       <workItem from="1544913445160" duration="13568000" />
-      <workItem from="1546146378015" duration="1551000" />
+      <workItem from="1546146378015" duration="1575000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91651000" />
+    <option name="totallyTimeSpent" value="91675000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -580,15 +579,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
+    <frame x="0" y="0" width="720" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22818312" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.22818312" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34096387" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.35024753" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.44216868" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -1264,16 +1263,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Controllers/CalcController.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="18" column="54" lean-forward="true" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
+        <state relative-caret-position="390">
+          <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
           <folding>
-            <marker date="1546150431242" expanded="false" signature="6:140" ph="..." />
-            <marker date="1546150431242" expanded="true" signature="178:950" ph="{...}" />
-            <marker date="1546150431242" expanded="true" signature="257:948" ph="{...}" />
-            <marker date="1546150431242" expanded="true" signature="272:557" ph="/* TODO: Add other async methods ... */" />
-            <marker date="1546150431242" expanded="true" signature="692:942" ph="{...}" />
-            <marker date="1546150431242" expanded="true" signature="718:834" ph="{...}" />
-            <marker date="1546150431242" expanded="true" signature="866:932" ph="{...}" />
+            <marker date="1546213226924" expanded="false" signature="6:140" ph="..." />
+            <marker date="1546213226924" expanded="true" signature="178:1023" ph="{...}" />
+            <marker date="1546213226924" expanded="true" signature="257:1021" ph="{...}" />
+            <marker date="1546213226924" expanded="true" signature="272:557" ph="/* TODO: Add other async methods ... */" />
+            <marker date="1546213226924" expanded="true" signature="692:942" ph="{...}" />
+            <marker date="1546213226924" expanded="true" signature="718:834" ph="{...}" />
+            <marker date="1546213226924" expanded="true" signature="866:932" ph="{...}" />
           </folding>
         </state>
       </provider>

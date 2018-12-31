@@ -10,7 +10,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 export class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;
 
-	handleMinimumPointsChange = (minimumPoints: number) =>
+	handleMinimumPointsPerClusterChange = (minimumPoints: number) =>
 		this.setState({ minimumPoints });
 
 	handleDistanceBetweenPointsChange = (distanceBetweenPoints: number) =>
@@ -27,12 +27,15 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 			currentClusterOption,
 			onClusterCountChange: handleClusterCountChange
 		} = this.props;
-		const { minimumPoints, distanceBetweenPoints } = this.state;
+		const {
+			minimumPoints: minimumPointsPerCluster,
+			distanceBetweenPoints: maximumDistanceBetweenPoints
+		} = this.state;
 
 		const minClusters = 1;
 		const maxClusters = points.length;
 		const maxDistanceBetweenPoints = 5;
-		const maxMinimumPoints = 10;
+		const maxMinimumPointsPerCluster = 10;
 
 		if (!currentClusterOption) {
 			return null;
@@ -56,14 +59,18 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 					<DbscanParameters
 						minDistanceBetweenPoints={minDistanceBetweenPoints}
 						maxDistanceBetweenPoints={maxDistanceBetweenPoints}
-						maxMinimumPoints={maxMinimumPoints}
-						minMinimumPoints={minMinimumPoints}
-						distanceBetweenPoints={distanceBetweenPoints}
-						minimumPoints={minimumPoints}
+						maxMinimumPointsPerCluster={maxMinimumPointsPerCluster}
+						minMinimumPointsPerCluster={minMinimumPointsPerCluster}
+						maximumDistanceBetweenPoints={
+							maximumDistanceBetweenPoints
+						}
+						minimumPointsPerCluster={minimumPointsPerCluster}
 						onDistanceBetweenPointsChange={
 							this.handleDistanceBetweenPointsChange
 						}
-						onMinimumPointsChange={this.handleMinimumPointsChange}
+						onMinimumPointsPerClusterChange={
+							this.handleMinimumPointsPerClusterChange
+						}
 					/>
 				);
 			default:
@@ -103,9 +110,9 @@ export const Parameters = connect(
 
 // state initialization
 const minDistanceBetweenPoints = 1;
-const minMinimumPoints = 1;
+const minMinimumPointsPerCluster = 1;
 
 const initialState = {
 	distanceBetweenPoints: minDistanceBetweenPoints,
-	minimumPoints: minMinimumPoints
+	minimumPoints: minMinimumPointsPerCluster
 };

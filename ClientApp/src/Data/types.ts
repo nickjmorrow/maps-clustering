@@ -11,7 +11,7 @@ export interface ClusteredPoint extends Point {
 	clusterId: number;
 }
 
-export interface ModeledPoint extends Point {
+export interface AgglomerativeHierarchicalClusterPoint extends Point {
 	agglomerativeHierarchicalClusterInfos: ClusterInfo[];
 }
 
@@ -22,4 +22,12 @@ export interface ClusterInfo {
 
 export interface IClusterOption extends IOption {
 	parameters: React.ReactNode;
+}
+
+export type AgglomerativeHierarchicalClusterConfig = Point[];
+
+export interface DbscanConfig {
+	points: Point[];
+	minimumPointsPerCluster: number;
+	maximumDistanceBetweenPoints: number;
 }

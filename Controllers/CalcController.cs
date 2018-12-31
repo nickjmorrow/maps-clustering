@@ -27,5 +27,29 @@ namespace WebApplication.Controllers
                 return BadRequest(e);
             }
         }
+
+        [HttpPost("[action]")]
+        public IActionResult GetExpectationMaximizationClusters(IEnumerable<Point> points)
+        {
+            return BadRequest();
+        }
+        
+        [HttpPost("[action]")]
+        public IActionResult GetDBSCANClusters(IEnumerable<Point> points)
+        {
+            return BadRequest();
+        }
+        
+        [HttpPost("[action]")]
+        public IActionResult GetMeanShiftClusters(IEnumerable<Point> points)
+        {
+            return BadRequest();
+        }
+        
+        [HttpPost("[action]")]
+        public IActionResult GetKMeansClusters(IEnumerable<Point> points)
+        {
+            return BadRequest();
+        }
     }
 }

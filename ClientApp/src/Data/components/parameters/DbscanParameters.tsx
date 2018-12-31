@@ -4,12 +4,12 @@ import { Typography, Slider } from 'njm-react-component-library';
 export const DbscanParameters: React.SFC<IProps> = ({
 	minDistanceBetweenPoints,
 	maxDistanceBetweenPoints,
-	minMinimumPoints,
-	maxMinimumPoints,
-	distanceBetweenPoints,
-	minimumPoints,
+	minMinimumPointsPerCluster: minMinimumPoints,
+	maxMinimumPointsPerCluster: maxMinimumPoints,
+	maximumDistanceBetweenPoints: distanceBetweenPoints,
+	minimumPointsPerCluster: minimumPoints,
 	onDistanceBetweenPointsChange: handleDistanceBetweenPointsChange,
-	onMinimumPointsChange: handleMinimumPointsChange
+	onMinimumPointsPerClusterChange: handleMinimumPointsChange
 }) => {
 	return (
 		<div>
@@ -34,10 +34,10 @@ export const DbscanParameters: React.SFC<IProps> = ({
 interface IProps {
 	minDistanceBetweenPoints: number;
 	maxDistanceBetweenPoints: number;
-	minMinimumPoints: number;
-	maxMinimumPoints: number;
-	distanceBetweenPoints: number;
-	minimumPoints: number;
+	minMinimumPointsPerCluster: number;
+	maxMinimumPointsPerCluster: number;
+	maximumDistanceBetweenPoints: number;
+	minimumPointsPerCluster: number;
 	onDistanceBetweenPointsChange(distanceBetweenPoints: number): void;
-	onMinimumPointsChange(minimumPoints: number): void;
+	onMinimumPointsPerClusterChange(minimumPoints: number): void;
 }

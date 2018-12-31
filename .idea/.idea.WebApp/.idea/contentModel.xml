@@ -229,6 +229,12 @@
               <e p="index.ts" t="Include" />
               <e p="Map.tsx" t="Include" />
               <e p="MapPage.tsx" t="Include" />
+              <e p="parameters" t="Include">
+                <e p="AhcParameters.tsx" t="Include" />
+                <e p="DbscanParameters.tsx" t="Include" />
+                <e p="index.ts" t="Include" />
+                <e p="Parameters.tsx" t="Include" />
+              </e>
             </e>
             <e p="constants.ts" t="Include" />
             <e p="index.ts" t="Include" />
