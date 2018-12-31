@@ -2,22 +2,41 @@ import { clusterTypes } from 'src/Data/constants';
 import { IOption } from 'njm-react-component-library';
 import * as React from 'react';
 import { AhcParameters, DbscanParameters } from '.';
-import { Point } from 'src/Data/types';
+import { Point, DbscanConfig } from 'src/Data/types';
 import { connect } from 'react-redux';
 import { getAgglomerativeHierarchicalClusters } from 'src/Data';
 import { bindActionCreators, Dispatch } from 'redux';
+import { getDbscan } from 'src/Data/actions';
 
 export class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;
 
 	handleMinimumPointsPerClusterChange = (minimumPoints: number) =>
-		this.setState({ minimumPoints });
+		this.setState({ minimumPointsPerCluster: minimumPoints });
 
-	handleDistanceBetweenPointsChange = (distanceBetweenPoints: number) =>
-		this.setState({ distanceBetweenPoints });
+	handleMaximumDistanceBetweenPointsChange = (
+		maximumDistanceBetweenPoints: number
+	) =>
+		this.setState({
+			maximumDistanceBetweenPoints
+		});
 
 	handleGetAgglomerativeHierarchicalClusters = () => {
 		this.props.getAgglomerativeHierarchicalClusters(this.props.points);
+	};
+
+	handleGetDbscan = () => {
+		const { points } = this.props;
+		const {
+			minimumPointsPerCluster,
+			maximumDistanceBetweenPoints
+		} = this.state;
+		const dbscanConfig: DbscanConfig = {
+			points,
+			minimumPointsPerCluster,
+			maximumDistanceBetweenPoints
+		};
+		this.props.getDbscan(dbscanConfig);
 	};
 
 	render() {
@@ -28,8 +47,8 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 			onClusterCountChange: handleClusterCountChange
 		} = this.props;
 		const {
-			minimumPoints: minimumPointsPerCluster,
-			distanceBetweenPoints: maximumDistanceBetweenPoints
+			minimumPointsPerCluster: minimumPointsPerCluster,
+			maximumDistanceBetweenPoints: maximumDistanceBetweenPoints
 		} = this.state;
 
 		const minClusters = 1;
@@ -57,7 +76,9 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 			case clusterTypes.dbscan:
 				return (
 					<DbscanParameters
-						minDistanceBetweenPoints={minDistanceBetweenPoints}
+						minDistanceBetweenPoints={
+							minMaximumDistanceBetweenPoints
+						}
 						maxDistanceBetweenPoints={maxDistanceBetweenPoints}
 						maxMinimumPointsPerCluster={maxMinimumPointsPerCluster}
 						minMinimumPointsPerCluster={minMinimumPointsPerCluster}
@@ -66,11 +87,12 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 						}
 						minimumPointsPerCluster={minimumPointsPerCluster}
 						onDistanceBetweenPointsChange={
-							this.handleDistanceBetweenPointsChange
+							this.handleMaximumDistanceBetweenPointsChange
 						}
 						onMinimumPointsPerClusterChange={
 							this.handleMinimumPointsPerClusterChange
 						}
+						onGetDbscan={this.handleGetDbscan}
 					/>
 				);
 			default:
@@ -89,6 +111,7 @@ interface IOwnProps {
 
 interface IDispatchProps {
 	getAgglomerativeHierarchicalClusters(points: Point[]): void;
+	getDbscan(dbscanConig: DbscanConfig): void;
 }
 
 type IProps = IOwnProps & IDispatchProps;
@@ -99,7 +122,8 @@ type IState = typeof initialState;
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			getAgglomerativeHierarchicalClusters
+			getAgglomerativeHierarchicalClusters,
+			getDbscan: getDbscan.request
 		},
 		dispatch
 	);
@@ -109,10 +133,10 @@ export const Parameters = connect(
 )(ParametersInternal);
 
 // state initialization
-const minDistanceBetweenPoints = 1;
+const minMaximumDistanceBetweenPoints = 1;
 const minMinimumPointsPerCluster = 1;
 
 const initialState = {
-	distanceBetweenPoints: minDistanceBetweenPoints,
-	minimumPoints: minMinimumPointsPerCluster
+	maximumDistanceBetweenPoints: minMaximumDistanceBetweenPoints,
+	minimumPointsPerCluster: minMinimumPointsPerCluster
 };

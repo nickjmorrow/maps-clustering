@@ -62,7 +62,10 @@ export type ActionTypes =
 	| GetMapPointsFailedAction
 	| GetAgglomerativeHierarchicalClustersAction
 	| GetAgglomerativeHierarchicalClustersSucceededAction
-	| GetAgglomerativeHierarchicalClustersFailedAction;
+	| GetAgglomerativeHierarchicalClustersFailedAction
+	| GetDbscanAction
+	| GetDbscanSucceededAction
+	| GetDbscanFailedAction;
 
 export interface GetMapPointsAction {
 	type: dataTypeKeys.GET_DATA;

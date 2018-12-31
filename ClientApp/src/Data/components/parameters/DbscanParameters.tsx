@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Slider } from 'njm-react-component-library';
+import { Typography, Slider, Button } from 'njm-react-component-library';
 
 export const DbscanParameters: React.SFC<IProps> = ({
 	minDistanceBetweenPoints,
@@ -9,7 +9,8 @@ export const DbscanParameters: React.SFC<IProps> = ({
 	maximumDistanceBetweenPoints: distanceBetweenPoints,
 	minimumPointsPerCluster: minimumPoints,
 	onDistanceBetweenPointsChange: handleDistanceBetweenPointsChange,
-	onMinimumPointsPerClusterChange: handleMinimumPointsChange
+	onMinimumPointsPerClusterChange: handleMinimumPointsChange,
+	onGetDbscan: handleGetDbscan
 }) => {
 	return (
 		<div>
@@ -27,6 +28,7 @@ export const DbscanParameters: React.SFC<IProps> = ({
 				value={minimumPoints}
 				onChange={handleMinimumPointsChange}
 			/>
+			<Button onClick={handleGetDbscan}>Get Dbscan</Button>
 		</div>
 	);
 };
@@ -40,4 +42,5 @@ interface IProps {
 	minimumPointsPerCluster: number;
 	onDistanceBetweenPointsChange(distanceBetweenPoints: number): void;
 	onMinimumPointsPerClusterChange(minimumPoints: number): void;
+	onGetDbscan(): void;
 }
