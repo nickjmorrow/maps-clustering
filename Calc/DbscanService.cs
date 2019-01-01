@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Calc.Models;
+using GeoCoordinatePortable;
 
 namespace Calc
 {
@@ -195,14 +196,12 @@ namespace Calc
         {
             return points.Select(p =>
             {
-                var horizontalDifference = Math.Abs(point.HorizontalDisplacement - p.HorizontalDisplacement);
-                var verticalDifference = Math.Abs(point.VerticalDisplacement - p.VerticalDisplacement);
-                var squaredDistance = Math.Pow(horizontalDifference, 2) + Math.Pow(verticalDifference, 2);
-                var actualDistance = Math.Pow(squaredDistance, 0.5);
+                var sCoord = new GeoCoordinate(point.HorizontalDisplacement, point.VerticalDisplacement);
+                var eCoord = new GeoCoordinate(p.HorizontalDisplacement, p.VerticalDisplacement);
                 return new PointDistance()
                 {
                     Point = p,
-                    Distance = actualDistance
+                    Distance = sCoord.GetDistanceTo(eCoord)
                 };
             });
         }
