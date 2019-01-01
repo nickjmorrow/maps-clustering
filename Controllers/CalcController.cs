@@ -11,6 +11,13 @@ namespace WebApplication.Controllers
     [Route("api/[controller]")]
     public class CalcController : Controller
     {
+        private AgglomerativeHierarchicalClusteringService _agglomerativeHierarchicalClusteringService { get; }
+
+        public CalcController(AgglomerativeHierarchicalClusteringService agglomerativeHierarchicalClusteringService)
+        {
+            this._agglomerativeHierarchicalClusteringService = agglomerativeHierarchicalClusteringService;
+        }
+
         // TODO: Add other async methods
         // TODO: Add EF tests
         // TODO: Play around more with dependency injection, ie don't just register interfaces
@@ -21,7 +28,7 @@ namespace WebApplication.Controllers
         {
             try
             {
-                return Ok(AgglomerativeHierarchicalClusteringService.GetModel(points));
+                return Ok(this._agglomerativeHierarchicalClusteringService.GetModel(points));
             }
             catch (Exception e)
             {

@@ -5,9 +5,9 @@ using Calc.Models;
 
 namespace Calc
 {
-    public static class AgglomerativeHierarchicalClusteringService
+    public class AgglomerativeHierarchicalClusteringService
     {
-        public static IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModel(IEnumerable<Point> points, 
+        public IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModel(IEnumerable<Point> points, 
             int minimumClusters = 1)
         {
             if (minimumClusters < 1)
@@ -21,7 +21,7 @@ namespace Calc
             return GetModelInternal(initialClusters, minimumClusters);
         }
 
-        internal static IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModelInternal(
+        internal IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModelInternal(
             IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> initialClusters, int minimumClusters)
         {
             // calculate distance between each pair of clusters by their centers
@@ -51,7 +51,7 @@ namespace Calc
             return GetModelInternal(recordedClusters, minimumClusters);
         }
 
-        internal static IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> RecordClusters(
+        internal IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> RecordClusters(
             IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> clusters)
         {
             var clusterCount = clusters.Count();
@@ -79,7 +79,7 @@ namespace Calc
 
         }
 
-        internal static IEnumerable<T> MergeClusters<T, U>(
+        internal IEnumerable<T> MergeClusters<T, U>(
             IEnumerable<T> unmergedClusters,
             T clusterOne,
             T clusterTwo) 
@@ -99,7 +99,7 @@ namespace Calc
             return mergedClusters;
         }
 
-        internal static IEnumerable<ClusterDistance<T, U>> GetClusterDistances<T, U>(IEnumerable<T> clusters)
+        internal IEnumerable<ClusterDistance<T, U>> GetClusterDistances<T, U>(IEnumerable<T> clusters)
             where T : Cluster<U>
             where U : Point
         {
@@ -116,7 +116,7 @@ namespace Calc
                 .Select(c => c.First());
         }
         
-        internal static IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> ConvertPointsToClusters(
+        internal IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> ConvertPointsToClusters(
             IEnumerable<Point> points)
         {
             var clusterCount = points.Count();
@@ -144,7 +144,7 @@ namespace Calc
             }).ToList();
         }
 
-        internal static double GetDistance(Point startingPoint, Point endingPoint)
+        internal double GetDistance(Point startingPoint, Point endingPoint)
         {
             var horizontalDistance =
                 Math.Abs(startingPoint.HorizontalDisplacement - endingPoint.HorizontalDisplacement);

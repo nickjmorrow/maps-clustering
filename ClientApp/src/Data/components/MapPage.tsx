@@ -1,8 +1,13 @@
-import { IOption, Select, Typography } from 'njm-react-component-library';
+import {
+	IOption,
+	Select,
+	Typography,
+	colors
+} from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { ReduxState } from 'src/reducer';
-import { getColors } from 'src/services';
+import { getColors as getMarkerColors } from 'src/services';
 import styled from 'styled-components';
 import { Clusters, Map, Parameters } from '../';
 import { clusterOptions, clusterTypes } from '../constants';
@@ -21,7 +26,9 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
 
 	componentWillReceiveProps = (nextProps: IProps) =>
-		this.setState({ colors: getColors(nextProps.points.length) });
+		this.setState({
+			markerColors: getMarkerColors(nextProps.points.length)
+		});
 
 	handleClusterCountChange = (clusterCount: number) =>
 		this.setState({ clusterCount });
@@ -34,19 +41,20 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 		const {
 			currentClusterOption,
 			clusterCount: clusterCount,
-			colors
+			markerColors
 		} = this.state;
 
 		const markers = getMarkers(
 			getPointsForMap(this.state, this.props),
 			clusterCount,
-			colors,
+			markerColors,
 			currentClusterOption
 		);
 
 		return (
 			<div>
 				<Map markers={markers} />
+				<Divider />
 				<MapControls>
 					<InfoPanel>
 						<Typography variant="h1">Parameters</Typography>
@@ -145,19 +153,19 @@ const getPointsForMap = (
 };
 const getFillColorFunc = (
 	currentClusterOption: IOption | null,
-	colors: string[],
+	markerColors: string[],
 	value: number
 ) => {
 	const defaultFillColorFunc = (
 		p: Point | AgglomerativeHierarchicalClusterPoint
 	) => 'red';
-	if (!currentClusterOption || colors.length === 0) {
+	if (!currentClusterOption || markerColors.length === 0) {
 		return defaultFillColorFunc;
 	}
 	switch (currentClusterOption.value) {
 		case clusterTypes.agglomerativeHierarchicalClusters:
 			return (p: AgglomerativeHierarchicalClusterPoint) =>
-				colors[
+				markerColors[
 					p.agglomerativeHierarchicalClusterInfos[value - 1].clusterId
 				];
 		default:
@@ -167,7 +175,7 @@ const getFillColorFunc = (
 const getMarkers = (
 	modeledPoints: Point[],
 	value: number,
-	colors: string[],
+	markerColors: string[],
 	currentClusterOption: IOption | null
 ) => {
 	if (!modeledPoints.length) {
@@ -182,7 +190,11 @@ const getMarkers = (
 			text: mp.name
 		},
 		icon: {
-			fillColor: getFillColorFunc(currentClusterOption, colors, value)(mp)
+			fillColor: getFillColorFunc(
+				currentClusterOption,
+				markerColors,
+				value
+			)(mp)
 		}
 	}));
 };
@@ -191,7 +203,7 @@ const getMarkers = (
 const initialState = {
 	clusterCount: 30,
 	currentClusterOption: null as IOption | null,
-	colors: [] as string[]
+	markerColors: [] as string[]
 };
 
 type IState = typeof initialState;
@@ -214,4 +226,9 @@ const MapControls = styled.div`
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
+`;
+
+const Divider = styled.div`
+	height: 20px;
+	background-color: ${colors.darkGray};
 `;

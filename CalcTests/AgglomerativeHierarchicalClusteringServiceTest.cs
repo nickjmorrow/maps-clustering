@@ -88,7 +88,8 @@ namespace CalcTests
                     },
                 }
             };
-            var modeledPoints = AgglomerativeHierarchicalClusteringService.GetModel(new List<Point>()
+            
+            var modeledPoints = new AgglomerativeHierarchicalClusteringService().GetModel(new List<Point>()
             {
                 firstPoint, secondPoint, thirdPoint
             });
@@ -166,7 +167,7 @@ namespace CalcTests
                 }
             };
 
-            var recordedClusters = AgglomerativeHierarchicalClusteringService.RecordClusters(clusters);
+            var recordedClusters = new AgglomerativeHierarchicalClusteringService().RecordClusters(clusters);
             // TODO
             Assert.IsTrue(true);
         }
@@ -218,8 +219,8 @@ namespace CalcTests
                 firstCluster, secondCluster, thirdCluster
             };
 
-            var mergedClusters =
-                AgglomerativeHierarchicalClusteringService
+            var mergedClusters = new
+                AgglomerativeHierarchicalClusteringService()
                     .MergeClusters<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>(clusters,
                         secondCluster, thirdCluster)
                     .ToList();
@@ -303,7 +304,7 @@ namespace CalcTests
                 }
             };
 
-            var actualClusterDistances = AgglomerativeHierarchicalClusteringService
+            var actualClusterDistances = new AgglomerativeHierarchicalClusteringService()
                 .GetClusterDistances<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>(
                     new List<Cluster<AgglomerativeHierarchicalClusterPoint>>()
                     {
@@ -346,7 +347,7 @@ namespace CalcTests
                 new Point() {HorizontalDisplacement = 2, VerticalDisplacement = 3},
             };
 
-            var actualClusters = AgglomerativeHierarchicalClusteringService.ConvertPointsToClusters(points).ToList();
+            var actualClusters = new AgglomerativeHierarchicalClusteringService().ConvertPointsToClusters(points).ToList();
             var expectedClusters = new List<Cluster<AgglomerativeHierarchicalClusterPoint>>()
             {
                 new Cluster<AgglomerativeHierarchicalClusterPoint>()
@@ -398,7 +399,7 @@ namespace CalcTests
                 VerticalDisplacement = secondVerticalDisplacement
             };
 
-            var distance = AgglomerativeHierarchicalClusteringService.GetDistance(startingPoint, endingPoint);
+            var distance = new AgglomerativeHierarchicalClusteringService().GetDistance(startingPoint, endingPoint);
             Assert.AreEqual(distance, expectedDistance);
         }
     }

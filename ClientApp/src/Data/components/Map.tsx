@@ -20,7 +20,7 @@ export const Map: React.ComponentClass<Props> = compose(
 		googleMapURL,
 		loadingElement: <div style={{ height: `100%` }} />,
 		containerElement: (
-			<div style={{ height: `850px`, width: '100%', display: 'block' }} />
+			<div style={{ height: '580px', width: '100%', display: 'block' }} />
 		),
 		mapElement: <div style={{ height: `100%` }} />
 	}),

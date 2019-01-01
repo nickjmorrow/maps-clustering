@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Calc.Models;
 
-namespace WebApplication.Models
+namespace Calc.Models
 {
     public class DbscanConfig
     {

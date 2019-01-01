@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Calc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,8 @@ namespace WebApplication
             services.AddScoped<WizardService, WizardService>();
             services.AddScoped<MagicItemService, MagicItemService>();
             services.AddScoped<FileHandlerService, FileHandlerService>();
+            services
+                .AddScoped<AgglomerativeHierarchicalClusteringService, AgglomerativeHierarchicalClusteringService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
