@@ -6,23 +6,15 @@ using Calc.Models;
 namespace Calc
 {
     public class DbscanService
-    {
+    {        
         public IEnumerable<ClusteredPoint> GetModel(DbscanConfig dbscanConfig)
         {
             var points = dbscanConfig.Points;
             var maximumDistanceBetweenPoints = dbscanConfig.MaximumDistanceBetweenPoints;
             var minimumPointsPerCluster = dbscanConfig.MinimumPointsPerCluster;
-
-            var unclusteredPoints = points.Select(p => new ClusteredPoint()
-            {
-                PointId = p.PointId,
-                HorizontalDisplacement = p.HorizontalDisplacement,
-                VerticalDisplacement = p.VerticalDisplacement,
-                Name = p.Name,
-                ClusterId = null,
-                IsVisited = false
-            });
-            return this.GetModelInternal(unclusteredPoints, maximumDistanceBetweenPoints, minimumPointsPerCluster);
+            
+            return this.GetModelInternal(this.ConvertToClusteredPoints(points), maximumDistanceBetweenPoints, 
+                minimumPointsPerCluster);
             
             // 1. begin: pick random unvisited point
             
@@ -69,7 +61,7 @@ namespace Calc
         /// Choose an unclustered point that qualifies as a cluster and continue to assign other points to clusters
         /// until there are no more unvisited unclustered points that remain.
         /// </summary>
-        public IEnumerable<ClusteredPoint> AssignPointsToClusters(
+        internal IEnumerable<ClusteredPoint> AssignPointsToClusters(
             IEnumerable<ClusteredPoint> points, 
             int maximumDistanceBetweenPoints, 
             int minimumPointsPerCluster, 
@@ -77,8 +69,11 @@ namespace Calc
         {
             var unclusteredUnvisitedPoint = points.First(p => !p.ClusterId.HasValue && !p.IsVisited);
             var nearbyPoints = this.GetNearbyPoints(unclusteredUnvisitedPoint, points, maximumDistanceBetweenPoints);
-            var pointsComprisingCluster = nearbyPoints.Concat(new List<ClusteredPoint>() { unclusteredUnvisitedPoint });
+            var pointsComprisingCluster = nearbyPoints.Concat(new List<ClusteredPoint>() {unclusteredUnvisitedPoint})
+                .ToList();
 
+            // if point can't be made the start of a cluster, then mark it as visited
+            // and recurse
             if (pointsComprisingCluster.Count() <= minimumPointsPerCluster)
             {
                 var pointsWithVisitedPoint = points.Where(p => p.PointId != unclusteredUnvisitedPoint.PointId).Concat(
@@ -99,7 +94,7 @@ namespace Calc
             }
             
             
-            // assign all points to a cluster
+            // assign all nearby points to a cluster
             var pointIdsComprisingCluster = pointsComprisingCluster.Select(pcc => pcc.PointId);
             var processedPointsComprisingCluster = pointsComprisingCluster.Select(pcd => new ClusteredPoint()
             {
@@ -115,8 +110,11 @@ namespace Calc
 
             return this.VisitClusteredUnvisitedPoints(newPoints, maximumDistanceBetweenPoints, minimumPointsPerCluster);
         }
-
-        public IEnumerable<ClusteredPoint> VisitClusteredUnvisitedPoints(IEnumerable<ClusteredPoint> points, 
+           
+        /// <summary>
+        /// Given a clustered point, continues to add nearby points until there are none left.
+        /// </summary>
+        internal IEnumerable<ClusteredPoint> VisitClusteredUnvisitedPoints(IEnumerable<ClusteredPoint> points, 
             int maximiumDistanceBetweenPoints, int minimumPointsPerCluster)
         {
             var clusteredUnvisitedPoint = points.FirstOrDefault(p => p.ClusterId.HasValue && !p.IsVisited);
@@ -174,10 +172,58 @@ namespace Calc
                 minimumPointsPerCluster);
         }
 
-        public IEnumerable<ClusteredPoint> GetNearbyPoints(ClusteredPoint point, IEnumerable<ClusteredPoint> allPoints,
+        /// <summary>
+        /// Returns points with a distance less than maximumDistanceBetweenPoints from a specific point. Does not
+        /// return the specific point.
+        /// </summary>
+        internal IEnumerable<ClusteredPoint> GetNearbyPoints(ClusteredPoint point, IEnumerable<ClusteredPoint> allPoints,
             int maximumDistanceBetweenPoints)
         {
-            throw new NotImplementedException();
+            var nearbyPointIds = this.GetPointDistances(point, allPoints)
+                .Where(pd => pd.Distance < maximumDistanceBetweenPoints)
+                .Where(pd => pd.Point.PointId != point.PointId)
+                .Select(pd => pd.Point.PointId);
+
+            return allPoints.Where(p => nearbyPointIds.Contains(p.PointId));
+
+        }
+
+        /// <summary>
+        /// Returns a list of objects that give the distance between each point and a specific point.
+        /// </summary>
+        internal IEnumerable<PointDistance> GetPointDistances(Point point, IEnumerable<Point> points)
+        {
+            return points.Select(p =>
+            {
+                var horizontalDifference = Math.Abs(point.HorizontalDisplacement - p.HorizontalDisplacement);
+                var verticalDifference = Math.Abs(point.VerticalDisplacement - p.VerticalDisplacement);
+                var squaredDistance = Math.Pow(horizontalDifference, 2) + Math.Pow(verticalDifference, 2);
+                var actualDistance = Math.Pow(squaredDistance, 0.5);
+                return new PointDistance()
+                {
+                    Point = p,
+                    Distance = actualDistance
+                };
+            });
+        }
+        
+        internal IEnumerable<ClusteredPoint> ConvertToClusteredPoints(IEnumerable<Point> points)
+        {
+            return points.Select(p => new ClusteredPoint()
+            {
+                PointId = p.PointId,
+                HorizontalDisplacement = p.HorizontalDisplacement,
+                VerticalDisplacement = p.VerticalDisplacement,
+                Name = p.Name,
+                ClusterId = null,
+                IsVisited = false
+            });
+        }
+
+        internal class PointDistance
+        {
+            public Point Point { get; set; }
+            public double Distance { get; set; }
         }
     }
 }
