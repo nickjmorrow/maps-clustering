@@ -68,7 +68,12 @@ namespace Calc
             int minimumPointsPerCluster, 
             int clusterId)
         {
-            var unclusteredUnvisitedPoint = points.First(p => !p.ClusterId.HasValue && !p.IsVisited);
+            var unclusteredUnvisitedPoint = points.FirstOrDefault(p => !p.ClusterId.HasValue && !p.IsVisited);
+
+            if (unclusteredUnvisitedPoint == null)
+            {
+                return points;
+            }
             var nearbyPoints = this.GetNearbyPoints(unclusteredUnvisitedPoint, points, maximumDistanceBetweenPoints);
             var pointsComprisingCluster = nearbyPoints.Concat(new List<ClusteredPoint>() {unclusteredUnvisitedPoint})
                 .ToList();
