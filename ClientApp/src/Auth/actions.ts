@@ -4,7 +4,7 @@ import {
 	IRegisterInfo
 } from 'njm-react-component-library/lib/types';
 import { IUser, userFavoriteItemId } from './types';
-import { error } from 'src/Core/types';
+import { error } from './types';
 
 export enum authTypeKeys {
 	LOGIN = 'LOGIN',
