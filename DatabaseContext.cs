@@ -21,6 +21,10 @@ namespace WebApplication
         public DbSet<Spell> Spells { get; set; }
         public DbSet<SpellType> SpellTypes { get; set; }
         public DbSet<MagicItem> MagicItems { get; set; }
+        public DbSet<UserItem> UserItems { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<UserFavoriteItem> UserFavoriteItems { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +38,8 @@ namespace WebApplication
                 .HasOne(ws => ws.Wizard)
                 .WithMany(ws => ws.WizardSpells)
                 .HasForeignKey(ws => ws.WizardId);
+            modelBuilder.Entity<UserFavoriteItem>()
+                .HasKey(ufi => new {ufi.ItemId, ufi.UserId});
         }
     }
 }

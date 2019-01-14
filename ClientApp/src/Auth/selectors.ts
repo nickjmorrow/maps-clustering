@@ -11,6 +11,6 @@ export const isInFavoritedItemIds = (
 ): boolean =>
 	state.auth.favoritedItemIds.find(ii => ii === itemId) !== undefined;
 
-export const isAuthorized = (state: IReduxState): boolean => {
+export const isAuthenticatedSelector = (state: IReduxState): boolean => {
 	return state.auth.user !== null && state.auth.user.userId !== null;
 };

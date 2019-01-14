@@ -1,37 +1,73 @@
-import {
-	AppBar as GenericAppBar,
-	Button,
-	Typography
-} from 'njm-react-component-library';
+import { PopulatedAppBar as GenericAppBar } from 'njm-react-component-library';
 import * as React from 'react';
-import styled from 'styled-components';
-import { labeledRoutes } from '../constants';
+import { connect } from 'react-redux';
+import { isAuthenticatedSelector } from 'src/Auth/selectors';
+import { IReduxState } from 'src/reducer';
+import { AuthModal, LogOutModal } from 'src/Auth';
 
-export const AppBar: React.SFC = () => {
-	return (
-		<GenericAppBar>
+export class AppBarInternal extends React.PureComponent<IProps, IOwnState> {
+	readonly state = initialState;
+
+	handleToggleAuthModal = () =>
+		this.setState(prevState => {
+			const x = {
+				isAuthModalOpen: !prevState.isAuthModalOpen
+			};
+			console.log(x);
+			return x;
+		});
+
+	handleToggleLogOutModal = () =>
+		this.setState(prevState => ({
+			isLogOutModalOpen: !prevState.isLogOutModalOpen
+		}));
+
+	render() {
+		const { isAuthModalOpen, isLogOutModalOpen } = this.state;
+		const { isAuthenticated } = this.props;
+		return (
 			<div>
-				<Typography variant="h2" color="light">
-					Location Clusterer
-				</Typography>
+				<GenericAppBar
+					links={[]}
+					appName={'Location Clusterer'}
+					isAuthenticated={isAuthenticated}
+					onLogInClick={this.handleToggleAuthModal}
+					onRegisterClick={this.handleToggleAuthModal}
+					onLogOutClick={this.handleToggleLogOutModal}
+				/>
+				<AuthModal
+					isOpen={isAuthModalOpen}
+					handleToggleIsOpen={this.handleToggleAuthModal}
+				/>
+				<LogOutModal
+					isOpen={isLogOutModalOpen}
+					onRequestClose={this.handleToggleLogOutModal}
+				/>
 			</div>
-			<ButtonWrapper>{linkButtons}</ButtonWrapper>
-		</GenericAppBar>
-	);
+		);
+	}
+}
+
+// types
+interface IReduxProps {
+	isAuthenticated: boolean;
+}
+
+const initialState = {
+	isAuthModalOpen: false,
+	isLogOutModalOpen: false
 };
 
-const linkButtons = labeledRoutes.map(e => (
-	<Button
-		key={e.path}
-		path={e.path}
-		onClick={() => {
-			return;
-		}}>
-		{e.label}
-	</Button>
-));
+type IOwnState = typeof initialState;
 
-const ButtonWrapper = styled.div`
-	display: flex;
-	flex-direction: row;
-`;
+type IProps = IReduxProps;
+
+// redux
+const mapStateToProps = (state: IReduxState): IReduxProps => ({
+	isAuthenticated: isAuthenticatedSelector(state)
+});
+
+export const AppBar = connect(
+	mapStateToProps,
+	null
+)(AppBarInternal);

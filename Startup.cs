@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Warlock.Services;
 using WebApplication.Helpers;
 using WebApplication.Services;
 
@@ -82,6 +83,8 @@ namespace WebApplication
             services.AddScoped<FileHandlerService, FileHandlerService>();
             services
                 .AddScoped<AgglomerativeHierarchicalClusteringService, AgglomerativeHierarchicalClusteringService>();
+            services.AddScoped<UserService, UserService>();
+            services.AddScoped<UserItemService, UserItemService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,37 +8,23 @@ import { getMapData } from '../Data';
 import { AppBar } from './AppBar';
 import { MapForm } from './MapForm';
 import { MapPage } from '../Data/components/MapPage';
+import { routes } from '../Core/constants';
 
 export class LandingInternal extends React.Component<IDispatchProps, {}> {
-	handleClick = async (inputs: IInputInfo[]) => {
-		const fileList = inputs.find(i => i.name === 'Map File')!
-			.value as FileList;
-		if (fileList.length) {
-			const formData = new FormData();
-			formData.append('file', fileList[0]);
-			this.props.getMapData(formData);
-		}
-	};
-
 	render() {
+		const renderedRoutes = routes.map(r => (
+			<Route
+				exact={true}
+				key={r.route}
+				path={r.route}
+				component={r.component}
+			/>
+		));
 		return (
 			<BrowserRouter>
 				<Wrapper>
 					<AppBar />
-					<Switch>
-						<Route
-							exact={true}
-							path="/form"
-							render={() => (
-								<MapForm onClick={this.handleClick} />
-							)}
-						/>
-						<Route
-							exact={true}
-							path="/map"
-							render={() => <MapPage />}
-						/>
-					</Switch>
+					<Switch>{renderedRoutes}</Switch>
 				</Wrapper>
 			</BrowserRouter>
 		);

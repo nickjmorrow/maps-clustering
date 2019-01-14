@@ -27,7 +27,8 @@ export const authReducer = (
 			addToLocalStorage(action.payload, USER);
 			return {
 				...state,
-				user: action.payload
+				user: action.payload,
+				error: null
 			};
 		case authTypeKeys.LOGIN_FAILED:
 			return {
@@ -37,7 +38,8 @@ export const authReducer = (
 		case authTypeKeys.REGISTER_SUCCEEDED:
 			return {
 				...state,
-				user: action.payload
+				user: action.payload,
+				error: null
 			};
 		case authTypeKeys.REGISTER_FAILED:
 			return {
