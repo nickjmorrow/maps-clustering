@@ -4,18 +4,15 @@ import { connect } from 'react-redux';
 import { isAuthenticatedSelector } from 'src/Auth/selectors';
 import { IReduxState } from 'src/reducer';
 import { AuthModal, LogOutModal } from 'src/Auth';
+import { routes } from 'src/Core/constants';
 
 export class AppBarInternal extends React.PureComponent<IProps, IOwnState> {
 	readonly state = initialState;
 
 	handleToggleAuthModal = () =>
-		this.setState(prevState => {
-			const x = {
-				isAuthModalOpen: !prevState.isAuthModalOpen
-			};
-			console.log(x);
-			return x;
-		});
+		this.setState(prevState => ({
+			isAuthModalOpen: !prevState.isAuthModalOpen
+		}));
 
 	handleToggleLogOutModal = () =>
 		this.setState(prevState => ({
@@ -29,6 +26,7 @@ export class AppBarInternal extends React.PureComponent<IProps, IOwnState> {
 			<div>
 				<GenericAppBar
 					links={[]}
+					authenticatedButtonProps={routes}
 					appName={'Location Clusterer'}
 					isAuthenticated={isAuthenticated}
 					onLogInClick={this.handleToggleAuthModal}

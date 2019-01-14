@@ -1,4 +1,6 @@
 import Axios from 'axios';
+import { Point } from 'src/Data';
+import { IUser } from './types';
 
 export const addToLocalStorage = (value: object, key: string) => {
 	localStorage.setItem(key, JSON.stringify(value));
@@ -22,3 +24,13 @@ export const getFromLocalStorage = (key: string) =>
 
 export const removeFromLocalStorage = (key: string) =>
 	localStorage.removeItem(key);
+
+export const populateStateFromLocalStorageIfAvailable = (
+	dispatchFunc: (val: IUser | Point[]) => void,
+	key: string
+) => {
+	if (isInLocalStorage(key)) {
+		const value = JSON.parse(getFromLocalStorage(key));
+		return dispatchFunc(value);
+	}
+};

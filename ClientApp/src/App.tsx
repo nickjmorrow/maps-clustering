@@ -1,28 +1,33 @@
 import * as React from 'react';
-import { Landing } from '.';
-import { Point } from './Data/types';
 import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
-import { getMapDataSucceeded } from './Data';
+import { bindActionCreators, Dispatch } from 'redux';
+import { Landing } from '.';
+import {
+	IUser,
+	populateStateFromLocalStorageIfAvailable,
+	setCurrentUser
+	// USER
+} from './Auth';
+import { getMapDataSucceeded, Point } from './Data';
 
 export class AppInternal extends React.Component<IProps> {
+	componentDidMount = () => {
+		const { onGetMapDataSucceeded } = this.props;
+		// populateStateFromLocalStorageIfAvailable(onSetCurrentUser, USER);
+		populateStateFromLocalStorageIfAvailable(
+			onGetMapDataSucceeded,
+			'points'
+		);
+	};
 	public render() {
-		const handleLocalStorage = () => {
-			if (localStorage.getItem('points') !== null) {
-				const points = JSON.parse(
-					localStorage.getItem('points')!
-				) as Point[];
-				this.props.getMapDataSucceeded(points);
-			}
-		};
-		handleLocalStorage();
 		return <Landing />;
 	}
 }
 
 // types
 interface IDispatchProps {
-	getMapDataSucceeded(points: Point[]): void;
+	onGetMapDataSucceeded(points: Point[]): void;
+	onSetCurrentUser(user: IUser): void;
 }
 type IProps = IDispatchProps;
 
@@ -30,7 +35,8 @@ type IProps = IDispatchProps;
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			getMapDataSucceeded
+			onGetMapDataSucceeded: getMapDataSucceeded,
+			onSetCurrentUser: setCurrentUser
 		},
 		dispatch
 	);
