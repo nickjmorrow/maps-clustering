@@ -6,7 +6,7 @@ import {
 } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ReduxState } from 'src/reducer';
+import { IReduxState } from 'src/reducer';
 import { getColors as getMarkerColors } from 'src/services';
 import styled from 'styled-components';
 import { Clusters, Map, Parameters } from '../';
@@ -90,7 +90,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 }
 
 // redux
-const mapStateToProps = (state: ReduxState): IReduxProps => ({
+const mapStateToProps = (state: IReduxState): IReduxProps => ({
 	points: getPoints(state),
 	agglomerativeHierarchicalClusters: getAgglomerativeHierarchicalClustersFromState(
 		state
