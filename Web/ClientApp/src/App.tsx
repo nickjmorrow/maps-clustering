@@ -4,7 +4,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { Landing } from '.';
 import {
 	IUser,
-	populateStateFromLocalStorageIfAvailable,
+	// populateStateFromLocalStorageIfAvailable,
 	setCurrentUser
 	// USER
 } from './Auth';
@@ -12,12 +12,12 @@ import { getMapDataSucceeded, Point } from './Data';
 
 export class AppInternal extends React.Component<IProps> {
 	componentDidMount = () => {
-		const { onGetMapDataSucceeded } = this.props;
+		// const { onGetMapDataSucceeded } = this.props;
 		// populateStateFromLocalStorageIfAvailable(onSetCurrentUser, USER);
-		populateStateFromLocalStorageIfAvailable(
-			onGetMapDataSucceeded,
-			'points'
-		);
+		// populateStateFromLocalStorageIfAvailable(
+		// 	onGetMapDataSucceeded,
+		// 	'points'
+		// );
 	};
 	public render() {
 		return <Landing />;

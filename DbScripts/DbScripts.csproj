@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="dbup4-core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=4b419c53bdfd4cbf">
+        <HintPath>..\..\..\.nuget\packages\dbup4-core\4.0.0-beta0003\lib\netstandard1.3\dbup4-core.dll</HintPath>
+      </Reference>
+      <Reference Include="dbup4-sqlserver, Version=4.0.0.0, Culture=neutral, PublicKeyToken=4b419c53bdfd4cbf">
+        <HintPath>..\..\..\.nuget\packages\dbup4-sqlserver\4.0.0-beta0003\lib\netstandard1.3\dbup4-sqlserver.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Scripts\MyFirstScript.sql" />
+      <EmbeddedResource Include="Scripts\MyFirstScript.sql" />
+    </ItemGroup>
+
+</Project>
