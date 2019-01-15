@@ -30,7 +30,7 @@ export const populateStateFromLocalStorageIfAvailable = (
 	key: string
 ) => {
 	if (isInLocalStorage(key)) {
-		const value = JSON.parse(getFromLocalStorage(key));
+		const value = getFromLocalStorage(key);
 		return dispatchFunc(value);
 	}
 };

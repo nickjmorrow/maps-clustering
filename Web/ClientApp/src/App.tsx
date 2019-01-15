@@ -4,19 +4,26 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { Landing } from '.';
 import {
 	IUser,
-	// populateStateFromLocalStorageIfAvailable,
-	setCurrentUser
+	populateStateFromLocalStorageIfAvailable,
+	setCurrentUser,
+	USER
 	// USER
 } from './Auth';
 import { getMapDataSucceeded, Point } from './Data';
 
 export class AppInternal extends React.Component<IProps> {
 	componentDidMount = () => {
-		// const { onGetMapDataSucceeded } = this.props;
-		// populateStateFromLocalStorageIfAvailable(onSetCurrentUser, USER);
+		const { onSetCurrentUser } = this.props;
+		populateStateFromLocalStorageIfAvailable(onSetCurrentUser, USER);
 
-		if (localStorage.getItem('user')) {
-			console.log(JSON.parse(localStorage.getItem('user')!));
+		// if (localStorage.getItem(USER)) {
+		// 	const user = JSON.parse(localStorage.getItem(USER)!);
+		// 	this.props.onSetCurrentUser(user);
+		// }
+
+		if (localStorage.getItem('points')) {
+			const points = JSON.parse(localStorage.getItem('points')!);
+			this.props.onGetMapDataSucceeded(points);
 		}
 		// populateStateFromLocalStorageIfAvailable(
 		// 	onGetMapDataSucceeded,
