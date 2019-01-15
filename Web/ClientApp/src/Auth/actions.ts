@@ -24,7 +24,9 @@ export enum authTypeKeys {
 	FAVORITE_ITEM_FAILED = 'FAVORITE_ITEM_FAILED',
 	GET_USER_FAVORITE_ITEMS = 'GET_USER_FAVORITE_ITEMS',
 	GET_USER_FAVORITE_ITEMS_SUCCEEDED = 'GET_USER_FAVORITE_ITEMS_SUCCEEDED',
-	GET_USER_FAVORITE_ITEMS_FAILED = 'GET_USER_FAVORITE_ITEMS_FAILED'
+	GET_USER_FAVORITE_ITEMS_FAILED = 'GET_USER_FAVORITE_ITEMS_FAILED',
+	POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE = 'POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE',
+	POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED'
 }
 
 export type ActionTypes =
@@ -45,7 +47,9 @@ export type ActionTypes =
 	| IFavoriteItemActionFailed
 	| IGetUserFavoriteItemsAction
 	| IGetUserFavoriteItemsActionSucceeded
-	| IGetUserFavoriteItemsActionFailed;
+	| IGetUserFavoriteItemsActionFailed
+	| IPopulateUserStateFromLocalStorageIfAvailableAction
+	| IPopulateUserStateFromLocalStorageIfAvailableActionSucceeded;
 
 export const handleLogin = (loginInfo: ILoginInfo): IHandleLoginAction =>
 	action(authTypeKeys.LOGIN, loginInfo);
@@ -67,6 +71,9 @@ export const getUserFavoriteItems = (
 	userId: number
 ): IGetUserFavoriteItemsAction =>
 	action(authTypeKeys.GET_USER_FAVORITE_ITEMS, userId);
+
+export const populateUserStateFromLocalStorageIfAvailable = () =>
+	action(authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
 
 export interface IHandleLoginAction {
 	type: authTypeKeys.LOGIN;
@@ -152,4 +159,13 @@ export interface IGetUserFavoriteItemsActionSucceeded {
 export interface IGetUserFavoriteItemsActionFailed {
 	type: authTypeKeys.GET_USER_FAVORITE_ITEMS_FAILED;
 	payload: string;
+}
+
+export interface IPopulateUserStateFromLocalStorageIfAvailableAction {
+	type: authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE;
+}
+
+export interface IPopulateUserStateFromLocalStorageIfAvailableActionSucceeded {
+	type: authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED;
+	payload: IUser;
 }

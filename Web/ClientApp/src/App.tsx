@@ -2,33 +2,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { Landing } from '.';
-import {
-	IUser,
-	populateStateFromLocalStorageIfAvailable,
-	setCurrentUser,
-	USER
-	// USER
-} from './Auth';
-import { getMapDataSucceeded, Point } from './Data';
+import { populateUserStateFromLocalStorageIfAvailable } from './Auth';
+import { populatePointsStateFromLocalStorageIfAvailable } from './Data';
 
 export class AppInternal extends React.Component<IProps> {
 	componentDidMount = () => {
-		const { onSetCurrentUser } = this.props;
-		populateStateFromLocalStorageIfAvailable(onSetCurrentUser, USER);
-
-		// if (localStorage.getItem(USER)) {
-		// 	const user = JSON.parse(localStorage.getItem(USER)!);
-		// 	this.props.onSetCurrentUser(user);
-		// }
-
-		if (localStorage.getItem('points')) {
-			const points = JSON.parse(localStorage.getItem('points')!);
-			this.props.onGetMapDataSucceeded(points);
-		}
-		// populateStateFromLocalStorageIfAvailable(
-		// 	onGetMapDataSucceeded,
-		// 	'points'
-		// );
+		const {
+			onPopulateUserStateFromLocalStorageIfAvailable,
+			onPopulatePointsStateFromLocalStorageIfAvailable
+		} = this.props;
+		onPopulateUserStateFromLocalStorageIfAvailable();
+		onPopulatePointsStateFromLocalStorageIfAvailable();
 	};
 	public render() {
 		return <Landing />;
@@ -37,8 +21,8 @@ export class AppInternal extends React.Component<IProps> {
 
 // types
 interface IDispatchProps {
-	onGetMapDataSucceeded(points: Point[]): void;
-	onSetCurrentUser(user: IUser): void;
+	onPopulatePointsStateFromLocalStorageIfAvailable(): void;
+	onPopulateUserStateFromLocalStorageIfAvailable(): void;
 }
 type IProps = IDispatchProps;
 
@@ -46,8 +30,8 @@ type IProps = IDispatchProps;
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			onGetMapDataSucceeded: getMapDataSucceeded,
-			onSetCurrentUser: setCurrentUser
+			onPopulatePointsStateFromLocalStorageIfAvailable: populatePointsStateFromLocalStorageIfAvailable,
+			onPopulateUserStateFromLocalStorageIfAvailable: populateUserStateFromLocalStorageIfAvailable
 		},
 		dispatch
 	);

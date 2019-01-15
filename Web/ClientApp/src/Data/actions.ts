@@ -6,6 +6,7 @@ import {
 	DbscanConfig,
 	ClusteredPoint
 } from './types';
+import { authTypeKeys } from 'src/Auth';
 
 export enum dataTypeKeys {
 	GET_DATA = 'GET_DATA',
@@ -16,7 +17,9 @@ export enum dataTypeKeys {
 	GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED',
 	GET_DBSCAN = 'GET_DBSCAN',
 	GET_DBSCAN_SUCCEEDED = 'GET_DBSCAN_SUCCEEDED',
-	GET_DBSCAN_FAILED = 'GET_DBSCAN_FAILED'
+	GET_DBSCAN_FAILED = 'GET_DBSCAN_FAILED',
+	POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE = 'POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE',
+	POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED'
 }
 
 export const getMapData = (payload: FormData): GetMapPointsAction =>
@@ -56,6 +59,9 @@ export const getDbscan = {
 		action(dataTypeKeys.GET_DBSCAN_FAILED, payload)
 };
 
+export const populatePointsStateFromLocalStorageIfAvailable = () =>
+	action(authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
+
 export type ActionTypes =
 	| GetMapPointsAction
 	| GetMapPointsSucceededAction
@@ -65,7 +71,9 @@ export type ActionTypes =
 	| GetAgglomerativeHierarchicalClustersFailedAction
 	| GetDbscanAction
 	| GetDbscanSucceededAction
-	| GetDbscanFailedAction;
+	| GetDbscanFailedAction
+	| IPopulatePointsStateFromLocalStorageIfAvailable
+	| IPopulatePointsStateFromLocalStorageIfAvailableSucceeded;
 
 export interface GetMapPointsAction {
 	type: dataTypeKeys.GET_DATA;
@@ -110,4 +118,13 @@ export interface GetDbscanSucceededAction {
 export interface GetDbscanFailedAction {
 	type: dataTypeKeys.GET_DBSCAN_FAILED;
 	payload: string;
+}
+
+export interface IPopulatePointsStateFromLocalStorageIfAvailable {
+	type: dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE;
+}
+
+export interface IPopulatePointsStateFromLocalStorageIfAvailableSucceeded {
+	type: dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED;
+	payload: Point[];
 }

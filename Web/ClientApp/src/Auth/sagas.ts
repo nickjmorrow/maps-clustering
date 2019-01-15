@@ -55,7 +55,7 @@ function* handleLoginAsync(action: IHandleLoginAction) {
 	}
 }
 
-export function* watchHandleLogin() {
+function* watchHandleLogin() {
 	yield takeLatest(authTypeKeys.LOGIN, handleLoginAsync);
 }
 
@@ -70,7 +70,7 @@ function* handleRegisterAsync(action: IHandleRegisterAction) {
 	}
 }
 
-export function* watchHandleRegister() {
+function* watchHandleRegister() {
 	yield takeLatest(authTypeKeys.REGISTER, handleRegisterAsync);
 }
 
@@ -86,7 +86,7 @@ function* handleLogOutLocalStorage() {
 	}
 }
 
-export function* watchHandleLogOutLocalStorage() {
+function* watchHandleLogOutLocalStorage() {
 	yield takeLatest(authTypeKeys.LOGOUT, handleLogOutLocalStorage);
 }
 
@@ -103,11 +103,11 @@ function* handleToggleFavoriteItemAsync(action: IFavoriteItemAction) {
 	}
 }
 
-export function* watchHandleToggleFavoriteItem() {
+function* watchHandleToggleFavoriteItem() {
 	yield takeLatest(authTypeKeys.FAVORITE_ITEM, handleToggleFavoriteItemAsync);
 }
 
-export function* handleSetCurrentUser(action: ISetCurrentUserAction) {
+function* handleSetCurrentUser(action: ISetCurrentUserAction) {
 	try {
 		addTokenToDefaultHeader(action.payload.token);
 		const user = getFromLocalStorage(USER);
@@ -120,8 +120,31 @@ export function* handleSetCurrentUser(action: ISetCurrentUserAction) {
 	}
 }
 
-export function* watchHandleSetCurrentUser() {
+function* watchHandleSetCurrentUser() {
 	yield takeLatest(authTypeKeys.SET_CURRENT_USER, handleSetCurrentUser);
+}
+
+function* handlePopulateUserStateFromLocalStorageIfAvailable() {
+	try {
+		if (localStorage.getItem(USER) !== null) {
+			const user = JSON.parse(localStorage.getItem(USER)!);
+			yield put(
+				typesafeAction(
+					authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
+					user
+				)
+			);
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+function* watchHandlePopulateUserStateFromLocalStorageIfAvailable() {
+	yield takeLatest(
+		authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE,
+		handlePopulateUserStateFromLocalStorageIfAvailable
+	);
 }
 
 export const sagas = [
@@ -130,5 +153,6 @@ export const sagas = [
 	watchHandleToggleFavoriteItem,
 	watchGetUserFavoriteItems,
 	watchHandleSetCurrentUser,
-	watchHandleLogOutLocalStorage
+	watchHandleLogOutLocalStorage,
+	watchHandlePopulateUserStateFromLocalStorageIfAvailable
 ];

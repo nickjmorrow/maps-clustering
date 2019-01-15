@@ -41,6 +41,8 @@ export const dataReducer = (
 			return { ...state, dbscan: action.payload };
 		case dataTypeKeys.GET_DBSCAN_FAILED:
 			return { ...state, error: action.payload };
+		case dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
+			return { ...state, points: action.payload };
 		default:
 			return state;
 	}

@@ -67,6 +67,12 @@ export const authReducer = (
 				user: null,
 				favoritedItemIds: []
 			};
+		case authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED: {
+			return {
+				...state,
+				user: action.payload
+			};
+		}
 		default:
 			return state;
 	}

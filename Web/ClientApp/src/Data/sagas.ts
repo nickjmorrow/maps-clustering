@@ -81,8 +81,32 @@ function* getDbscanAsync(action: GetDbscanAction) {
 	}
 }
 
+function* handlePopulatePointsFromLocalStorageIfAvailable() {
+	try {
+		const points = localStorage.getItem(localStorage.points);
+		if (points !== null) {
+			yield put(
+				typesafeAction(
+					dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
+					points
+				)
+			);
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+function* watchHandlePopulatePointsFromLocalStorageIfAvailable() {
+	yield takeLatest(
+		dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE,
+		handlePopulatePointsFromLocalStorageIfAvailable
+	);
+}
+
 export const sagas = [
 	watchGetMapData,
 	watchGetAgglomerativeHierarchicalClusters,
-	watchGetDbscan
+	watchGetDbscan,
+	watchHandlePopulatePointsFromLocalStorageIfAvailable
 ];
