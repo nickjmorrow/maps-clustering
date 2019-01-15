@@ -14,6 +14,10 @@ export class AppInternal extends React.Component<IProps> {
 	componentDidMount = () => {
 		// const { onGetMapDataSucceeded } = this.props;
 		// populateStateFromLocalStorageIfAvailable(onSetCurrentUser, USER);
+
+		if (localStorage.getItem('user')) {
+			console.log(JSON.parse(localStorage.getItem('user')!));
+		}
 		// populateStateFromLocalStorageIfAvailable(
 		// 	onGetMapDataSucceeded,
 		// 	'points'
