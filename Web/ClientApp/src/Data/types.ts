@@ -31,3 +31,8 @@ export interface DbscanConfig {
 	minimumPointsPerCluster: number;
 	maximumDistanceBetweenPoints: number;
 }
+
+export interface IPointsGroup {
+	pointsGroupId: number;
+	pointsGroupName: string;
+}

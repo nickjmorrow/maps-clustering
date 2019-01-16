@@ -36,6 +36,8 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	handleClusterTypeChange = (currentClusterOption: IClusterOption) =>
 		this.setState({ currentClusterOption });
 
+	handlePointsChange = (option: IOption) => alert('hey');
+
 	render() {
 		const { points } = this.props;
 		const {
@@ -58,6 +60,17 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 				<MapControls>
 					<InfoPanel>
 						<Typography variant="h1">Parameters</Typography>
+						<Typography variant="h2">Points</Typography>
+						{/* <Select 
+                            options={[{
+                                value: 'red', label: 'RED'
+                            }]}
+                            onChange={this.handlePointsChange)}
+                            currentOption={{
+                                value: 'red', label: 'RED'
+                            }}
+                            removeNoneOptionAfterSelection={true}
+                        /> */}
 						<Typography variant="h2">Cluster Type</Typography>
 						<Select
 							options={clusterOptions}

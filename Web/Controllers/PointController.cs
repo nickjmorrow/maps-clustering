@@ -31,5 +31,7 @@ namespace WebApplication.Controllers
         {
             return Ok(await this._pointService.AddPointsAsync(this._userId, points));
         }
+        
+        
     }
 }

@@ -7,7 +7,13 @@ import {
 	GetAgglomerativeHierarchicalClustersAction,
 	GetDbscanAction
 } from './actions';
-import { fileApi, localStorageKeys, formHeaders, calcApi } from './constants';
+import {
+	fileApi,
+	localStorageKeys,
+	formHeaders,
+	calcApi,
+	pointsApi
+} from './constants';
 
 function* watchGetMapData() {
 	yield takeLatest(dataTypeKeys.GET_DATA, getMapDataAsync);
@@ -104,9 +110,28 @@ function* watchHandlePopulatePointsFromLocalStorageIfAvailable() {
 	);
 }
 
+function* handleGetPointsGroupsAsync() {
+	try {
+		const { data } = yield call(axios.get, pointsApi.getPoints);
+		yield put(
+			typesafeAction(dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED, data)
+		);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+function* watchHandleGetPointsGroupsAsync() {
+	yield takeLatest(
+		dataTypeKeys.GET_POINTS_GROUPS,
+		handleGetPointsGroupsAsync
+	);
+}
+
 export const sagas = [
 	watchGetMapData,
 	watchGetAgglomerativeHierarchicalClusters,
 	watchGetDbscan,
-	watchHandlePopulatePointsFromLocalStorageIfAvailable
+	watchHandlePopulatePointsFromLocalStorageIfAvailable,
+	watchHandleGetPointsGroupsAsync
 ];

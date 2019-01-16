@@ -4,6 +4,7 @@ import {
 	AgglomerativeHierarchicalClusterPoint,
 	ClusteredPoint,
 	DbscanConfig,
+	IPointsGroup,
 	Point
 } from './types';
 
@@ -18,7 +19,9 @@ export enum dataTypeKeys {
 	GET_DBSCAN_SUCCEEDED = 'GET_DBSCAN_SUCCEEDED',
 	GET_DBSCAN_FAILED = 'GET_DBSCAN_FAILED',
 	POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE = 'POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE',
-	POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED'
+	POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED',
+	GET_POINTS_GROUPS = 'GET_POINTS_GROUPS',
+	GET_POINTS_GROUPS_SUCCEEDED = 'GET_POINTS_GROUPS_SUCCEEDED'
 }
 
 export const getMapData = (payload: FormData): GetMapPointsAction =>
@@ -58,6 +61,13 @@ export const getDbscan = {
 		action(dataTypeKeys.GET_DBSCAN_FAILED, payload)
 };
 
+export const getPointsGroups = {
+	request: (): IGetPointsGroupsAction =>
+		action(dataTypeKeys.GET_POINTS_GROUPS),
+	success: (payload: IPointsGroup[]): IGetPointsGroupsActionSucceeded =>
+		action(dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED, payload)
+};
+
 export const populatePointsStateFromLocalStorageIfAvailable = () =>
 	action(dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
 
@@ -72,7 +82,9 @@ export type ActionTypes =
 	| GetDbscanSucceededAction
 	| GetDbscanFailedAction
 	| IPopulatePointsStateFromLocalStorageIfAvailable
-	| IPopulatePointsStateFromLocalStorageIfAvailableSucceeded;
+	| IPopulatePointsStateFromLocalStorageIfAvailableSucceeded
+	| IGetPointsGroupsAction
+	| IGetPointsGroupsActionSucceeded;
 
 export interface GetMapPointsAction {
 	type: dataTypeKeys.GET_DATA;
@@ -126,4 +138,13 @@ export interface IPopulatePointsStateFromLocalStorageIfAvailable {
 export interface IPopulatePointsStateFromLocalStorageIfAvailableSucceeded {
 	type: dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED;
 	payload: Point[];
+}
+
+export interface IGetPointsGroupsAction {
+	type: dataTypeKeys.GET_POINTS_GROUPS;
+}
+
+export interface IGetPointsGroupsActionSucceeded {
+	type: dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED;
+	payload: IPointsGroup[];
 }

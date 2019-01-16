@@ -13,6 +13,12 @@ export enum calcApi {
 	getKMeansClusters = '/api/calc/getKMeansClusters'
 }
 
+const pointController = 'point';
+export const pointsApi = {
+	getPoints: `/api/${pointController}/getPoints`,
+	getPointsGroups: `api/${pointController}/getPointsGroups`
+};
+
 export enum clusterTypes {
 	none = 'none',
 	agglomerativeHierarchicalClusters = 'agglomerativeHierarchicalClusters',

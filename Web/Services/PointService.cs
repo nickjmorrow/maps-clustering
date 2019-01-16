@@ -25,6 +25,8 @@ namespace Web.Services
             this._userItemService = userItemService;
         }
 
+        // TODO: should think in terms of 'points groups', and users can be permissioned to whole groups
+        // it does'nt make sense to keep track of permissioning on a points-level
         public async Task<IEnumerable<Point>> GetPointsAsync(int userId)
         {
             using (var context = this._context)
