@@ -1,12 +1,11 @@
 import { action } from 'typesafe-actions';
 import {
-	Point,
-	AgglomerativeHierarchicalClusterPoint,
 	AgglomerativeHierarchicalClusterConfig,
+	AgglomerativeHierarchicalClusterPoint,
+	ClusteredPoint,
 	DbscanConfig,
-	ClusteredPoint
+	Point
 } from './types';
-import { authTypeKeys } from 'src/Auth';
 
 export enum dataTypeKeys {
 	GET_DATA = 'GET_DATA',
@@ -60,7 +59,7 @@ export const getDbscan = {
 };
 
 export const populatePointsStateFromLocalStorageIfAvailable = () =>
-	action(authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
+	action(dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
 
 export type ActionTypes =
 	| GetMapPointsAction

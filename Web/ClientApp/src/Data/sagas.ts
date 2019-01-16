@@ -83,12 +83,12 @@ function* getDbscanAsync(action: GetDbscanAction) {
 
 function* handlePopulatePointsFromLocalStorageIfAvailable() {
 	try {
-		const points = localStorage.getItem(localStorage.points);
+		const points = localStorage.getItem(localStorageKeys.points);
 		if (points !== null) {
 			yield put(
 				typesafeAction(
 					dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
-					points
+					JSON.parse(points)
 				)
 			);
 		}
