@@ -23,6 +23,7 @@ namespace WebApplication
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<UserFavoriteItem> UserFavoriteItems { get; set; }
         public DbSet<Point> Points { get; set; }
+        public DbSet<PointsGroup> PointsGroups { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

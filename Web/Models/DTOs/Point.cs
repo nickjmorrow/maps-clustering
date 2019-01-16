@@ -9,6 +9,6 @@ namespace WebApplication.Models.DTOs
         public string Name { get; set; }
         public double HorizontalDisplacement { get; set; }
         public double VerticalDisplacement { get; set; }
-        public int ItemId { get; set; }
+        public int PointsGroupId { get; set; }
     }
 }

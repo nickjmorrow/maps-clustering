@@ -6,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Warlock.Services;
 using WebApplication;
-using WebApplication.Enums;
+using WebApplication.Models;
 using WebApplication.Models.DTOs;
+using ItemType = WebApplication.Enums.ItemType;
 
 namespace Web.Services
 {
@@ -27,6 +28,10 @@ namespace Web.Services
 
         // TODO: should think in terms of 'points groups', and users can be permissioned to whole groups
         // it does'nt make sense to keep track of permissioning on a points-level
+        
+        // TODO: create has-many relationship between pointsGroup and points
+        // be able to upload file and save it as a pointsGroup
+        
         public async Task<IEnumerable<Point>> GetPointsAsync(int userId)
         {
             using (var context = this._context)
@@ -44,35 +49,43 @@ namespace Web.Services
             }
         }
 
-        public async Task<IEnumerable<Point>> AddPointsAsync(int userId, IEnumerable<Point> points)
+        public async Task<IEnumerable<Point>> AddPointsAsync(int userId, PointsGroup pointsGroup, IEnumerable<Point> points)
         {
+            var pointsGroupId = await this.AddPointsGroupAsync(userId, pointsGroup);
             using (var context = this._context)
             {
-                await context.Points.AddRangeAsync(points);
+                await context.Points.AddRangeAsync(points.Select(p =>
+                {
+                    p.PointsGroupId = pointsGroupId;
+                    return p;
+                }));
             }
-
-            await this.PopulatePointItemIdsAsync(points);
-
-            await this._userItemService.AddUserItemsAsync(userId, points.Select(p => p.ItemId));
 
             return points;
         }
 
-        private async Task<IEnumerable<Point>> PopulatePointItemIdsAsync(IEnumerable<Point> points)
+        public async Task<IEnumerable<PointsGroup>> GetPointsGroupsAsync(int userId)
         {
             using (var context = this._context)
             {
-               foreach (var point in points)
-               {
-                   var itemId = await this._itemService.AddItemAsync((int) ItemType.Point);
-                   point.ItemId = itemId;
-   
-                   context.Points.Update(point);
-                   await context.SaveChangesAsync();
-               } 
+                var pointsGroupUserItems = this._userItemService.GetUserItems(userId)
+                    .Where(i => !i.DateDeleted.HasValue && i.ItemTypeId == (int) ItemType.PointsGroup);
+                return context.PointsGroups
+                    .Where(pg => pointsGroupUserItems.Select(pgui => pgui.ItemId).Contains(pg.ItemId));
             }
+        }
 
-            return points;
+        private async Task<int> AddPointsGroupAsync(int userId, PointsGroup pointsGroup)
+        {
+            var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
+            using (var context = this._context)
+            {
+                pointsGroup.ItemId = itemId;
+                await context.PointsGroups.AddAsync(pointsGroup);
+                await context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
+                await context.SaveChangesAsync();
+                return pointsGroup.PointsGroupId;
+            }
         }
     }
 }
