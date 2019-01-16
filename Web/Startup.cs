@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Warlock.Services;
+using Web.Services;
 using WebApplication.Helpers;
 using WebApplication.Services;
 
@@ -85,6 +86,7 @@ namespace WebApplication
                 .AddScoped<AgglomerativeHierarchicalClusteringService, AgglomerativeHierarchicalClusteringService>();
             services.AddScoped<UserService, UserService>();
             services.AddScoped<UserItemService, UserItemService>();
+            services.AddScoped<ItemService, ItemService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

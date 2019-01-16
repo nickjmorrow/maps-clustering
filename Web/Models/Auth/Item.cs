@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,5 +10,7 @@ namespace WebApplication.Models
         [Key] 
         public int ItemId { get; set; }
         public int ItemTypeId { get; set; }
+        public DateTime? DateDeleted { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 }
