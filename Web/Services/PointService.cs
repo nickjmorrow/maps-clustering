@@ -32,6 +32,10 @@ namespace Web.Services
         // TODO: create has-many relationship between pointsGroup and points
         // be able to upload file and save it as a pointsGroup
         
+        // TODO: let me upload a file to replace a pointsGroup
+        
+        // TODO: let me rename a pointsGroup
+        
         public async Task<IEnumerable<Point>> GetPointsAsync(int userId)
         {
             using (var context = this._context)
