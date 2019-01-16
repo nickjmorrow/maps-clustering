@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using WebApplication;
 using WebApplication.Models;
 
@@ -13,6 +15,7 @@ namespace Warlock.Services
         UserItem RemoveUserItem(int userId, int itemId);
     }
 
+    [Authorize]
     public class UserItemService : IUserItemService
     {
         private DatabaseContext _context;
@@ -62,6 +65,21 @@ namespace Warlock.Services
                 context.UserItems.Add(userItem);
                 context.SaveChanges();
                 return userItem;
+            }
+        }
+
+        public async Task<IEnumerable<UserItem>> AddUserItemsAsync(int userId, IEnumerable<int> itemIds)
+        {
+            using (var context = this._context)
+            {
+                var userItems = itemIds.Select(itemId => new UserItem()
+                {
+                    UserId = userId,
+                    ItemId = itemId
+                });
+                await context.UserItems.AddRangeAsync(userItems);
+                await context.SaveChangesAsync();
+                return userItems;
             }
         }
 

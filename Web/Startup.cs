@@ -78,9 +78,6 @@ namespace WebApplication
             
             
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(appSettings.ConnectionString));
-            services.AddScoped<SpellService, SpellService>();
-            services.AddScoped<WizardService, WizardService>();
-            services.AddScoped<MagicItemService, MagicItemService>();
             services.AddScoped<FileHandlerService, FileHandlerService>();
             services
                 .AddScoped<AgglomerativeHierarchicalClusteringService, AgglomerativeHierarchicalClusteringService>();

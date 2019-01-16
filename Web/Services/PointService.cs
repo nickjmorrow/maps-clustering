@@ -1,22 +1,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using Warlock.Services;
 using WebApplication;
 using WebApplication.Enums;
 using WebApplication.Models.DTOs;
 
 namespace Web.Services
 {
+    [Authorize]
     public class PointService
     {
         private DatabaseContext _context;
         private ItemService _itemService;
+        private UserItemService _userItemService;
 
-        public PointService(DatabaseContext context, ItemService itemService)
+        public PointService(DatabaseContext context, ItemService itemService, UserItemService userItemService)
         {
             this._context = context;
             this._itemService = itemService;
+            this._userItemService = userItemService;
         }
 
         public async Task<IEnumerable<Point>> GetPointsAsync(int userId)
@@ -43,7 +49,11 @@ namespace Web.Services
                 await context.Points.AddRangeAsync(points);
             }
 
-            this.PopulatePointItemIdsAsync(points);
+            await this.PopulatePointItemIdsAsync(points);
+
+            await this._userItemService.AddUserItemsAsync(userId, points.Select(p => p.ItemId));
+
+            return points;
         }
 
         private async Task<IEnumerable<Point>> PopulatePointItemIdsAsync(IEnumerable<Point> points)
@@ -59,7 +69,8 @@ namespace Web.Services
                    await context.SaveChangesAsync();
                } 
             }
-            
+
+            return points;
         }
     }
 }

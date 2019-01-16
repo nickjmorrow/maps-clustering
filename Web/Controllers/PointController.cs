@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Services;
+using WebApplication.Models.DTOs;
 
 namespace WebApplication.Controllers
 {
@@ -17,9 +21,15 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetPoints()
+        public async Task<IActionResult> GetPoints()
         {
-            return Ok(this._pointService.GetPoints(this._userId));
+            return Ok(await this._pointService.GetPointsAsync(this._userId));
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AddPoints(IEnumerable<Point> points)
+        {
+            return Ok(await this._pointService.AddPointsAsync(this._userId, points));
         }
     }
 }
