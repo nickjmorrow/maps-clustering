@@ -18,7 +18,7 @@ namespace WebApplication.Controllers
 
         [HttpPost("[action]")]
         public IActionResult Login([FromBody] AuthInfo authInfo)
-        {
+        {        
             var user = this._userService.Authenticate(authInfo);
 
             if (user == null)

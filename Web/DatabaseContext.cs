@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication.Models;
+using WebApplication.Models.DTOs;
 
 namespace WebApplication
 {
@@ -16,15 +17,12 @@ namespace WebApplication
         {
         }
 
-        public DbSet<Wizard> Wizards { get; set; }
-        public DbSet<WizardSpell> WizardSpells { get; set; }
-        public DbSet<Spell> Spells { get; set; }
-        public DbSet<SpellType> SpellTypes { get; set; }
-        public DbSet<MagicItem> MagicItems { get; set; }
         public DbSet<UserItem> UserItems { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<UserFavoriteItem> UserFavoriteItems { get; set; }
+        public DbSet<Point> Points { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

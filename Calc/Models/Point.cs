@@ -7,7 +7,6 @@
         public double HorizontalDisplacement { get; set; }
         public double VerticalDisplacement { get; set; }
 
-
         public Point()
         {
             PointId = 0;
