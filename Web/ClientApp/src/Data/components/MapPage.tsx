@@ -19,7 +19,8 @@ import {
 	ClusteredPoint,
 	IClusterOption,
 	AgglomerativeHierarchicalClusterPoint,
-	IPoint
+	IPoint,
+	IPointsGroup
 } from '../types';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
@@ -39,7 +40,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	handlePointsChange = (option: IOption) => alert('hey');
 
 	render() {
-		const { points } = this.props;
+		const { points, pointsGroups } = this.props;
 		const {
 			currentClusterOption,
 			clusterCount: clusterCount,
@@ -61,16 +62,10 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 					<InfoPanel>
 						<Typography variant="h1">Parameters</Typography>
 						<Typography variant="h2">Points</Typography>
-						{/* <Select 
-                            options={[{
-                                value: 'red', label: 'RED'
-                            }]}
-                            onChange={this.handlePointsChange)}
-                            currentOption={{
-                                value: 'red', label: 'RED'
-                            }}
-                            removeNoneOptionAfterSelection={true}
-                        /> */}
+
+						{pointsGroups.map((pg, i) => (
+							<div key={i}>{pg.name}</div>
+						))}
 						<Typography variant="h2">Cluster Type</Typography>
 						<Select
 							options={clusterOptions}
@@ -107,7 +102,8 @@ const mapStateToProps = (state: IReduxState): IReduxProps => ({
 	points: getPoints(state),
 	agglomerativeHierarchicalClusters: getAgglomerativeHierarchicalClustersFromState(
 		state
-	)
+	),
+	pointsGroups: state.data.pointsGroups
 });
 
 export const MapPage = connect(
@@ -224,6 +220,7 @@ type IState = typeof initialState;
 interface IReduxProps {
 	points: IPoint[];
 	agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
+	pointsGroups: IPointsGroup[];
 }
 
 type IProps = IReduxProps;

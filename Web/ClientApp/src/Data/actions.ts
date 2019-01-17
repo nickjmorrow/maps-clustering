@@ -21,6 +21,8 @@ export enum dataTypeKeys {
 	GET_DBSCAN_FAILED = 'GET_DBSCAN_FAILED',
 	POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE = 'POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE',
 	POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED',
+	POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE = 'POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE',
+	POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED',
 	GET_POINTS_GROUPS = 'GET_POINTS_GROUPS',
 	GET_POINTS_GROUPS_SUCCEEDED = 'GET_POINTS_GROUPS_SUCCEEDED',
 	SAVE_POINTS_GROUP = 'SAVE_POINTS_GROUP',
@@ -67,6 +69,20 @@ export const getPointsGroups = {
 export const populatePointsStateFromLocalStorageIfAvailable = () =>
 	action(dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
 
+export const populatePointsGroupsStateFromLocalStorageIfAvailable = {
+	request: (): IPopulatePointsGroupStateFromLocalStorageIfAvailable =>
+		action(
+			dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE
+		),
+	success: (
+		pointsGroups: IPointsGroup[]
+	): IPopulatePointsGroupStateFromLocalStorageIfAvailableSucceeded =>
+		action(
+			dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
+			pointsGroups
+		)
+};
+
 export type ActionTypes =
 	| ICreatePointsGroupAction
 	| ICreatePointsGroupSucceededAction
@@ -79,6 +95,8 @@ export type ActionTypes =
 	| GetDbscanFailedAction
 	| IPopulatePointsStateFromLocalStorageIfAvailable
 	| IPopulatePointsStateFromLocalStorageIfAvailableSucceeded
+	| IPopulatePointsGroupStateFromLocalStorageIfAvailable
+	| IPopulatePointsGroupStateFromLocalStorageIfAvailableSucceeded
 	| IGetPointsGroupsAction
 	| IGetPointsGroupsActionSucceeded;
 
@@ -152,4 +170,13 @@ export interface ISavePointsGroupAction {
 export interface ISavePointsGroupActionSucceeded {
 	type: dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED;
 	payload: IPointsGroup;
+}
+
+export interface IPopulatePointsGroupStateFromLocalStorageIfAvailable {
+	type: dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE;
+}
+
+export interface IPopulatePointsGroupStateFromLocalStorageIfAvailableSucceeded {
+	type: dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED;
+	payload: IPointsGroup[];
 }
