@@ -14,17 +14,19 @@ using ItemType = WebApplication.Enums.ItemType;
 namespace Web.Services
 {
     [Authorize]
-    public class PointService
+    public class PointsGroupService
     {
         private DatabaseContext _context;
         private ItemService _itemService;
-        private UserItemService _userItemService;
+        private ItemFilterer _itemFilterer;
 
-        public PointService(DatabaseContext context, ItemService itemService, UserItemService userItemService)
+        public PointsGroupService(DatabaseContext context, 
+            ItemService itemService, 
+            ItemFilterer itemFilterer)
         {
             this._context = context;
             this._itemService = itemService;
-            this._userItemService = userItemService;
+            this._itemFilterer = itemFilterer;
         }
 
         // TODO: should think in terms of 'points groups', and users can be permissioned to whole groups
@@ -37,15 +39,13 @@ namespace Web.Services
         
         // TODO: let me rename a pointsGroup
 
-        public async Task<IEnumerable<PointsGroup>> GetPointsGroupsAsync(int userId)
+        public IEnumerable<PointsGroup> GetPointsGroups(int userId)
         {
             using (var context = this._context)
             {
-                var pointsGroupUserItems = this._userItemService.GetUserItems(userId)
-                    .Where(i => !i.DateDeleted.HasValue && i.ItemTypeId == (int) ItemType.PointsGroup);
-                return context.PointsGroups
-                    .Where(pg => pointsGroupUserItems.Select(pgui => pgui.ItemId).Contains(pg.ItemId))
-                    .Include(pg => pg.P)
+                var pointsGroups = context.PointsGroups
+                    .Include(pg => pg.Points);
+                return this._itemFilterer.GetValidItems(userId, pointsGroups);
             }
         }
 

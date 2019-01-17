@@ -11,24 +11,24 @@ namespace WebApplication.Controllers
     [Route("api/[controller]")]
     public partial class PointController : Controller
     {
-        private readonly PointService _pointService;
+        private readonly PointsGroupService _pointsGroupService;
         private int _userId => Int32.Parse(this.User.Identity.Name);
 
-        public PointController(PointService pointService)
+        public PointController(PointsGroupService pointsGroupService)
         {
-            this._pointService = pointService;
+            this._pointsGroupService = pointsGroupService;
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetPoints()
+        public IActionResult GetPointsGroups()
         {
-            return Ok(await this._pointService.GetPointsAsync(this._userId));
+            return Ok(this._pointsGroupService.GetPointsGroups(this._userId));
         }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> AddPointsGroup(PointsGroupInput pointsGroupInput)
         {
-            return Ok(await this._pointService.AddPointsGroupAsync(this._userId, pointsGroupInput));
+            return Ok(await this._pointsGroupService.AddPointsGroupAsync(this._userId, pointsGroupInput));
             
             
         }
