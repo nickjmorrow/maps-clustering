@@ -33,7 +33,7 @@ export interface DbscanConfig {
 }
 
 export interface IPointsGroup {
-	pointsGroupId: number;
+	pointsGroupId?: number;
 	name: string;
 	itemId?: number;
 	points: IPoint[];

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { IInputInfo } from 'njm-react-component-library/lib/types';
-import { Form } from 'njm-react-component-library';
+import { Form, Button } from 'njm-react-component-library';
 import { Dispatch, bindActionCreators } from 'redux';
 import { createPointsGroup, IPointsGroupInput } from 'src/Data';
 import { connect } from 'react-redux';
 import { mapFormFields } from 'src/Data/constants';
+import Axios from 'axios';
 
 export const MapFormInternal: React.SFC<IProps> = ({ onCreatePointsGroup }) => {
 	const handleClick = async (inputs: IInputInfo[]) => {
@@ -23,21 +24,35 @@ export const MapFormInternal: React.SFC<IProps> = ({ onCreatePointsGroup }) => {
 		}
 	};
 	return (
-		<Form
-			title={'Form'}
-			inputs={[
-				{
-					name: mapFormFields.mapName,
-					type: 'text',
-					placeholder: 'Map Name'
-				},
-				{
-					name: mapFormFields.file,
-					type: 'file'
-				}
-			]}
-			onClick={handleClick}
-		/>
+		<div>
+			<Form
+				title={'Form'}
+				inputs={[
+					{
+						name: mapFormFields.mapName,
+						type: 'text',
+						placeholder: 'Map Name'
+					},
+					{
+						name: mapFormFields.file,
+						type: 'file'
+					}
+				]}
+				onClick={handleClick}
+			/>
+			<Button
+				onClick={async () => {
+					const urls = {
+						fullSafe: 'https://localhost:5002/api/test/getlist',
+						full: 'http://localhost:5002/api/test/getlist',
+						short: '/api/test/getlist'
+					};
+					const list = await Axios.get(urls.short);
+					console.log(list);
+				}}>
+				Test
+			</Button>
+		</div>
 	);
 };
 
@@ -45,7 +60,7 @@ export const MapFormInternal: React.SFC<IProps> = ({ onCreatePointsGroup }) => {
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			onCreatePointsGroup: createPointsGroup
+			onCreatePointsGroup: createPointsGroup.request
 		},
 		dispatch
 	);
