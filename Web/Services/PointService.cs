@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Warlock.Services;
 using WebApplication;
+using WebApplication.Controllers;
 using WebApplication.Models;
 using WebApplication.Models.DTOs;
 using ItemType = WebApplication.Enums.ItemType;
@@ -35,38 +36,6 @@ namespace Web.Services
         // TODO: let me upload a file to replace a pointsGroup
         
         // TODO: let me rename a pointsGroup
-        
-        public async Task<IEnumerable<Point>> GetPointsAsync(int userId)
-        {
-            using (var context = this._context)
-            {
-                var userItems = context.UserItems.Select(ui => ui.ItemId);
-                var items = context.Items
-                    .Where(i => context.Points.Select(p => p.ItemId).Contains(i.ItemId))
-                    .Where(i => !i.DateDeleted.HasValue);
-                var points = await context.Points
-                    .Where(p => userItems.Contains(p.ItemId))
-                    .Where(p => items.Select(i => i.ItemId).Contains(p.ItemId))
-                    .ToListAsync();
-                
-                return points;
-            }
-        }
-
-        public async Task<IEnumerable<Point>> AddPointsAsync(int userId, PointsGroup pointsGroup, IEnumerable<Point> points)
-        {
-            var pointsGroupId = await this.AddPointsGroupAsync(userId, pointsGroup);
-            using (var context = this._context)
-            {
-                await context.Points.AddRangeAsync(points.Select(p =>
-                {
-                    p.PointsGroupId = pointsGroupId;
-                    return p;
-                }));
-            }
-
-            return points;
-        }
 
         public async Task<IEnumerable<PointsGroup>> GetPointsGroupsAsync(int userId)
         {
@@ -75,21 +44,44 @@ namespace Web.Services
                 var pointsGroupUserItems = this._userItemService.GetUserItems(userId)
                     .Where(i => !i.DateDeleted.HasValue && i.ItemTypeId == (int) ItemType.PointsGroup);
                 return context.PointsGroups
-                    .Where(pg => pointsGroupUserItems.Select(pgui => pgui.ItemId).Contains(pg.ItemId));
+                    .Where(pg => pointsGroupUserItems.Select(pgui => pgui.ItemId).Contains(pg.ItemId))
+                    .Include(pg => pg.P)
             }
         }
 
-        private async Task<int> AddPointsGroupAsync(int userId, PointsGroup pointsGroup)
+        public async Task<int> AddPointsGroupAsync(int userId, PointsGroupInput pointsGroupInput)
         {
+            // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
+            
+            var pointsGroup = new PointsGroup()
+            {
+                Name = pointsGroupInput.Name,
+                ItemId = itemId
+            };
+            
+            // add pointsGroup
             using (var context = this._context)
             {
-                pointsGroup.ItemId = itemId;
                 await context.PointsGroups.AddAsync(pointsGroup);
                 await context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
                 await context.SaveChangesAsync();
-                return pointsGroup.PointsGroupId;
             }
+
+            // label points with pointsGroupId
+            var points = pointsGroupInput.Points.Select(p =>
+            {
+                p.PointsGroupId = pointsGroup.PointsGroupId;
+                return p;
+            });
+
+            // add associated points 
+            using (var context = this._context)
+            {
+                await context.Points.AddRangeAsync(points);
+                await context.SaveChangesAsync();
+            }
+            return pointsGroup.PointsGroupId;
         }
     }
 }

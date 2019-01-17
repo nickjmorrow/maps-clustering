@@ -9,6 +9,9 @@ namespace WebApplication.Models.DTOs
         public string Name { get; set; }
         public double HorizontalDisplacement { get; set; }
         public double VerticalDisplacement { get; set; }
+        
+        [ForeignKey("PointsGroup")]
         public int PointsGroupId { get; set; }
+        public PointsGroup PointsGroup { get; set; }
     }
 }

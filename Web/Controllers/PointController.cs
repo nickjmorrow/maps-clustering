@@ -1,16 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Services;
-using WebApplication.Models.DTOs;
+using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class PointController : Controller
+    public partial class PointController : Controller
     {
         private readonly PointService _pointService;
         private int _userId => Int32.Parse(this.User.Identity.Name);
@@ -27,11 +26,11 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> AddPoints(IEnumerable<Point> points)
+        public async Task<IActionResult> AddPointsGroup(PointsGroupInput pointsGroupInput)
         {
-            return Ok(await this._pointService.AddPointsAsync(this._userId, points));
+            return Ok(await this._pointService.AddPointsGroupAsync(this._userId, pointsGroupInput));
+            
+            
         }
-        
-        
     }
 }
