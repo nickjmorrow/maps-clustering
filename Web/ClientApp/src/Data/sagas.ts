@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { action as typesafeAction } from 'typesafe-actions';
-import { takeLatest, put, call } from 'redux-saga/effects';
+import { takeLatest, put, call, all } from 'redux-saga/effects';
 import {
 	dataTypeKeys,
 	ICreatePointsGroupAction,
@@ -43,6 +43,10 @@ function* createPointsGroupAsync(action: ICreatePointsGroupAction) {
 			)
 		);
 		localStorage.setItem(localStorageKeys.points, JSON.stringify(data));
+		localStorage.setItem(
+			localStorageKeys.pointsGroups,
+			JSON.stringify([pointsGroup])
+		);
 	} catch (error) {
 		yield put(
 			typesafeAction(dataTypeKeys.GET_DATA_FAILED, error.response.data)
@@ -91,14 +95,31 @@ function* getDbscanAsync(action: GetDbscanAction) {
 function* handlePopulatePointsFromLocalStorageIfAvailable() {
 	try {
 		const points = localStorage.getItem(localStorageKeys.points);
+		const actions = [];
 		if (points !== null) {
-			yield put(
-				typesafeAction(
-					dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
-					JSON.parse(points)
+			actions.push(
+				put(
+					typesafeAction(
+						dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
+						JSON.parse(points)
+					)
 				)
 			);
 		}
+		const pointsGroups = localStorage.getItem(
+			localStorageKeys.pointsGroups
+		);
+		if (pointsGroups !== null) {
+			actions.push(
+				put(
+					typesafeAction(
+						dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
+						JSON.parse(pointsGroups!)
+					)
+				)
+			);
+		}
+		yield all(actions);
 	} catch (error) {
 		console.error(error);
 	}

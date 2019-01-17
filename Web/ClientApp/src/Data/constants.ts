@@ -49,7 +49,8 @@ export const clusterOptions: IOption[] = [
 ];
 
 export enum localStorageKeys {
-	points = 'points'
+	points = 'points',
+	pointsGroups = 'POINTS_GROUPS'
 }
 
 export const formHeaders = {

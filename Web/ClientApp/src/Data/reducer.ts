@@ -47,6 +47,17 @@ export const dataReducer = (
 			return { ...state, error: action.payload };
 		case dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
 			return { ...state, points: action.payload };
+		case dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
+			const unsavedPointsGroupsFromState = state.pointsGroups.filter(
+				pg => !pg.pointsGroupId
+			);
+			return {
+				...state,
+				pointsGroups: [
+					...unsavedPointsGroupsFromState,
+					...action.payload
+				]
+			};
 		default:
 			return state;
 	}
