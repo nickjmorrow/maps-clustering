@@ -27,14 +27,13 @@ export enum dataTypeKeys {
 	SAVE_POINTS_GROUP_SUCCEEDED = 'SAVE_POINTS_GROUP_SUCCEEDED'
 }
 
-export const createPointsGroup = (
-	payload: IPointsGroupInput
-): ICreatePointsGroupAction =>
-	action(dataTypeKeys.CREATE_POINTS_GROUP, payload);
-export const createPointsGroupSucceeded = (
-	payload: IPoint[]
-): ICreatePointsGroupSucceededAction =>
-	action(dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED, payload);
+export const createPointsGroup = {
+	request: (payload: IPointsGroupInput): ICreatePointsGroupAction =>
+		action(dataTypeKeys.CREATE_POINTS_GROUP, payload),
+	success: (payload: IPointsGroup): ICreatePointsGroupSucceededAction =>
+		action(dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED, payload)
+};
+
 export const getMapDataFailed = (payload: string): GetMapPointsFailedAction =>
 	action(dataTypeKeys.GET_DATA_FAILED, payload);
 

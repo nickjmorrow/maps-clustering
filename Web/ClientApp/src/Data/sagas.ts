@@ -3,7 +3,7 @@ import { action as typesafeAction } from 'typesafe-actions';
 import { takeLatest, put, call } from 'redux-saga/effects';
 import {
 	dataTypeKeys,
-	GetMapPointsAction,
+	ICreatePointsGroupAction,
 	GetAhcAction,
 	GetDbscanAction
 } from './actions';
@@ -14,21 +14,33 @@ import {
 	calcApi,
 	pointsApi
 } from './constants';
+import { IPointsGroup } from './types';
 
 function* watchCreatePointsGroup() {
 	yield takeLatest(dataTypeKeys.CREATE_POINTS_GROUP, createPointsGroupAsync);
 }
 
-function* createPointsGroupAsync(action: GetMapPointsAction) {
+function* createPointsGroupAsync(action: ICreatePointsGroupAction) {
 	try {
+		const { name, formData } = action.payload;
+
 		const { data } = yield call(
 			axios.post,
 			fileApi.upload,
-			action.payload,
+			formData,
 			formHeaders
 		);
+
+		const pointsGroup: IPointsGroup = {
+			points: data,
+			name
+		};
+
 		yield put(
-			typesafeAction(dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED, data)
+			typesafeAction(
+				dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED,
+				pointsGroup
+			)
 		);
 		localStorage.setItem(localStorageKeys.points, JSON.stringify(data));
 	} catch (error) {

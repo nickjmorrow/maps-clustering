@@ -38,3 +38,8 @@ export interface IPointsGroup {
 	itemId?: number;
 	points: IPoint[];
 }
+
+export interface IPointsGroupInput {
+	formData: FormData;
+	name: string;
+}
