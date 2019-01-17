@@ -83,6 +83,13 @@ export const populatePointsGroupsStateFromLocalStorageIfAvailable = {
 		)
 };
 
+export const savePointsGroup = {
+	request: (pointsGroup: IPointsGroup) =>
+		action(dataTypeKeys.SAVE_POINTS_GROUP, pointsGroup),
+	success: (pointsGroup: IPointsGroup) =>
+		action(dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED, pointsGroup)
+};
+
 export type ActionTypes =
 	| ICreatePointsGroupAction
 	| ICreatePointsGroupSucceededAction

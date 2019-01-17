@@ -2,14 +2,15 @@ import {
 	IOption,
 	Select,
 	Typography,
-	colors
+	colors,
+	Button
 } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IReduxState } from 'src/reducer';
 import { getColors as getMarkerColors } from 'src/services';
 import styled from 'styled-components';
-import { Clusters, Map, Parameters } from '../';
+import { Clusters, Map, Parameters, savePointsGroup } from '../';
 import { clusterOptions, clusterTypes } from '../constants';
 import {
 	getAgglomerativeHierarchicalClustersFromState,
@@ -22,6 +23,7 @@ import {
 	IPoint,
 	IPointsGroup
 } from '../types';
+import { Dispatch, bindActionCreators } from 'redux';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
@@ -38,6 +40,9 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 		this.setState({ currentClusterOption });
 
 	handlePointsChange = (option: IOption) => alert('hey');
+
+	savePointsGroup = (pointsGroup: IPointsGroup) =>
+		this.props.onSavePointsGroup(pointsGroup);
 
 	render() {
 		const { points, pointsGroups } = this.props;
@@ -64,7 +69,17 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 						<Typography variant="h2">Points</Typography>
 
 						{pointsGroups.map((pg, i) => (
-							<div key={i}>{pg.name}</div>
+							<div key={i}>
+								<div>{pg.name}</div>
+								// TODO: change the typing on button //
+								@ts-ignore
+								<Button
+									onClick={(pointsGroup: IPointsGroup) =>
+										this.savePointsGroup(pointsGroup)
+									}>
+									Save
+								</Button>
+							</div>
 						))}
 						<Typography variant="h2">Cluster Type</Typography>
 						<Select
@@ -106,10 +121,57 @@ const mapStateToProps = (state: IReduxState): IReduxProps => ({
 	pointsGroups: state.data.pointsGroups
 });
 
+const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
+	bindActionCreators(
+		{
+			onSavePointsGroup: savePointsGroup.request
+		},
+		dispatch
+	);
+
 export const MapPage = connect(
 	mapStateToProps,
-	null
+	mapDispatchToProps
 )(MapPageInternal);
+
+// types
+const initialState = {
+	clusterCount: 30,
+	currentClusterOption: null as IOption | null,
+	markerColors: [] as string[]
+};
+
+type IState = typeof initialState;
+
+interface IDispatchProps {
+	onSavePointsGroup(pointsGroup: IPointsGroup): void;
+}
+
+interface IReduxProps {
+	points: IPoint[];
+	agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
+	pointsGroups: IPointsGroup[];
+}
+
+type IProps = IReduxProps & IDispatchProps;
+
+// css
+const InfoPanel = styled.div`
+	margin: 0px 16px;
+	min-width: 300px;
+	min-height: 300px;
+`;
+
+const MapControls = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+`;
+
+const Divider = styled.div`
+	height: 20px;
+	background-color: ${colors.darkGray};
+`;
 
 // helpers
 const getClusters = (
@@ -207,38 +269,3 @@ const getMarkers = (
 		}
 	}));
 };
-
-// types
-const initialState = {
-	clusterCount: 30,
-	currentClusterOption: null as IOption | null,
-	markerColors: [] as string[]
-};
-
-type IState = typeof initialState;
-
-interface IReduxProps {
-	points: IPoint[];
-	agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
-	pointsGroups: IPointsGroup[];
-}
-
-type IProps = IReduxProps;
-
-// css
-const InfoPanel = styled.div`
-	margin: 0px 16px;
-	min-width: 300px;
-	min-height: 300px;
-`;
-
-const MapControls = styled.div`
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
-`;
-
-const Divider = styled.div`
-	height: 20px;
-	background-color: ${colors.darkGray};
-`;

@@ -5,14 +5,16 @@ import {
 	dataTypeKeys,
 	ICreatePointsGroupAction,
 	GetAhcAction,
-	GetDbscanAction
+	GetDbscanAction,
+	ISavePointsGroupAction
 } from './actions';
 import {
 	fileApi,
 	localStorageKeys,
 	formHeaders,
 	calcApi,
-	pointsApi
+	pointsApi,
+	pointsGroupApi
 } from './constants';
 import { IPointsGroup } from './types';
 
@@ -150,10 +152,33 @@ function* watchHandleGetPointsGroupsAsync() {
 	);
 }
 
+function* handleSavePointsGroupAsync(action: ISavePointsGroupAction) {
+	try {
+		const { data } = yield call(
+			axios.post,
+			pointsGroupApi.savePointsGroup,
+			action.payload
+		);
+		yield put(
+			typesafeAction(dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED, data)
+		);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+function* watchSavePointsGroup() {
+	yield takeLatest(
+		dataTypeKeys.SAVE_POINTS_GROUP,
+		handleSavePointsGroupAsync
+	);
+}
+
 export const sagas = [
 	watchCreatePointsGroup,
 	watchGetAhcs,
 	watchGetDbscan,
 	watchHandlePopulatePointsFromLocalStorageIfAvailable,
-	watchHandleGetPointsGroupsAsync
+	watchHandleGetPointsGroupsAsync,
+	watchSavePointsGroup
 ];
