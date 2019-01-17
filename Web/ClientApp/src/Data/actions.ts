@@ -5,16 +5,17 @@ import {
 	ClusteredPoint,
 	DbscanConfig,
 	IPointsGroup,
-	IPoint
+	IPoint,
+	IPointsGroupInput
 } from './types';
 
 export enum dataTypeKeys {
-	GET_DATA = 'GET_DATA',
-	GET_DATA_SUCCEEDED = 'GET_DATA_SUCCEEDED',
+	CREATE_POINTS_GROUP = 'CREATE_POINTS_GROUP',
+	CREATE_POINTS_GROUP_SUCCEEDED = 'GET_DATA_SUCCEEDED',
 	GET_DATA_FAILED = 'GET_DATA_FAILED',
-	GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS',
-	GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED',
-	GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED',
+	GET_AHCS = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS',
+	GET_AHCS_SUCCEEDED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED',
+	GET_AHCS_FAILED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED',
 	GET_DBSCAN = 'GET_DBSCAN',
 	GET_DBSCAN_SUCCEEDED = 'GET_DBSCAN_SUCCEEDED',
 	GET_DBSCAN_FAILED = 'GET_DBSCAN_FAILED',
@@ -22,36 +23,31 @@ export enum dataTypeKeys {
 	POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED',
 	GET_POINTS_GROUPS = 'GET_POINTS_GROUPS',
 	GET_POINTS_GROUPS_SUCCEEDED = 'GET_POINTS_GROUPS_SUCCEEDED',
-	CREATE_POINTS_GROUP = 'CREATE_POINTS_GROUP'
+	SAVE_POINTS_GROUP = 'SAVE_POINTS_GROUP',
+	SAVE_POINTS_GROUP_SUCCEEDED = 'SAVE_POINTS_GROUP_SUCCEEDED'
 }
 
-export const getMapData = (payload: FormData): GetMapPointsAction =>
-	action(dataTypeKeys.GET_DATA, payload);
-export const getMapDataSucceeded = (
+export const createPointsGroup = (
+	payload: IPointsGroupInput
+): ICreatePointsGroupAction =>
+	action(dataTypeKeys.CREATE_POINTS_GROUP, payload);
+export const createPointsGroupSucceeded = (
 	payload: IPoint[]
-): GetMapPointsSucceededAction =>
-	action(dataTypeKeys.GET_DATA_SUCCEEDED, payload);
+): ICreatePointsGroupSucceededAction =>
+	action(dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED, payload);
 export const getMapDataFailed = (payload: string): GetMapPointsFailedAction =>
 	action(dataTypeKeys.GET_DATA_FAILED, payload);
 
 export const getAgglomerativeHierarchicalClusters = (
 	payload: IPoint[]
-): GetAhcAction =>
-	action(dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS, payload);
+): GetAhcAction => action(dataTypeKeys.GET_AHCS, payload);
 export const getAgglomerativeHierarchicalClustersSucceeded = (
 	payload: AhcPoint[]
-): GetAhcSucceededAction =>
-	action(
-		dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED,
-		payload
-	);
+): GetAhcSucceededAction => action(dataTypeKeys.GET_AHCS_SUCCEEDED, payload);
 export const getAgglomerativeHierarchicalClustersFailed = (
 	payload: string
 ): GetAgglomerativeHierarchicalClustersFailedAction =>
-	action(
-		dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED,
-		payload
-	);
+	action(dataTypeKeys.GET_AHCS_FAILED, payload);
 
 export const getDbscan = {
 	request: (payload: DbscanConfig): GetDbscanAction =>
@@ -73,8 +69,8 @@ export const populatePointsStateFromLocalStorageIfAvailable = () =>
 	action(dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
 
 export type ActionTypes =
-	| GetMapPointsAction
-	| GetMapPointsSucceededAction
+	| ICreatePointsGroupAction
+	| ICreatePointsGroupSucceededAction
 	| GetMapPointsFailedAction
 	| GetAhcAction
 	| GetAhcSucceededAction
@@ -85,17 +81,16 @@ export type ActionTypes =
 	| IPopulatePointsStateFromLocalStorageIfAvailable
 	| IPopulatePointsStateFromLocalStorageIfAvailableSucceeded
 	| IGetPointsGroupsAction
-	| IGetPointsGroupsActionSucceeded
-	| ICreatePointsGroupAction;
+	| IGetPointsGroupsActionSucceeded;
 
-export interface GetMapPointsAction {
-	type: dataTypeKeys.GET_DATA;
-	payload: FormData;
+export interface ICreatePointsGroupAction {
+	type: dataTypeKeys.CREATE_POINTS_GROUP;
+	payload: IPointsGroupInput;
 }
 
-export interface GetMapPointsSucceededAction {
-	type: dataTypeKeys.GET_DATA_SUCCEEDED;
-	payload: any; // TODO
+export interface ICreatePointsGroupSucceededAction {
+	type: dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED;
+	payload: IPointsGroup;
 }
 
 export interface GetMapPointsFailedAction {
@@ -104,17 +99,17 @@ export interface GetMapPointsFailedAction {
 }
 
 export interface GetAhcAction {
-	type: dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS;
+	type: dataTypeKeys.GET_AHCS;
 	payload: AgglomerativeHierarchicalClusterConfig;
 }
 
 export interface GetAhcSucceededAction {
-	type: dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED;
+	type: dataTypeKeys.GET_AHCS_SUCCEEDED;
 	payload: AhcPoint[];
 }
 
 export interface GetAgglomerativeHierarchicalClustersFailedAction {
-	type: dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED;
+	type: dataTypeKeys.GET_AHCS_FAILED;
 	payload: string;
 }
 
@@ -151,7 +146,11 @@ export interface IGetPointsGroupsActionSucceeded {
 	payload: IPointsGroup[];
 }
 
-export interface ICreatePointsGroupAction {
-	type: dataTypeKeys.CREATE_POINTS_GROUP;
+export interface ISavePointsGroupAction {
+	type: dataTypeKeys.SAVE_POINTS_GROUP;
+}
+
+export interface ISavePointsGroupActionSucceeded {
+	type: dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED;
 	payload: IPointsGroup;
 }

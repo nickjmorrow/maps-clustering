@@ -4,7 +4,7 @@ import { takeLatest, put, call } from 'redux-saga/effects';
 import {
 	dataTypeKeys,
 	GetMapPointsAction,
-	GetAgglomerativeHierarchicalClustersAction,
+	GetAhcAction,
 	GetDbscanAction
 } from './actions';
 import {
@@ -15,11 +15,11 @@ import {
 	pointsApi
 } from './constants';
 
-function* watchGetMapData() {
-	yield takeLatest(dataTypeKeys.GET_DATA, getMapDataAsync);
+function* watchCreatePointsGroup() {
+	yield takeLatest(dataTypeKeys.CREATE_POINTS_GROUP, createPointsGroupAsync);
 }
 
-function* getMapDataAsync(action: GetMapPointsAction) {
+function* createPointsGroupAsync(action: GetMapPointsAction) {
 	try {
 		const { data } = yield call(
 			axios.post,
@@ -27,7 +27,9 @@ function* getMapDataAsync(action: GetMapPointsAction) {
 			action.payload,
 			formHeaders
 		);
-		yield put(typesafeAction(dataTypeKeys.GET_DATA_SUCCEEDED, data));
+		yield put(
+			typesafeAction(dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED, data)
+		);
 		localStorage.setItem(localStorageKeys.points, JSON.stringify(data));
 	} catch (error) {
 		yield put(
@@ -36,34 +38,21 @@ function* getMapDataAsync(action: GetMapPointsAction) {
 	}
 }
 
-function* watchGetAgglomerativeHierarchicalClusters() {
-	yield takeLatest(
-		dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS,
-		getAgglomerativeHierarchicalClustersAsync
-	);
+function* watchGetAhcs() {
+	yield takeLatest(dataTypeKeys.GET_AHCS, getAhcsAsync);
 }
 
-function* getAgglomerativeHierarchicalClustersAsync(
-	action: GetAgglomerativeHierarchicalClustersAction
-) {
+function* getAhcsAsync(action: GetAhcAction) {
 	try {
 		const { data } = yield call(
 			axios.post,
 			calcApi.getAgglomerativeHierarchicalClusters,
 			action.payload
 		);
-		yield put(
-			typesafeAction(
-				dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED,
-				data
-			)
-		);
+		yield put(typesafeAction(dataTypeKeys.GET_AHCS_SUCCEEDED, data));
 	} catch (error) {
 		yield put(
-			typesafeAction(
-				dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED,
-				error.response.data
-			)
+			typesafeAction(dataTypeKeys.GET_AHCS_FAILED, error.response.data)
 		);
 	}
 }
@@ -129,8 +118,8 @@ function* watchHandleGetPointsGroupsAsync() {
 }
 
 export const sagas = [
-	watchGetMapData,
-	watchGetAgglomerativeHierarchicalClusters,
+	watchCreatePointsGroup,
+	watchGetAhcs,
 	watchGetDbscan,
 	watchHandlePopulatePointsFromLocalStorageIfAvailable,
 	watchHandleGetPointsGroupsAsync

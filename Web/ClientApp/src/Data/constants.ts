@@ -55,3 +55,8 @@ export enum localStorageKeys {
 export const formHeaders = {
 	headers: { 'Content-Type': 'multipart/form-data' }
 };
+
+export enum mapFormFields {
+	file = 'FILE',
+	mapName = 'MAP_NAME'
+}

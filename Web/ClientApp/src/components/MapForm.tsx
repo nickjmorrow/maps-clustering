@@ -2,17 +2,24 @@ import * as React from 'react';
 import { IInputInfo } from 'njm-react-component-library/lib/types';
 import { Form } from 'njm-react-component-library';
 import { Dispatch, bindActionCreators } from 'redux';
-import { getMapData as getMapDataAction } from 'src/Data';
+import { createPointsGroup, IPointsGroupInput } from 'src/Data';
 import { connect } from 'react-redux';
+import { mapFormFields } from 'src/Data/constants';
 
-export const MapFormInternal: React.SFC<IProps> = ({ getMapData }) => {
+export const MapFormInternal: React.SFC<IProps> = ({ onCreatePointsGroup }) => {
 	const handleClick = async (inputs: IInputInfo[]) => {
-		const fileList = inputs.find(i => i.name === 'Map File')!
+		const fileList = inputs.find(i => i.name === mapFormFields.file)!
 			.value as FileList;
+		const name = inputs.find(i => i.name === mapFormFields.mapName)!
+			.value as string;
 		if (fileList.length) {
 			const formData = new FormData();
 			formData.append('file', fileList[0]);
-			getMapData(formData);
+			const pointsGroupInput = {
+				formData,
+				name
+			};
+			onCreatePointsGroup(pointsGroupInput);
 		}
 	};
 	return (
@@ -20,12 +27,12 @@ export const MapFormInternal: React.SFC<IProps> = ({ getMapData }) => {
 			title={'Form'}
 			inputs={[
 				{
-					name: 'Filename',
+					name: mapFormFields.mapName,
 					type: 'text',
 					placeholder: 'Map Name'
 				},
 				{
-					name: 'Map File',
+					name: mapFormFields.file,
 					type: 'file'
 				}
 			]}
@@ -38,7 +45,7 @@ export const MapFormInternal: React.SFC<IProps> = ({ getMapData }) => {
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			getMapData: getMapDataAction
+			onCreatePointsGroup: createPointsGroup
 		},
 		dispatch
 	);
@@ -49,7 +56,7 @@ export const MapForm = connect(
 
 // types
 interface IDispatchProps {
-	getMapData(payload: FormData): void;
+	onCreatePointsGroup(payload: IPointsGroupInput): void;
 }
 
 type IProps = IDispatchProps;

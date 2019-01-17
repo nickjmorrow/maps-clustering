@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { Point } from 'src/Data';
+import { IPoint } from 'src/Data';
 import { IUser } from './types';
 
 export const addToLocalStorage = (value: object, key: string) => {
@@ -26,7 +26,7 @@ export const removeFromLocalStorage = (key: string) =>
 	localStorage.removeItem(key);
 
 export const populateStateFromLocalStorageIfAvailable = (
-	dispatchFunc: (val: IUser | Point[]) => void,
+	dispatchFunc: (val: IUser | IPoint[]) => void,
 	key: string
 ) => {
 	if (isInLocalStorage(key)) {

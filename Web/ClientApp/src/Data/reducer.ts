@@ -1,21 +1,24 @@
 import { ActionTypes, dataTypeKeys } from './actions';
 import {
-	Point,
+	IPoint,
 	AgglomerativeHierarchicalClusterPoint,
-	ClusteredPoint
+	ClusteredPoint,
+	IPointsGroup
 } from './types';
 
 export interface DataState {
-	readonly points: Point[];
+	readonly points: IPoint[];
 	readonly error: string;
 	readonly agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
 	readonly dbscan: ClusteredPoint[];
+	readonly pointsGroups: IPointsGroup[];
 }
 
 const initialState: DataState = {
 	points: [],
 	agglomerativeHierarchicalClusters: [],
 	dbscan: [],
+	pointsGroups: [],
 	error: ''
 };
 
@@ -26,16 +29,16 @@ export const dataReducer = (
 	state = state || initialState;
 
 	switch (action.type) {
-		case dataTypeKeys.GET_DATA_SUCCEEDED:
+		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
 			return { ...state, points: action.payload };
 		case dataTypeKeys.GET_DATA_FAILED:
 			return { ...state, error: action.payload };
-		case dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED:
+		case dataTypeKeys.GET_AHCS_SUCCEEDED:
 			return {
 				...state,
 				agglomerativeHierarchicalClusters: action.payload
 			};
-		case dataTypeKeys.GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED:
+		case dataTypeKeys.GET_AHCS_FAILED:
 			return { ...state, error: action.payload };
 		case dataTypeKeys.GET_DBSCAN_SUCCEEDED:
 			return { ...state, dbscan: action.payload };

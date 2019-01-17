@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Typography, Button, Slider } from 'njm-react-component-library';
-import { Point } from 'src/Data/types';
+import { IPoint } from 'src/Data/types';
 
 export const AhcParameters: React.SFC<IProps> = ({
 	min,
@@ -32,11 +32,13 @@ export const AhcParameters: React.SFC<IProps> = ({
 };
 
 // helpers
-const convertIterationsToClusterCount = (iterations: number, points: Point[]) =>
-	points.length - iterations + 1;
+const convertIterationsToClusterCount = (
+	iterations: number,
+	points: IPoint[]
+) => points.length - iterations + 1;
 const convertClusterCountToIterations = (
 	clusterCount: number,
-	points: Point[]
+	points: IPoint[]
 ) => 1 + points.length - clusterCount;
 
 // types
@@ -44,7 +46,7 @@ interface IProps {
 	min: number;
 	max: number;
 	clusterCount: number;
-	points: Point[];
+	points: IPoint[];
 	onClusterCountChange(value: number): void;
 	onGetAgglomerativeHierarchicalClusters(): void;
 }

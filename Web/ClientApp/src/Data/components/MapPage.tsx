@@ -19,7 +19,7 @@ import {
 	ClusteredPoint,
 	IClusterOption,
 	AgglomerativeHierarchicalClusterPoint,
-	Point
+	IPoint
 } from '../types';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
@@ -147,7 +147,7 @@ const getClusters = (
 const getPointsForMap = (
 	state: IState,
 	props: IProps
-): Point[] | AgglomerativeHierarchicalClusterPoint[] => {
+): IPoint[] | AgglomerativeHierarchicalClusterPoint[] => {
 	const { currentClusterOption } = state;
 	const { agglomerativeHierarchicalClusters, points } = props;
 	if (currentClusterOption === null) {
@@ -170,7 +170,7 @@ const getFillColorFunc = (
 	value: number
 ) => {
 	const defaultFillColorFunc = (
-		p: Point | AgglomerativeHierarchicalClusterPoint
+		p: IPoint | AgglomerativeHierarchicalClusterPoint
 	) => 'red';
 	if (!currentClusterOption || markerColors.length === 0) {
 		return defaultFillColorFunc;
@@ -186,7 +186,7 @@ const getFillColorFunc = (
 	}
 };
 const getMarkers = (
-	modeledPoints: Point[],
+	modeledPoints: IPoint[],
 	value: number,
 	markerColors: string[],
 	currentClusterOption: IOption | null
@@ -222,7 +222,7 @@ const initialState = {
 type IState = typeof initialState;
 
 interface IReduxProps {
-	points: Point[];
+	points: IPoint[];
 	agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
 }
 

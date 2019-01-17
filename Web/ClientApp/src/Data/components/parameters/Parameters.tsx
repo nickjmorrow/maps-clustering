@@ -2,7 +2,7 @@ import { clusterTypes } from 'src/Data/constants';
 import { IOption } from 'njm-react-component-library';
 import * as React from 'react';
 import { AhcParameters, DbscanParameters } from '.';
-import { Point, DbscanConfig } from 'src/Data/types';
+import { IPoint, DbscanConfig } from 'src/Data/types';
 import { connect } from 'react-redux';
 import { getAgglomerativeHierarchicalClusters } from 'src/Data';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -105,12 +105,12 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 interface IOwnProps {
 	currentClusterOption: IOption | null;
 	clusterCount: number;
-	points: Point[];
+	points: IPoint[];
 	onClusterCountChange(clusterCount: number): void;
 }
 
 interface IDispatchProps {
-	getAgglomerativeHierarchicalClusters(points: Point[]): void;
+	getAgglomerativeHierarchicalClusters(points: IPoint[]): void;
 	getDbscan(dbscanConig: DbscanConfig): void;
 }
 
