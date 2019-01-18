@@ -7,14 +7,13 @@ using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
-    public partial class PointController : Controller
+    public class PointsGroupController : Controller
     {
         private readonly PointsGroupService _pointsGroupService;
         private int _userId => Int32.Parse(this.User.Identity.Name);
 
-        public PointController(PointsGroupService pointsGroupService)
+        public PointsGroupController(PointsGroupService pointsGroupService)
         {
             this._pointsGroupService = pointsGroupService;
         }
@@ -26,11 +25,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> AddPointsGroup(PointsGroupInput pointsGroupInput)
+        public async Task<IActionResult> AddPointsGroup([FromBody] PointsGroupInput pointsGroupInput)
         {
             return Ok(await this._pointsGroupService.AddPointsGroupAsync(this._userId, pointsGroupInput));
-            
-            
         }
     }
 }

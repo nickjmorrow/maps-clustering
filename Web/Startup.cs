@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Warlock.Services;
 using Web.Services;
 using WebApplication.Helpers;
+using WebApplication.Models;
 using WebApplication.Services;
 
 namespace WebApplication
@@ -40,7 +41,7 @@ namespace WebApplication
             // CORS
             services.AddCors(options => { options.AddPolicy("AllowMyOrigin", 
                 policyBuilder => policyBuilder
-                    .WithOrigins("https://localhost:5001")
+                    .WithOrigins("https://localhost:5002")
                     .WithMethods("*")
                     .WithHeaders("*")); });
             
@@ -84,6 +85,8 @@ namespace WebApplication
             services.AddScoped<UserService, UserService>();
             services.AddScoped<UserItemService, UserItemService>();
             services.AddScoped<ItemService, ItemService>();
+            services.AddScoped<PointsGroupService, PointsGroupService>();
+            services.AddScoped<ItemFilterer, ItemFilterer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

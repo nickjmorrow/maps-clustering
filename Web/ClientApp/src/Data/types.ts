@@ -39,7 +39,7 @@ export interface IPointsGroup {
 	points: IPoint[];
 }
 
-export interface IPointsGroupInput {
+export interface IPointsGroupFormInput {
 	formData: FormData;
 	name: string;
 }

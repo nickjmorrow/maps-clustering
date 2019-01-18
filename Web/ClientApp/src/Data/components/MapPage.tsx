@@ -1,12 +1,12 @@
 import {
+	colors,
 	IOption,
 	Select,
-	Typography,
-	colors,
-	Button
+	Typography
 } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { IReduxState } from 'src/reducer';
 import { getColors as getMarkerColors } from 'src/services';
 import styled from 'styled-components';
@@ -17,13 +17,12 @@ import {
 	getPoints
 } from '../selectors';
 import {
+	AgglomerativeHierarchicalClusterPoint,
 	ClusteredPoint,
 	IClusterOption,
-	AgglomerativeHierarchicalClusterPoint,
 	IPoint,
 	IPointsGroup
 } from '../types';
-import { Dispatch, bindActionCreators } from 'redux';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
@@ -39,6 +38,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	handleClusterTypeChange = (currentClusterOption: IClusterOption) =>
 		this.setState({ currentClusterOption });
 
+	// TODO
 	handlePointsChange = (option: IOption) => alert('hey');
 
 	savePointsGroup = (pointsGroup: IPointsGroup) =>
@@ -71,14 +71,16 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 						{pointsGroups.map((pg, i) => (
 							<div key={i}>
 								<div>{pg.name}</div>
-								// TODO: change the typing on button //
-								@ts-ignore
-								<Button
-									onClick={(pointsGroup: IPointsGroup) =>
-										this.savePointsGroup(pointsGroup)
-									}>
-									Save
-								</Button>
+								// TODO: change the typing on button
+								{!pg.pointsGroupId && (
+									<button
+										// @ts-ignore
+										onClick={() =>
+											this.savePointsGroup(pg)
+										}>
+										Save
+									</button>
+								)}
 							</div>
 						))}
 						<Typography variant="h2">Cluster Type</Typography>

@@ -66,22 +66,20 @@ namespace Web.Services
                 await context.PointsGroups.AddAsync(pointsGroup);
                 await context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
                 await context.SaveChangesAsync();
-            }
-
-            // label points with pointsGroupId
-            var points = pointsGroupInput.Points.Select(p =>
-            {
-                p.PointsGroupId = pointsGroup.PointsGroupId;
-                return p;
-            });
-
-            // add associated points 
-            using (var context = this._context)
-            {
+                
+                // label points with pointsGroupId
+                var points = pointsGroupInput.Points.Select((p, i) =>
+                {
+                    p.PointId = i + 1;
+                    p.PointsGroupId = pointsGroup.PointsGroupId;
+                    return p;
+                });
+                
+                // add associated points 
                 await context.Points.AddRangeAsync(points);
                 await context.SaveChangesAsync();
-            }
-            return pointsGroup.PointsGroupId;
+                return pointsGroup.PointsGroupId;
+            }   
         }
     }
 }

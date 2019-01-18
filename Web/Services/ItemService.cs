@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using WebApplication;
 using WebApplication.Models;
@@ -15,16 +16,15 @@ namespace Web.Services
 
         public async Task<int> AddItemAsync(int itemTypeId)
         {
-            using (var context = this._context)
+            var item = new Item()
             {
-                var item = new Item()
-                {
-                    ItemTypeId = itemTypeId
-                };
-                await context.Items.AddAsync(item);
-                await context.SaveChangesAsync();
-                return item.ItemId;
-            }
+                ItemTypeId = itemTypeId,
+                DateCreated = DateTime.Now,
+                DateDeleted = null
+            };
+            await this._context.Items.AddAsync(item);
+            await this._context.SaveChangesAsync();
+            return item.ItemId;
         }
     }
 }

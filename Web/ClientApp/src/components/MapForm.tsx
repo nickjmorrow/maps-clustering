@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IInputInfo } from 'njm-react-component-library/lib/types';
 import { Form, Button } from 'njm-react-component-library';
 import { Dispatch, bindActionCreators } from 'redux';
-import { createPointsGroup, IPointsGroupInput } from 'src/Data';
+import { createPointsGroup, IPointsGroupFormInput } from 'src/Data';
 import { connect } from 'react-redux';
 import { mapFormFields } from 'src/Data/constants';
 import Axios from 'axios';
@@ -71,7 +71,7 @@ export const MapForm = connect(
 
 // types
 interface IDispatchProps {
-	onCreatePointsGroup(payload: IPointsGroupInput): void;
+	onCreatePointsGroup(payload: IPointsGroupFormInput): void;
 }
 
 type IProps = IDispatchProps;

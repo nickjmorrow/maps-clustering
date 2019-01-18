@@ -6,7 +6,7 @@ import {
 	DbscanConfig,
 	IPointsGroup,
 	IPoint,
-	IPointsGroupInput
+	IPointsGroupFormInput
 } from './types';
 
 export enum dataTypeKeys {
@@ -30,7 +30,7 @@ export enum dataTypeKeys {
 }
 
 export const createPointsGroup = {
-	request: (payload: IPointsGroupInput): ICreatePointsGroupAction =>
+	request: (payload: IPointsGroupFormInput): ICreatePointsGroupAction =>
 		action(dataTypeKeys.CREATE_POINTS_GROUP, payload),
 	success: (payload: IPointsGroup): ICreatePointsGroupSucceededAction =>
 		action(dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED, payload)
@@ -105,11 +105,13 @@ export type ActionTypes =
 	| IPopulatePointsGroupStateFromLocalStorageIfAvailable
 	| IPopulatePointsGroupStateFromLocalStorageIfAvailableSucceeded
 	| IGetPointsGroupsAction
-	| IGetPointsGroupsActionSucceeded;
+	| IGetPointsGroupsActionSucceeded
+	| ISavePointsGroupAction
+	| ISavePointsGroupActionSucceeded;
 
 export interface ICreatePointsGroupAction {
 	type: dataTypeKeys.CREATE_POINTS_GROUP;
-	payload: IPointsGroupInput;
+	payload: IPointsGroupFormInput;
 }
 
 export interface ICreatePointsGroupSucceededAction {
@@ -172,11 +174,12 @@ export interface IGetPointsGroupsActionSucceeded {
 
 export interface ISavePointsGroupAction {
 	type: dataTypeKeys.SAVE_POINTS_GROUP;
+	payload: IPointsGroup;
 }
 
 export interface ISavePointsGroupActionSucceeded {
 	type: dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED;
-	payload: IPointsGroup;
+	payload: number;
 }
 
 export interface IPopulatePointsGroupStateFromLocalStorageIfAvailable {

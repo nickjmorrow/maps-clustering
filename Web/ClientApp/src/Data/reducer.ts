@@ -58,6 +58,18 @@ export const dataReducer = (
 					...action.payload
 				]
 			};
+		case dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED:
+			return {
+				...state,
+				pointsGroups: state.pointsGroups.map(pg =>
+					pg.pointsGroupId
+						? pg
+						: {
+								...pg,
+								pointsGroupId: action.payload
+						  }
+				)
+			};
 		default:
 			return state;
 	}

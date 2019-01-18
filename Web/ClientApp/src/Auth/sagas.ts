@@ -39,6 +39,7 @@ function* watchGetUserFavoriteItems() {
 function* handleLoginAsync(action: IHandleLoginAction) {
 	try {
 		const { data } = yield call(axios.post, api.login, action.payload);
+		addTokenToDefaultHeader(data.token);
 		yield [
 			put(typesafeAction(authTypeKeys.LOGIN_SUCCEEDED, data)),
 			put(

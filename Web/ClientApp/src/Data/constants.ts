@@ -13,6 +13,11 @@ export enum calcApi {
 	getKMeansClusters = '/api/calc/getKMeansClusters'
 }
 
+const pointsGroupController = 'pointsGroup';
+export const pointsGroupApi = {
+	savePointsGroup: `/api/${pointsGroupController}/addPointsGroup`
+};
+
 const pointController = 'point';
 export const pointsApi = {
 	getPoints: `/api/${pointController}/getPoints`,
