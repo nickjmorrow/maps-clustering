@@ -51,7 +51,7 @@ function* createPointsGroupAsync(action: ICreatePointsGroupAction) {
 		);
 	} catch (error) {
 		yield put(
-			typesafeAction(dataTypeKeys.GET_DATA_FAILED, error.response.data)
+			typesafeAction(dataTypeKeys.GET_MAP_POINTS, error.response.data)
 		);
 	}
 }
@@ -136,7 +136,7 @@ function* watchHandlePopulatePointsFromLocalStorageIfAvailable() {
 
 function* handleGetPointsGroupsAsync() {
 	try {
-		const { data } = yield call(axios.get, pointsApi.getPoints);
+		const { data } = yield call(axios.get, pointsApi.getPointsGroups);
 		yield put(
 			typesafeAction(dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED, data)
 		);
@@ -145,7 +145,7 @@ function* handleGetPointsGroupsAsync() {
 	}
 }
 
-function* watchHandleGetPointsGroupsAsync() {
+function* watchGetPointsGroups() {
 	yield takeLatest(
 		dataTypeKeys.GET_POINTS_GROUPS,
 		handleGetPointsGroupsAsync
@@ -159,6 +159,7 @@ function* handleSavePointsGroupAsync(action: ISavePointsGroupAction) {
 			pointsGroupApi.savePointsGroup,
 			action.payload
 		);
+		localStorage.removeItem(localStorageKeys.pointsGroups);
 		yield put(
 			typesafeAction(dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED, data)
 		);
@@ -179,6 +180,6 @@ export const sagas = [
 	watchGetAhcs,
 	watchGetDbscan,
 	watchHandlePopulatePointsFromLocalStorageIfAvailable,
-	watchHandleGetPointsGroupsAsync,
+	watchGetPointsGroups,
 	watchSavePointsGroup
 ];

@@ -15,6 +15,7 @@ import {
 	isInLocalStorage,
 	removeFromLocalStorage
 } from './services';
+import { IUser } from './types';
 
 function* handleGetUserFavoriteItems() {
 	try {
@@ -128,7 +129,8 @@ function* watchHandleSetCurrentUser() {
 function* handlePopulateUserStateFromLocalStorageIfAvailable() {
 	try {
 		if (localStorage.getItem(USER) !== null) {
-			const user = JSON.parse(localStorage.getItem(USER)!);
+			const user: IUser = JSON.parse(localStorage.getItem(USER)!);
+			addTokenToDefaultHeader(user.token);
 			yield put(
 				typesafeAction(
 					authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,

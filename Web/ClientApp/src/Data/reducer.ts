@@ -32,7 +32,9 @@ export const dataReducer = (
 		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
 			const pointsGroups = [...state.pointsGroups, action.payload];
 			return { ...state, pointsGroups };
-		case dataTypeKeys.GET_DATA_FAILED:
+		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
+			return { ...state, pointsGroups: action.payload };
+		case dataTypeKeys.GET_MAP_POINTS:
 			return { ...state, error: action.payload };
 		case dataTypeKeys.GET_AHCS_SUCCEEDED:
 			return {

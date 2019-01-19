@@ -18,10 +18,9 @@ export const pointsGroupApi = {
 	savePointsGroup: `/api/${pointsGroupController}/addPointsGroup`
 };
 
-const pointController = 'point';
+const pointsGroupControllerName = 'pointsGroup';
 export const pointsApi = {
-	getPoints: `/api/${pointController}/getPoints`,
-	getPointsGroups: `api/${pointController}/getPointsGroups`
+	getPointsGroups: `api/${pointsGroupControllerName}/getPointsGroups`
 };
 
 export enum clusterTypes {

@@ -2,8 +2,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { Landing } from '.';
-import { populateUserStateFromLocalStorageIfAvailable } from './Auth';
-import { populatePointsStateFromLocalStorageIfAvailable } from './Data';
+import {
+	populateUserStateFromLocalStorageIfAvailable,
+	isAuthenticatedSelector
+} from './Auth';
+import {
+	populatePointsStateFromLocalStorageIfAvailable,
+	getPointsGroups
+} from './Data';
+import { IReduxState } from './reducer';
 
 export class AppInternal extends React.Component<IProps> {
 	componentDidMount = () => {
@@ -14,6 +21,13 @@ export class AppInternal extends React.Component<IProps> {
 		onPopulateUserStateFromLocalStorageIfAvailable();
 		onPopulatePointsStateFromLocalStorageIfAvailable();
 	};
+
+	componentWillReceiveProps = (nextProps: IProps) => {
+		if (nextProps.isAuthenticated) {
+			this.props.onGetPointsGroups();
+		}
+	};
+
 	public render() {
 		return <Landing />;
 	}
@@ -23,19 +37,30 @@ export class AppInternal extends React.Component<IProps> {
 interface IDispatchProps {
 	onPopulatePointsStateFromLocalStorageIfAvailable(): void;
 	onPopulateUserStateFromLocalStorageIfAvailable(): void;
+	onGetPointsGroups(): void;
 }
-type IProps = IDispatchProps;
+
+interface IReduxProps {
+	isAuthenticated: boolean;
+}
+type IProps = IDispatchProps & IReduxProps;
 
 // redux
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
 			onPopulatePointsStateFromLocalStorageIfAvailable: populatePointsStateFromLocalStorageIfAvailable,
-			onPopulateUserStateFromLocalStorageIfAvailable: populateUserStateFromLocalStorageIfAvailable
+			onPopulateUserStateFromLocalStorageIfAvailable: populateUserStateFromLocalStorageIfAvailable,
+			onGetPointsGroups: getPointsGroups.request
 		},
 		dispatch
 	);
+
+const mapStateToProps = (state: IReduxState): IReduxProps => ({
+	isAuthenticated: isAuthenticatedSelector(state)
+});
+
 export const App = connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(AppInternal);

@@ -41,12 +41,9 @@ namespace Web.Services
 
         public IEnumerable<PointsGroup> GetPointsGroups(int userId)
         {
-            using (var context = this._context)
-            {
-                var pointsGroups = context.PointsGroups
-                    .Include(pg => pg.Points);
-                return this._itemFilterer.GetValidItems(userId, pointsGroups);
-            }
+            var pointsGroups = this._context.PointsGroups
+                .Include(pg => pg.Points);
+            return this._itemFilterer.GetValidItems(userId, pointsGroups);
         }
 
         public async Task<int> AddPointsGroupAsync(int userId, PointsGroupInput pointsGroupInput)
