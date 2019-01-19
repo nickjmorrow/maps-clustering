@@ -43,12 +43,10 @@ export const dataReducer = (
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: [
-					...getUnsavedPointsGroups(state).map(
-						withFirstPointsGroupActive
-					),
-					...action.payload.map(asAllInactive)
-				]
+				pointsGroups: firstUnsavedOrJustFirst(
+					state.pointsGroups,
+					action.payload
+				)
 			};
 		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
 			return { ...state, error: action.payload };
@@ -102,20 +100,9 @@ export const dataReducer = (
 const getSavedPointsGroups = (dataState: DataState): IPointsGroup[] =>
 	dataState.pointsGroups.filter(pg => pg.pointsGroupId);
 
-const getUnsavedPointsGroups = (dataState: DataState) =>
-	dataState.pointsGroups.filter(pg => !pg.pointsGroupId);
-
-const withFirstPointsGroupActive = (pg: IPointsGroup, i: number) =>
-	i === 0 ? { ...pg, isActive: true } : { ...pg, isActive: false };
-
 const removePointsGroupId = (pointsGroupId: number) => (
 	pointsGroup: IPointsGroup
 ) => pointsGroup.pointsGroupId !== pointsGroupId;
-
-const asAllInactive = (pointsGroup: IPointsGroup) => ({
-	...pointsGroup,
-	isActive: false
-});
 
 const setActivePointsGroup = (pointsGroupId: number | undefined) => (
 	pg: IPointsGroup
@@ -123,3 +110,25 @@ const setActivePointsGroup = (pointsGroupId: number | undefined) => (
 	pg.pointsGroupId === pointsGroupId
 		? { ...pg, isActive: true }
 		: { ...pg, isActive: false };
+
+const firstUnsavedOrJustFirst = (
+	pointsGroups: IPointsGroup[],
+	savedPointsGroups: IPointsGroup[]
+) => {
+	const unsavedPointsGroupsAndSavedPointsGroups = [
+		...getUnsavedPointsGroups(pointsGroups),
+		...savedPointsGroups
+	];
+	return unsavedPointsGroupsAndSavedPointsGroups.map(
+		withFirstPointsGroupActive
+	);
+};
+
+const withFirstPointsGroupActive = (
+	pg: IPointsGroup,
+	i: number
+): IPointsGroup =>
+	i === 0 ? { ...pg, isActive: true } : { ...pg, isActive: false };
+
+const getUnsavedPointsGroups = (pointsGroup: IPointsGroup[]) =>
+	pointsGroup.filter(pg => !pg.pointsGroupId);
