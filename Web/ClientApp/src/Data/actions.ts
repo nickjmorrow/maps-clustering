@@ -11,8 +11,8 @@ import {
 
 export enum dataTypeKeys {
 	CREATE_POINTS_GROUP = 'CREATE_POINTS_GROUP',
-	CREATE_POINTS_GROUP_SUCCEEDED = 'GET_DATA_SUCCEEDED',
-	GET_MAP_POINTS = 'GET_DATA_FAILED',
+	CREATE_POINTS_GROUP_SUCCEEDED = 'CREATE_POINTS_GROUP_SUCCEEDED',
+	CREATE_POINTS_GROUP_FAILED = 'GET_DATA_FAILED',
 	GET_AHCS = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS',
 	GET_AHCS_SUCCEEDED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_SUCCEEDED',
 	GET_AHCS_FAILED = 'GET_AGGLOMERATIVE_HIERARCHICAL_CLUSTERS_FAILED',
@@ -37,7 +37,7 @@ export const createPointsGroup = {
 };
 
 export const getMapDataFailed = (payload: string): GetMapPointsFailedAction =>
-	action(dataTypeKeys.GET_MAP_POINTS, payload);
+	action(dataTypeKeys.CREATE_POINTS_GROUP_FAILED, payload);
 
 export const getAgglomerativeHierarchicalClusters = (
 	payload: IPoint[]
@@ -120,7 +120,7 @@ export interface ICreatePointsGroupSucceededAction {
 }
 
 export interface GetMapPointsFailedAction {
-	type: dataTypeKeys.GET_MAP_POINTS;
+	type: dataTypeKeys.CREATE_POINTS_GROUP_FAILED;
 	payload: string;
 }
 

@@ -1,7 +1,7 @@
 import { ActionTypes, authTypeKeys } from './actions';
-import { IUser } from './types';
-import { addTokenToDefaultHeader, addToLocalStorage } from './services';
 import { USER } from './constants';
+import { addTokenToDefaultHeader, addToLocalStorage } from './services';
+import { IUser } from './types';
 
 export interface IAuthState {
 	readonly user: IUser | null;

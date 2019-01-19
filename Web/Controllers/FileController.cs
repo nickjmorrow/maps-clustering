@@ -23,15 +23,16 @@ namespace WebApplication.Controllers
         {
             this._fileHandlerService = fileHandlerService;
         }
-        
+
         [HttpPost("[action]")]
-        public IActionResult ConvertFileToPoints(IFormFile file) {
+        public IActionResult ConvertFileToPoints(IFormFile file)
+        {
             if (file.Length == 0)
             {
                 return BadRequest();
             }
 
-            return Ok(this._fileHandlerService.ConvertFileToPoints(file));
+            return Ok(this._fileHandlerService.ConvertFileToPointsGroup(file));
         }
     }
 }

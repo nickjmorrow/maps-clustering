@@ -21,6 +21,8 @@
     <ItemGroup>
       <None Remove="Scripts\Script00001 - create user and item tables.sql" />
       <EmbeddedResource Include="Scripts\Script00001 - create user and item tables.sql" />
+      <None Remove="Scripts\Script00002 - create points tables.sql" />
+      <EmbeddedResource Include="Scripts\Script00002 - create points tables.sql" />
     </ItemGroup>
 
 </Project>

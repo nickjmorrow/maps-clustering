@@ -35,11 +35,13 @@ export interface DbscanConfig {
 export interface IPointsGroup {
 	pointsGroupId?: number;
 	name: string;
+	averageHorizontalDisplacement: number;
+	averageVerticalDisplacement: number;
 	itemId?: number;
 	points: IPoint[];
 }
 
 export interface IPointsGroupFormInput {
-	formData: FormData;
+	file: FormData;
 	name: string;
 }

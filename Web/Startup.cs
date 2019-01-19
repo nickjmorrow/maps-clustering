@@ -87,6 +87,7 @@ namespace WebApplication
             services.AddScoped<ItemService, ItemService>();
             services.AddScoped<PointsGroupService, PointsGroupService>();
             services.AddScoped<ItemFilterer, ItemFilterer>();
+            services.AddScoped<FileConversionService, FileConversionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

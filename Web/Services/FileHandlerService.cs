@@ -3,37 +3,48 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Calc.Models;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Web.Services;
+using WebApplication.Controllers;
+using WebApplication.Models;
+using WebApplication.Models.DTOs;
 
 namespace WebApplication.Services
 {
     public class FileHandlerService
     {
-        public IEnumerable<Point> ConvertFileToPoints(IFormFile file)
+        private FileConversionService _fileConversionService { get; set; }
+
+        public FileHandlerService(FileConversionService fileConversionService)
         {
-            var xml = this.LoadAsXml(file);
-            var json = this.ConvertXmlToJson(xml);
-            return this.ParseJsonToPoints(json);
-        }
-        
-        private XmlDocument LoadAsXml(IFormFile file)
-        {
-            using (var reader = new StreamReader(file.OpenReadStream()))
-            {
-                var contents = reader.ReadToEnd();
-                var xml = new XmlDocument();
-                xml.LoadXml(contents);
-                return xml;   
-            }
+            this._fileConversionService = fileConversionService;
         }
 
-        private JObject ConvertXmlToJson(XmlDocument xml)
+        public PointsGroup ConvertFileToPointsGroup(IFormFile file)
         {
-            string json = JsonConvert.SerializeXmlNode(xml);
-            return JObject.Parse(json);
+            var json = this._fileConversionService.ConvertFileToJson(file);
+            var points = this.ParseJsonToPoints(json);
+            return this.BuildPointsGroup(points);
+        }
+
+        private PointsGroup BuildPointsGroup(IEnumerable<Point> points)
+        {
+            var averageHorizontalDisplacement = points
+                .Select(p => p.HorizontalDisplacement)
+                .Average();
+
+            var averageVerticalDisplacement = points
+                .Select(p => p.VerticalDisplacement)
+                .Average();
+
+            return new PointsGroup()
+            {
+                Points = points,
+                AverageHorizontalDisplacement = averageHorizontalDisplacement,
+                AverageVerticalDisplacement = averageVerticalDisplacement
+            };
         }
 
         private IEnumerable<Point> ParseJsonToPoints(JObject json)
@@ -50,6 +61,7 @@ namespace WebApplication.Services
                     VerticalDisplacement = Convert.ToDouble(coordinates[1]),
                 };
             });
+            
         }
     }
 }

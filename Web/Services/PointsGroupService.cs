@@ -51,32 +51,39 @@ namespace Web.Services
             // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
             
+            var averageHorizontalDisplacement = pointsGroupInput.Points
+                .Select(p => p.HorizontalDisplacement)
+                .Average();
+
+            var averageVerticalDisplacement = pointsGroupInput.Points
+                .Select(p => p.VerticalDisplacement)
+                .Average();
+            
             var pointsGroup = new PointsGroup()
             {
                 Name = pointsGroupInput.Name,
+                AverageHorizontalDisplacement = averageHorizontalDisplacement,
+                AverageVerticalDisplacement = averageVerticalDisplacement,
                 ItemId = itemId
             };
             
             // add pointsGroup
-            using (var context = this._context)
+            await this._context.PointsGroups.AddAsync(pointsGroup);
+            await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
+            await this._context.SaveChangesAsync();
+                
+            // label points with pointsGroupId
+            var points = pointsGroupInput.Points.Select((p, i) =>
             {
-                await context.PointsGroups.AddAsync(pointsGroup);
-                await context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
-                await context.SaveChangesAsync();
-                
-                // label points with pointsGroupId
-                var points = pointsGroupInput.Points.Select((p, i) =>
-                {
-                    p.PointId = i + 1;
-                    p.PointsGroupId = pointsGroup.PointsGroupId;
-                    return p;
-                });
-                
-                // add associated points 
-                await context.Points.AddRangeAsync(points);
-                await context.SaveChangesAsync();
-                return pointsGroup.PointsGroupId;
-            }   
+                p.PointId = i + 1;
+                p.PointsGroupId = pointsGroup.PointsGroupId;
+                return p;
+            });
+            
+            // add associated points 
+            await this._context.Points.AddRangeAsync(points);
+            await this._context.SaveChangesAsync();
+            return pointsGroup.PointsGroupId;
         }
     }
 }

@@ -2,7 +2,8 @@ import {
 	colors,
 	IOption,
 	Select,
-	Typography
+	Typography,
+	Button
 } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -71,16 +72,15 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 						{pointsGroups.map((pg, i) => (
 							<div key={i}>
 								<div>{pg.name}</div>
-								// TODO: change the typing on button
-								{!pg.pointsGroupId && (
-									<button
-										// @ts-ignore
-										onClick={() =>
-											this.savePointsGroup(pg)
-										}>
-										Save
-									</button>
-								)}
+								{!pg.pointsGroupId ||
+									(pg.pointsGroupId === 0 && (
+										<Button
+											onClick={() =>
+												this.savePointsGroup(pg)
+											}>
+											Save
+										</Button>
+									))}
 							</div>
 						))}
 						<Typography variant="h2">Cluster Type</Typography>

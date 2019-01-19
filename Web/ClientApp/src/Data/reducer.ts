@@ -30,11 +30,19 @@ export const dataReducer = (
 
 	switch (action.type) {
 		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
-			const pointsGroups = [...state.pointsGroups, action.payload];
-			return { ...state, pointsGroups };
+			return {
+				...state,
+				pointsGroups: [...getSavedPointsGroups(state), action.payload]
+			};
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
-			return { ...state, pointsGroups: action.payload };
-		case dataTypeKeys.GET_MAP_POINTS:
+			return {
+				...state,
+				pointsGroups: [
+					...getUnsavedPointsGroups(state),
+					...action.payload
+				]
+			};
+		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
 			return { ...state, error: action.payload };
 		case dataTypeKeys.GET_AHCS_SUCCEEDED:
 			return {
@@ -50,13 +58,10 @@ export const dataReducer = (
 		case dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
 			return { ...state, points: action.payload };
 		case dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
-			const unsavedPointsGroupsFromState = state.pointsGroups.filter(
-				pg => !pg.pointsGroupId
-			);
 			return {
 				...state,
 				pointsGroups: [
-					...unsavedPointsGroupsFromState,
+					...getSavedPointsGroups(state),
 					...action.payload
 				]
 			};
@@ -76,3 +81,9 @@ export const dataReducer = (
 			return state;
 	}
 };
+
+const getSavedPointsGroups = (dataState: DataState): IPointsGroup[] =>
+	dataState.pointsGroups.filter(pg => pg.pointsGroupId);
+
+const getUnsavedPointsGroups = (dataState: DataState) =>
+	dataState.pointsGroups.filter(pg => !pg.pointsGroupId);

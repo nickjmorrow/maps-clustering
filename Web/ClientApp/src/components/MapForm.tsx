@@ -14,10 +14,10 @@ export const MapFormInternal: React.SFC<IProps> = ({ onCreatePointsGroup }) => {
 		const name = inputs.find(i => i.name === mapFormFields.mapName)!
 			.value as string;
 		if (fileList.length) {
-			const formData = new FormData();
-			formData.append('file', fileList[0]);
+			const file = new FormData();
+			file.append('file', fileList[0]);
 			const pointsGroupInput = {
-				formData,
+				file,
 				name
 			};
 			onCreatePointsGroup(pointsGroupInput);

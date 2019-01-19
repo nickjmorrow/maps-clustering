@@ -12,6 +12,8 @@ namespace WebApplication.Models
         [Key]
         public int PointsGroupId { get; set; }
         public string Name { get; set; }
+        public double AverageHorizontalDisplacement { get; set; }
+        public double AverageVerticalDisplacement { get; set; }
         public int ItemId { get; set; }
 
         public IEnumerable<Point> Points { get; set; }
