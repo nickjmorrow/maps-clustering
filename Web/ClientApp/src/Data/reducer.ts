@@ -51,9 +51,12 @@ export const dataReducer = (
 		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
 			return { ...state, error: action.payload };
 		case dataTypeKeys.GET_AHCS_SUCCEEDED:
+			const { pointsGroupId } = action.payload;
 			return {
 				...state,
-				agglomerativeHierarchicalClusters: action.payload
+				pointsGroups: state.pointsGroups.map(pg =>
+					pg.pointsGroupId === pointsGroupId ? action.payload : pg
+				)
 			};
 		case dataTypeKeys.GET_AHCS_FAILED:
 			return { ...state, error: action.payload };

@@ -1,11 +1,5 @@
 import { action } from 'typesafe-actions';
-import {
-	AgglomerativeHierarchicalClusterConfig,
-	AgglomerativeHierarchicalClusterPoint as AhcPoint,
-	IPoint,
-	IPointsGroup,
-	IPointsGroupFormInput
-} from './types';
+import { IPoint, IPointsGroup, IPointsGroupFormInput } from './types';
 
 export enum dataTypeKeys {
 	CREATE_POINTS_GROUP = 'CREATE_POINTS_GROUP',
@@ -36,14 +30,12 @@ export const createPointsGroup = {
 		action(dataTypeKeys.CREATE_POINTS_GROUP_FAILED, payload)
 };
 
-export const getAgglomerativeHierarchicalClusters = {
-	request: (payload: IPoint[]): GetAhcAction =>
+export const getAhcs = {
+	request: (payload: IPointsGroup): GetAhcsAction =>
 		action(dataTypeKeys.GET_AHCS, payload),
-	success: (payload: AhcPoint[]): GetAhcSucceededAction =>
+	success: (payload: IPointsGroup): GetAhcsActionSucceeded =>
 		action(dataTypeKeys.GET_AHCS_SUCCEEDED, payload),
-	failure: (
-		payload: string
-	): GetAgglomerativeHierarchicalClustersFailedAction =>
+	failure: (payload: string): GetAhcsActionFailed =>
 		action(dataTypeKeys.GET_AHCS_FAILED, payload)
 };
 
@@ -94,9 +86,9 @@ export type ActionTypes =
 	| ICreatePointsGroupAction
 	| ICreatePointsGroupSucceededAction
 	| GetMapPointsFailedAction
-	| GetAhcAction
-	| GetAhcSucceededAction
-	| GetAgglomerativeHierarchicalClustersFailedAction
+	| GetAhcsAction
+	| GetAhcsActionSucceeded
+	| GetAhcsActionFailed
 	| IPopulatePointsStateFromLocalStorageIfAvailable
 	| IPopulatePointsStateFromLocalStorageIfAvailableSucceeded
 	| IPopulatePointsGroupStateFromLocalStorageIfAvailable
@@ -124,17 +116,17 @@ export interface GetMapPointsFailedAction {
 	payload: string;
 }
 
-export interface GetAhcAction {
+export interface GetAhcsAction {
 	type: dataTypeKeys.GET_AHCS;
-	payload: AgglomerativeHierarchicalClusterConfig;
+	payload: IPointsGroup;
 }
 
-export interface GetAhcSucceededAction {
+export interface GetAhcsActionSucceeded {
 	type: dataTypeKeys.GET_AHCS_SUCCEEDED;
-	payload: AhcPoint[];
+	payload: IPointsGroup;
 }
 
-export interface GetAgglomerativeHierarchicalClustersFailedAction {
+export interface GetAhcsActionFailed {
 	type: dataTypeKeys.GET_AHCS_FAILED;
 	payload: string;
 }

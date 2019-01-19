@@ -1,11 +1,11 @@
 import {
+	border,
+	borderRadius,
 	colors,
 	IOption,
-	Select,
-	Typography,
-	borderRadius,
-	border,
-	transitions
+	LabeledRadioButtonInput,
+	transitions,
+	Typography
 } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -15,11 +15,12 @@ import { getColors as getMarkerColors } from 'src/services';
 import styled from 'styled-components';
 import {
 	Clusters,
+	deletePointsGroup,
 	Map,
 	Parameters,
 	savePointsGroup,
-	deletePointsGroup,
-	setActivePointsGroup
+	setActivePointsGroup,
+	getAhcs
 } from '../';
 import { clusterOptions, clusterTypes } from '../constants';
 import {
@@ -29,7 +30,6 @@ import {
 import {
 	AgglomerativeHierarchicalClusterPoint,
 	ClusteredPoint,
-	IClusterOption,
 	IPoint,
 	IPointsGroup
 } from '../types';
@@ -54,8 +54,9 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	handleClusterCountChange = (clusterCount: number) =>
 		this.setState({ clusterCount });
 
-	handleClusterTypeChange = (currentClusterOption: IClusterOption) =>
+	handleClusterTypeChange = (currentClusterOption: IOption) => {
 		this.setState({ currentClusterOption });
+	};
 
 	// TODO
 	handlePointsChange = (option: IOption) => alert('hey');
@@ -83,23 +84,28 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	);
 
 	render() {
-		const { points, pointsGroups } = this.props;
+		const { pointsGroups, onGetAhcs } = this.props;
 		const {
 			currentClusterOption,
 			clusterCount: clusterCount,
 			markerColors
 		} = this.state;
 
-		const markers = getMarkers(
-			getPointsForMap(this.state, this.props),
-			clusterCount,
-			markerColors,
-			currentClusterOption
+		const activePointsGroup = pointsGroups.find(pg => pg.isActive)!;
+
+		const pointsForMap = getPointsForMap(
+			currentClusterOption,
+			activePointsGroup
 		);
 
-		const activePointsGroup = this.props.pointsGroups.find(
-			pg => pg.isActive
-		)!;
+		const markers = getMarkers(
+			pointsForMap,
+			clusterCount,
+			markerColors,
+			currentClusterOption,
+			activePointsGroup
+		);
+
 		const defaultPosition = activePointsGroup && {
 			lat: activePointsGroup.averageVerticalDisplacement,
 			lng: activePointsGroup.averageHorizontalDisplacement
@@ -116,15 +122,13 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 
 						{pointsGroups.map(this.renderPointsGroup)}
 						<Typography variant="h2">Cluster Type</Typography>
-						<Select
+						<LabeledRadioButtonInput
 							options={clusterOptions}
-							onChange={this.handleClusterTypeChange}
-							currentOption={currentClusterOption}
-							removeNoneOptionAfterSelection={true}
+							onClick={this.handleClusterTypeChange}
+							selectedOption={currentClusterOption}
 						/>
 						<Parameters
 							currentClusterOption={currentClusterOption}
-							points={points}
 							clusterCount={clusterCount}
 							onClusterCountChange={this.handleClusterCountChange}
 						/>
@@ -136,7 +140,8 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 							clusteredPoints={getClusters(
 								currentClusterOption,
 								clusterCount,
-								this.props
+								activePointsGroup,
+								onGetAhcs
 							)}
 						/>
 					</InfoPanel>
@@ -160,7 +165,8 @@ const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 		{
 			onSavePointsGroup: savePointsGroup.request,
 			onDeletePointsGroup: deletePointsGroup.request,
-			onSetActivePointsGroup: setActivePointsGroup
+			onSetActivePointsGroup: setActivePointsGroup,
+			onGetAhcs: getAhcs.request
 		},
 		dispatch
 	);
@@ -173,7 +179,7 @@ export const MapPage = connect(
 // types
 const initialState = {
 	clusterCount: 30,
-	currentClusterOption: null as IOption | null,
+	currentClusterOption: clusterOptions[0],
 	markerColors: [] as string[]
 };
 
@@ -183,6 +189,7 @@ interface IDispatchProps {
 	onSavePointsGroup(pointsGroup: IPointsGroup): void;
 	onDeletePointsGroup(pointsGroupId: number): void;
 	onSetActivePointsGroup(pointsGroupId: number | undefined): void;
+	onGetAhcs(pointsGroup: IPointsGroup): void;
 }
 
 interface IReduxProps {
@@ -227,20 +234,33 @@ const SmallCloseIcon = styled.button``;
 
 // helpers
 const getClusters = (
-	currentClusterOption: IOption | null,
+	currentClusterOption: IOption,
 	clusterCount: number,
-	props: IProps
+	activePointsGroup: IPointsGroup,
+	onGetAhcs: (pointsGroup: IPointsGroup) => void
 ): ClusteredPoint[] => {
-	const unclusteredPoints = props.points.map(p => ({
+	if (!activePointsGroup) {
+		return [];
+	}
+	const unclusteredPoints = activePointsGroup.points.map(p => ({
 		...p,
 		clusterId: p.pointId
 	}));
-	if (!currentClusterOption) {
+
+	if (currentClusterOption.value === clusterTypes.none) {
 		return unclusteredPoints;
 	}
+
 	switch (currentClusterOption.value) {
-		case clusterTypes.agglomerativeHierarchicalClusters:
-			return props.agglomerativeHierarchicalClusters.map(ahc => {
+		case clusterTypes.ahcs:
+			// if clusterInfo is not present, request for it and return
+			// unclustered points
+			if (activePointsGroup.ahcInfo === undefined) {
+				onGetAhcs(activePointsGroup);
+				return unclusteredPoints;
+			}
+
+			return activePointsGroup.ahcInfo.map(ahc => {
 				return {
 					...ahc,
 					clusterId:
@@ -255,25 +275,23 @@ const getClusters = (
 };
 
 const getPointsForMap = (
-	state: IState,
-	props: IProps
+	currentClusterOption: IOption,
+	activePointsGroup: IPointsGroup
 ): IPoint[] | AgglomerativeHierarchicalClusterPoint[] => {
-	const { currentClusterOption } = state;
-	const { agglomerativeHierarchicalClusters, pointsGroups } = props;
-	const activePointsGroup = pointsGroups.find(pg => pg.isActive)!;
 	if (!activePointsGroup) {
 		return [];
 	}
 	const { points } = activePointsGroup;
-	if (currentClusterOption === null) {
+	if (!activePointsGroup.ahcInfo) {
 		return points;
 	}
 	const canShowAgglomerativeHierarchicalClusters =
-		props.agglomerativeHierarchicalClusters.length > 0;
+		activePointsGroup.ahcInfo![0].agglomerativeHierarchicalClusterInfos
+			.length > 0;
 	switch (currentClusterOption.value) {
-		case clusterTypes.agglomerativeHierarchicalClusters:
+		case clusterTypes.ahcs:
 			return canShowAgglomerativeHierarchicalClusters
-				? agglomerativeHierarchicalClusters
+				? activePointsGroup.ahcInfo!
 				: points;
 		default:
 			return points;
@@ -282,7 +300,8 @@ const getPointsForMap = (
 const getFillColorFunc = (
 	currentClusterOption: IOption | null,
 	markerColors: string[],
-	value: number
+	value: number,
+	activePointsGroup: IPointsGroup
 ) => {
 	const defaultFillColorFunc = (
 		p: IPoint | AgglomerativeHierarchicalClusterPoint
@@ -291,7 +310,15 @@ const getFillColorFunc = (
 		return defaultFillColorFunc;
 	}
 	switch (currentClusterOption.value) {
-		case clusterTypes.agglomerativeHierarchicalClusters:
+		case clusterTypes.ahcs:
+			if (
+				activePointsGroup.ahcInfo === undefined ||
+				value >
+					activePointsGroup.ahcInfo[0]
+						.agglomerativeHierarchicalClusterInfos.length
+			) {
+				return defaultFillColorFunc;
+			}
 			return (p: AgglomerativeHierarchicalClusterPoint) =>
 				markerColors[
 					p.agglomerativeHierarchicalClusterInfos[value - 1].clusterId
@@ -301,15 +328,17 @@ const getFillColorFunc = (
 	}
 };
 const getMarkers = (
-	modeledPoints: IPoint[],
+	pointsForMap: Array<AgglomerativeHierarchicalClusterPoint | IPoint>,
 	value: number,
 	markerColors: string[],
-	currentClusterOption: IOption | null
+	currentClusterOption: IOption,
+	activePointsGroup: IPointsGroup
 ) => {
-	if (!modeledPoints.length) {
+	if (!activePointsGroup) {
 		return [];
 	}
-	return modeledPoints.map(mp => ({
+	// const { points } = activePointsGroup;
+	return pointsForMap.map(mp => ({
 		position: {
 			lat: mp.verticalDisplacement,
 			lng: mp.horizontalDisplacement
@@ -321,7 +350,8 @@ const getMarkers = (
 			fillColor: getFillColorFunc(
 				currentClusterOption,
 				markerColors,
-				value
+				value,
+				activePointsGroup
 			)(mp)
 		}
 	}));

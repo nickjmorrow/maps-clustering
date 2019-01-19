@@ -27,7 +27,7 @@ export const pointsApi = {
 
 export enum clusterTypes {
 	none = 'none',
-	agglomerativeHierarchicalClusters = 'agglomerativeHierarchicalClusters',
+	ahcs = 'agglomerativeHierarchicalClusters',
 	expectationMaximization = 'expectationMaximization',
 	dbscan = 'dbscan',
 	meanShift = 'meanShift',
@@ -36,22 +36,26 @@ export enum clusterTypes {
 
 export const clusterOptions: IOption[] = [
 	{
-		value: clusterTypes.agglomerativeHierarchicalClusters,
+		value: clusterTypes.none,
+		label: 'None'
+	},
+	{
+		value: clusterTypes.ahcs,
 		label: 'AHC'
-	},
-	{ value: clusterTypes.dbscan, label: 'DBSCAN' },
-	{
-		value: clusterTypes.meanShift,
-		label: 'Mean-Shift Clustering'
-	},
-	{
-		value: clusterTypes.kMeans,
-		label: 'K-Means Clustering'
-	},
-	{
-		value: clusterTypes.expectationMaximization,
-		label: 'Expectation Maximization'
 	}
+	// { value: clusterTypes.dbscan, label: 'DBSCAN' },
+	// {
+	// 	value: clusterTypes.meanShift,
+	// 	label: 'Mean-Shift Clustering'
+	// },
+	// {
+	// 	value: clusterTypes.kMeans,
+	// 	label: 'K-Means Clustering'
+	// },
+	// {
+	// 	value: clusterTypes.expectationMaximization,
+	// 	label: 'Expectation Maximization'
+	// }
 ];
 
 export enum localStorageKeys {

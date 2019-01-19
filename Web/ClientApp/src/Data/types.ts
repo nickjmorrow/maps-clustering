@@ -40,9 +40,12 @@ export interface IPointsGroup {
 	itemId?: number;
 	points: IPoint[];
 	isActive: boolean;
+	ahcInfo?: AgglomerativeHierarchicalClusterPoint[];
 }
 
 export interface IPointsGroupFormInput {
 	file: FormData;
 	name: string;
 }
+
+export type PointsGroupId = number;

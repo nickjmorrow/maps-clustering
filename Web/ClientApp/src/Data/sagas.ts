@@ -3,7 +3,7 @@ import { all, call, put, takeLatest } from 'redux-saga/effects';
 import { action as typesafeAction } from 'typesafe-actions';
 import {
 	dataTypeKeys,
-	GetAhcAction,
+	GetAhcsAction,
 	ICreatePointsGroupAction,
 	ISavePointsGroupAction,
 	IDeletePointsGroupAction
@@ -60,17 +60,22 @@ function* createPointsGroupAsync(action: ICreatePointsGroupAction) {
 }
 
 function* watchGetAhcs() {
-	yield takeLatest(dataTypeKeys.GET_AHCS, getAhcsAsync);
+	yield takeLatest(dataTypeKeys.GET_AHCS, handleGetAhcsAsync);
 }
 
-function* getAhcsAsync(action: GetAhcAction) {
+function* handleGetAhcsAsync(action: GetAhcsAction) {
+	const { points } = action.payload;
 	try {
 		const { data } = yield call(
 			axios.post,
 			calcApi.getAgglomerativeHierarchicalClusters,
-			action.payload
+			points
 		);
-		yield put(typesafeAction(dataTypeKeys.GET_AHCS_SUCCEEDED, data));
+		const pointsGroup: IPointsGroup = {
+			...action.payload,
+			ahcInfo: data
+		};
+		yield put(typesafeAction(dataTypeKeys.GET_AHCS_SUCCEEDED, pointsGroup));
 	} catch (error) {
 		yield put(
 			typesafeAction(dataTypeKeys.GET_AHCS_FAILED, error.response.data)

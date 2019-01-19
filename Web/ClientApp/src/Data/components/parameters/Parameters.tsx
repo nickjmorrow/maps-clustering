@@ -2,9 +2,10 @@ import { IOption } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { getAgglomerativeHierarchicalClusters } from 'src/Data';
+import { getAhcs } from 'src/Data';
 import { clusterTypes } from 'src/Data/constants';
-import { IPoint } from 'src/Data/types';
+import { IPointsGroup } from 'src/Data/types';
+import { IReduxState } from 'src/reducer';
 import { AhcParameters } from '.';
 // import { getDbscan } from 'src/Data/actions';
 
@@ -21,46 +22,32 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 			maximumDistanceBetweenPoints
 		});
 
-	handleGetAgglomerativeHierarchicalClusters = () => {
-		this.props.onGetAgglomerativeHierarchicalClusters(this.props.points);
+	handleGetAhcs = () => {
+		const { onGetAhcs, pointsGroups } = this.props;
+		onGetAhcs(pointsGroups.find(pg => pg.isActive)!);
 	};
-
-	// handleGetDbscan = () => {
-	// 	const { points } = this.props;
-	// 	const {
-	// 		minimumPointsPerCluster,
-	// 		maximumDistanceBetweenPoints
-	// 	} = this.state;
-	// 	const dbscanConfig: DbscanConfig = {
-	// 		points,
-	// 		minimumPointsPerCluster,
-	// 		maximumDistanceBetweenPoints
-	// 	};
-	// 	this.props.getDbscan(dbscanConfig);
-	// };
 
 	render() {
 		const {
-			points,
+			pointsGroups,
 			clusterCount,
 			currentClusterOption,
 			onClusterCountChange: handleClusterCountChange
 		} = this.props;
-		// const {
-		// 	minimumPointsPerCluster: minimumPointsPerCluster,
-		// 	maximumDistanceBetweenPoints: maximumDistanceBetweenPoints
-		// } = this.state;
 
+		const activePointsGroup = pointsGroups.find(pg => pg.isActive)!;
+		if (!activePointsGroup) {
+			return null;
+		}
+		const { points } = activePointsGroup;
 		const minClusters = 1;
 		const maxClusters = points.length;
-		// const maxDistanceBetweenPoints = 5;
-		// const maxMinimumPointsPerCluster = 10;
 
 		if (!currentClusterOption) {
 			return null;
 		}
 		switch (currentClusterOption.value) {
-			case clusterTypes.agglomerativeHierarchicalClusters:
+			case clusterTypes.ahcs:
 				return (
 					<AhcParameters
 						min={minClusters}
@@ -69,32 +56,10 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 						points={points}
 						onClusterCountChange={handleClusterCountChange}
 						onGetAgglomerativeHierarchicalClusters={
-							this.handleGetAgglomerativeHierarchicalClusters
+							this.handleGetAhcs
 						}
 					/>
 				);
-			// case clusterTypes.dbscan:
-			// 	return (
-			// 		<DbscanParameters
-			// 			minDistanceBetweenPoints={
-			// 				minMaximumDistanceBetweenPoints
-			// 			}
-			// 			maxDistanceBetweenPoints={maxDistanceBetweenPoints}
-			// 			maxMinimumPointsPerCluster={maxMinimumPointsPerCluster}
-			// 			minMinimumPointsPerCluster={minMinimumPointsPerCluster}
-			// 			maximumDistanceBetweenPoints={
-			// 				maximumDistanceBetweenPoints
-			// 			}
-			// 			minimumPointsPerCluster={minimumPointsPerCluster}
-			// 			onDistanceBetweenPointsChange={
-			// 				this.handleMaximumDistanceBetweenPointsChange
-			// 			}
-			// 			onMinimumPointsPerClusterChange={
-			// 				this.handleMinimumPointsPerClusterChange
-			// 			}
-			// 			onGetDbscan={this.handleGetDbscan}
-			// 		/>
-			// 	);
 			default:
 				return <div>Hello</div>;
 		}
@@ -105,31 +70,34 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 interface IOwnProps {
 	currentClusterOption: IOption | null;
 	clusterCount: number;
-	points: IPoint[];
 	onClusterCountChange(clusterCount: number): void;
 }
 
 interface IDispatchProps {
-	onGetAgglomerativeHierarchicalClusters(points: IPoint[]): void;
-	// getDbscan(dbscanConig: DbscanConfig): void;
+	onGetAhcs(pointsGroupId: IPointsGroup): void;
 }
 
-type IProps = IOwnProps & IDispatchProps;
+interface IReduxProps {
+	pointsGroups: IPointsGroup[];
+}
+
+type IProps = IOwnProps & IDispatchProps & IReduxProps;
 
 type IState = typeof initialState;
 
 // redux
+const mapStateToProps = (state: IReduxState): IReduxProps => ({
+	pointsGroups: state.data.pointsGroups
+});
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			onGetAgglomerativeHierarchicalClusters:
-				getAgglomerativeHierarchicalClusters.request
-			// getDbscan: getDbscan.request
+			onGetAhcs: getAhcs.request
 		},
 		dispatch
 	);
 export const Parameters = connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(ParametersInternal);
 
