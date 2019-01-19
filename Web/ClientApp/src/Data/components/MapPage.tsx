@@ -37,10 +37,19 @@ import {
 export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
 
-	componentWillReceiveProps = (nextProps: IProps) =>
+	componentWillReceiveProps = (nextProps: IProps) => {
+		const activePointsGroup = nextProps.pointsGroups.find(
+			pg => pg.isActive
+		)!;
+		if (!activePointsGroup) {
+			this.setState({ markerColors: [] });
+			return;
+		}
+
 		this.setState({
-			markerColors: getMarkerColors(nextProps.points.length)
+			markerColors: getMarkerColors(activePointsGroup.points.length)
 		});
+	};
 
 	handleClusterCountChange = (clusterCount: number) =>
 		this.setState({ clusterCount });
@@ -88,9 +97,17 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 			currentClusterOption
 		);
 
+		const activePointsGroup = this.props.pointsGroups.find(
+			pg => pg.isActive
+		)!;
+		const defaultPosition = activePointsGroup && {
+			lat: activePointsGroup.averageVerticalDisplacement,
+			lng: activePointsGroup.averageHorizontalDisplacement
+		};
+
 		return (
 			<div>
-				<Map markers={markers} />
+				<Map markers={markers} defaultPosition={defaultPosition} />
 				<Divider />
 				<MapControls>
 					<InfoPanel>

@@ -12,6 +12,10 @@ import { manhattanPosition, scale } from '../../constants';
 
 interface Props {
 	markers?: MarkerProps[];
+	defaultPosition?: {
+		lat: number;
+		lng: number;
+	};
 	children?: React.ReactNode;
 }
 
@@ -27,11 +31,11 @@ export const Map: React.ComponentClass<Props> = compose(
 	withScriptjs,
 	withGoogleMap
 )((props: Props) => {
-	const { markers = [] } = props;
+	const { markers = [], defaultPosition = manhattanPosition } = props;
 	return (
 		// TODO: defaultCenter should be calculated on the fly based on
 		// points chosen
-		<GoogleMap defaultZoom={13} defaultCenter={manhattanPosition}>
+		<GoogleMap defaultZoom={13} defaultCenter={defaultPosition}>
 			{markers && renderMarkers(markers)}
 		</GoogleMap>
 	);
