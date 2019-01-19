@@ -4,17 +4,17 @@ import { action as typesafeAction } from 'typesafe-actions';
 import {
 	dataTypeKeys,
 	GetAhcAction,
-	GetDbscanAction,
 	ICreatePointsGroupAction,
-	ISavePointsGroupAction
+	ISavePointsGroupAction,
+	IDeletePointsGroupAction
 } from './actions';
 import {
 	calcApi,
 	fileApi,
+	formHeaders,
 	localStorageKeys,
 	pointsApi,
-	pointsGroupApi,
-	formHeaders
+	pointsGroupApi
 } from './constants';
 import { IPointsGroup } from './types';
 
@@ -74,25 +74,6 @@ function* getAhcsAsync(action: GetAhcAction) {
 	} catch (error) {
 		yield put(
 			typesafeAction(dataTypeKeys.GET_AHCS_FAILED, error.response.data)
-		);
-	}
-}
-
-function* watchGetDbscan() {
-	yield takeLatest(dataTypeKeys.GET_DBSCAN, getDbscanAsync);
-}
-
-function* getDbscanAsync(action: GetDbscanAction) {
-	try {
-		const { data } = yield call(
-			axios.post,
-			calcApi.getDbscan,
-			action.payload
-		);
-		yield put(typesafeAction(dataTypeKeys.GET_DBSCAN_SUCCEEDED, data));
-	} catch (error) {
-		yield put(
-			typesafeAction(dataTypeKeys.GET_DBSCAN_FAILED, error.response.data)
 		);
 	}
 }
@@ -178,11 +159,32 @@ function* watchSavePointsGroup() {
 	);
 }
 
+function* handleDeletePointsGroupAsync(action: IDeletePointsGroupAction) {
+	try {
+		const { data } = yield call(
+			axios.delete,
+			pointsGroupApi.deletePointsGroup(action.payload)
+		);
+		yield put(
+			typesafeAction(dataTypeKeys.DELETE_POINTS_GROUP_SUCCEEDED, data)
+		);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+function* watchDeletePointsGroup() {
+	yield takeLatest(
+		dataTypeKeys.DELETE_POINTS_GROUP,
+		handleDeletePointsGroupAsync
+	);
+}
+
 export const sagas = [
 	watchCreatePointsGroup,
 	watchGetAhcs,
-	watchGetDbscan,
 	watchHandlePopulatePointsFromLocalStorageIfAvailable,
 	watchGetPointsGroups,
-	watchSavePointsGroup
+	watchSavePointsGroup,
+	watchDeletePointsGroup
 ];

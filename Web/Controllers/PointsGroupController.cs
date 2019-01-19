@@ -29,5 +29,11 @@ namespace WebApplication.Controllers
         {
             return Ok(await this._pointsGroupService.AddPointsGroupAsync(this._userId, pointsGroupInput));
         }
+
+        [HttpDelete("[action]/{pointsGroupId}")]
+        public async Task<IActionResult> DeletePointsGroup(int pointsGroupId)
+        {
+            return Ok(await this._pointsGroupService.DeletePointsGroupAsync(pointsGroupId));
+        }
     }
 }

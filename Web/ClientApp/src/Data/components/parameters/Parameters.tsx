@@ -1,12 +1,12 @@
-import { clusterTypes } from 'src/Data/constants';
 import { IOption } from 'njm-react-component-library';
 import * as React from 'react';
-import { AhcParameters, DbscanParameters } from '.';
-import { IPoint, DbscanConfig } from 'src/Data/types';
 import { connect } from 'react-redux';
-import { getAgglomerativeHierarchicalClusters } from 'src/Data';
 import { bindActionCreators, Dispatch } from 'redux';
-import { getDbscan } from 'src/Data/actions';
+import { getAgglomerativeHierarchicalClusters } from 'src/Data';
+import { clusterTypes } from 'src/Data/constants';
+import { IPoint } from 'src/Data/types';
+import { AhcParameters } from '.';
+// import { getDbscan } from 'src/Data/actions';
 
 export class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;
@@ -22,22 +22,22 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 		});
 
 	handleGetAgglomerativeHierarchicalClusters = () => {
-		this.props.getAgglomerativeHierarchicalClusters(this.props.points);
+		this.props.onGetAgglomerativeHierarchicalClusters(this.props.points);
 	};
 
-	handleGetDbscan = () => {
-		const { points } = this.props;
-		const {
-			minimumPointsPerCluster,
-			maximumDistanceBetweenPoints
-		} = this.state;
-		const dbscanConfig: DbscanConfig = {
-			points,
-			minimumPointsPerCluster,
-			maximumDistanceBetweenPoints
-		};
-		this.props.getDbscan(dbscanConfig);
-	};
+	// handleGetDbscan = () => {
+	// 	const { points } = this.props;
+	// 	const {
+	// 		minimumPointsPerCluster,
+	// 		maximumDistanceBetweenPoints
+	// 	} = this.state;
+	// 	const dbscanConfig: DbscanConfig = {
+	// 		points,
+	// 		minimumPointsPerCluster,
+	// 		maximumDistanceBetweenPoints
+	// 	};
+	// 	this.props.getDbscan(dbscanConfig);
+	// };
 
 	render() {
 		const {
@@ -46,15 +46,15 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 			currentClusterOption,
 			onClusterCountChange: handleClusterCountChange
 		} = this.props;
-		const {
-			minimumPointsPerCluster: minimumPointsPerCluster,
-			maximumDistanceBetweenPoints: maximumDistanceBetweenPoints
-		} = this.state;
+		// const {
+		// 	minimumPointsPerCluster: minimumPointsPerCluster,
+		// 	maximumDistanceBetweenPoints: maximumDistanceBetweenPoints
+		// } = this.state;
 
 		const minClusters = 1;
 		const maxClusters = points.length;
-		const maxDistanceBetweenPoints = 5;
-		const maxMinimumPointsPerCluster = 10;
+		// const maxDistanceBetweenPoints = 5;
+		// const maxMinimumPointsPerCluster = 10;
 
 		if (!currentClusterOption) {
 			return null;
@@ -73,28 +73,28 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 						}
 					/>
 				);
-			case clusterTypes.dbscan:
-				return (
-					<DbscanParameters
-						minDistanceBetweenPoints={
-							minMaximumDistanceBetweenPoints
-						}
-						maxDistanceBetweenPoints={maxDistanceBetweenPoints}
-						maxMinimumPointsPerCluster={maxMinimumPointsPerCluster}
-						minMinimumPointsPerCluster={minMinimumPointsPerCluster}
-						maximumDistanceBetweenPoints={
-							maximumDistanceBetweenPoints
-						}
-						minimumPointsPerCluster={minimumPointsPerCluster}
-						onDistanceBetweenPointsChange={
-							this.handleMaximumDistanceBetweenPointsChange
-						}
-						onMinimumPointsPerClusterChange={
-							this.handleMinimumPointsPerClusterChange
-						}
-						onGetDbscan={this.handleGetDbscan}
-					/>
-				);
+			// case clusterTypes.dbscan:
+			// 	return (
+			// 		<DbscanParameters
+			// 			minDistanceBetweenPoints={
+			// 				minMaximumDistanceBetweenPoints
+			// 			}
+			// 			maxDistanceBetweenPoints={maxDistanceBetweenPoints}
+			// 			maxMinimumPointsPerCluster={maxMinimumPointsPerCluster}
+			// 			minMinimumPointsPerCluster={minMinimumPointsPerCluster}
+			// 			maximumDistanceBetweenPoints={
+			// 				maximumDistanceBetweenPoints
+			// 			}
+			// 			minimumPointsPerCluster={minimumPointsPerCluster}
+			// 			onDistanceBetweenPointsChange={
+			// 				this.handleMaximumDistanceBetweenPointsChange
+			// 			}
+			// 			onMinimumPointsPerClusterChange={
+			// 				this.handleMinimumPointsPerClusterChange
+			// 			}
+			// 			onGetDbscan={this.handleGetDbscan}
+			// 		/>
+			// 	);
 			default:
 				return <div>Hello</div>;
 		}
@@ -110,8 +110,8 @@ interface IOwnProps {
 }
 
 interface IDispatchProps {
-	getAgglomerativeHierarchicalClusters(points: IPoint[]): void;
-	getDbscan(dbscanConig: DbscanConfig): void;
+	onGetAgglomerativeHierarchicalClusters(points: IPoint[]): void;
+	// getDbscan(dbscanConig: DbscanConfig): void;
 }
 
 type IProps = IOwnProps & IDispatchProps;
@@ -122,8 +122,9 @@ type IState = typeof initialState;
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			getAgglomerativeHierarchicalClusters,
-			getDbscan: getDbscan.request
+			onGetAgglomerativeHierarchicalClusters:
+				getAgglomerativeHierarchicalClusters.request
+			// getDbscan: getDbscan.request
 		},
 		dispatch
 	);

@@ -3,7 +3,9 @@ import {
 	IOption,
 	Select,
 	Typography,
-	Button
+	borderRadius,
+	border,
+	transitions
 } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -11,7 +13,14 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { IReduxState } from 'src/reducer';
 import { getColors as getMarkerColors } from 'src/services';
 import styled from 'styled-components';
-import { Clusters, Map, Parameters, savePointsGroup } from '../';
+import {
+	Clusters,
+	Map,
+	Parameters,
+	savePointsGroup,
+	deletePointsGroup,
+	setActivePointsGroup
+} from '../';
 import { clusterOptions, clusterTypes } from '../constants';
 import {
 	getAgglomerativeHierarchicalClustersFromState,
@@ -45,6 +54,25 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	savePointsGroup = (pointsGroup: IPointsGroup) =>
 		this.props.onSavePointsGroup(pointsGroup);
 
+	renderPointsGroup = (pg: IPointsGroup) => (
+		<PointsGroupWrapper
+			key={pg.pointsGroupId}
+			onClick={() => this.props.onSetActivePointsGroup(pg.pointsGroupId)}>
+			<Typography>{pg.name}</Typography>
+			{!pg.pointsGroupId && (
+				<button onClick={() => this.savePointsGroup(pg)}>Save</button>
+			)}
+			{pg.pointsGroupId && (
+				<SmallCloseIcon
+					onClick={() =>
+						this.props.onDeletePointsGroup(pg.pointsGroupId!)
+					}>
+					Delete
+				</SmallCloseIcon>
+			)}
+		</PointsGroupWrapper>
+	);
+
 	render() {
 		const { points, pointsGroups } = this.props;
 		const {
@@ -69,20 +97,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 						<Typography variant="h1">Parameters</Typography>
 						<Typography variant="h2">Points</Typography>
 
-						{pointsGroups.map((pg, i) => (
-							<div key={i}>
-								<div>{pg.name}</div>
-								{!pg.pointsGroupId ||
-									(pg.pointsGroupId === 0 && (
-										<Button
-											onClick={() =>
-												this.savePointsGroup(pg)
-											}>
-											Save
-										</Button>
-									))}
-							</div>
-						))}
+						{pointsGroups.map(this.renderPointsGroup)}
 						<Typography variant="h2">Cluster Type</Typography>
 						<Select
 							options={clusterOptions}
@@ -126,7 +141,9 @@ const mapStateToProps = (state: IReduxState): IReduxProps => ({
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			onSavePointsGroup: savePointsGroup.request
+			onSavePointsGroup: savePointsGroup.request,
+			onDeletePointsGroup: deletePointsGroup.request,
+			onSetActivePointsGroup: setActivePointsGroup
 		},
 		dispatch
 	);
@@ -147,6 +164,8 @@ type IState = typeof initialState;
 
 interface IDispatchProps {
 	onSavePointsGroup(pointsGroup: IPointsGroup): void;
+	onDeletePointsGroup(pointsGroupId: number): void;
+	onSetActivePointsGroup(pointsGroupId: number | undefined): void;
 }
 
 interface IReduxProps {
@@ -174,6 +193,20 @@ const Divider = styled.div`
 	height: 20px;
 	background-color: ${colors.darkGray};
 `;
+
+const PointsGroupWrapper = styled.div`
+	padding: 4px;
+	border-radius: ${borderRadius.default};
+	border: 1px solid transparent;
+	width: min-content;
+	cursor: pointer;
+	&: hover {
+		border: ${border.default};
+		transition: ${transitions.fast};
+	}
+`;
+
+const SmallCloseIcon = styled.button``;
 
 // helpers
 const getClusters = (
@@ -209,7 +242,12 @@ const getPointsForMap = (
 	props: IProps
 ): IPoint[] | AgglomerativeHierarchicalClusterPoint[] => {
 	const { currentClusterOption } = state;
-	const { agglomerativeHierarchicalClusters, points } = props;
+	const { agglomerativeHierarchicalClusters, pointsGroups } = props;
+	const activePointsGroup = pointsGroups.find(pg => pg.isActive)!;
+	if (!activePointsGroup) {
+		return [];
+	}
+	const { points } = activePointsGroup;
 	if (currentClusterOption === null) {
 		return points;
 	}

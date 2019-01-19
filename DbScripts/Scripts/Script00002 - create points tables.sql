@@ -7,7 +7,7 @@ CREATE TABLE dbo.pointsGroups (
 )
 
 CREATE TABLE dbo.points (
-    pointId iNT NOT NULL,
+    pointId iNT NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     horizontalDisplacement FLOAT NOT NULL,
     verticalDisplacement FLOAT NOT NULL,

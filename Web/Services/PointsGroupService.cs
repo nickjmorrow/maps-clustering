@@ -46,7 +46,7 @@ namespace Web.Services
             return this._itemFilterer.GetValidItems(userId, pointsGroups);
         }
 
-        public async Task<int> AddPointsGroupAsync(int userId, PointsGroupInput pointsGroupInput)
+        public async Task<PointsGroup> AddPointsGroupAsync(int userId, PointsGroupInput pointsGroupInput)
         {
             // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
@@ -75,15 +75,39 @@ namespace Web.Services
             // label points with pointsGroupId
             var points = pointsGroupInput.Points.Select((p, i) =>
             {
-                p.PointId = i + 1;
-                p.PointsGroupId = pointsGroup.PointsGroupId;
-                return p;
+                return new Point()
+                {
+                    PointsGroupId = pointsGroup.PointsGroupId,
+                    HorizontalDisplacement = p.HorizontalDisplacement,
+                    VerticalDisplacement = p.VerticalDisplacement,
+                    Name = p.Name
+                };
             });
             
             // add associated points 
             await this._context.Points.AddRangeAsync(points);
             await this._context.SaveChangesAsync();
-            return pointsGroup.PointsGroupId;
+            return pointsGroup;
+        }
+
+        public async Task<int> DeletePointsGroupAsync(int pointsGroupId)
+        {
+            var pointsGroup = this._context.PointsGroups.First(pg => pg.PointsGroupId == pointsGroupId);
+            var points = this._context.Points.Where(p => p.PointsGroupId == pointsGroupId);
+            this._context.Points.RemoveRange(points);
+            await this._context.SaveChangesAsync();
+
+            var userItem = this._context.UserItems.First(ui => ui.ItemId == pointsGroup.ItemId);
+            this._context.UserItems.Remove(userItem);
+            await this._context.SaveChangesAsync();
+
+            var item = this._context.Items.First(i => i.ItemId == pointsGroup.ItemId);
+            this._context.Items.Remove(item);
+            await this._context.SaveChangesAsync();
+            
+            this._context.PointsGroups.Remove(pointsGroup);
+            await this._context.SaveChangesAsync();
+            return pointsGroupId;
         }
     }
 }

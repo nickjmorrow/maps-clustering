@@ -1,8 +1,8 @@
 import { ActionTypes, dataTypeKeys } from './actions';
 import {
-	IPoint,
 	AgglomerativeHierarchicalClusterPoint,
 	ClusteredPoint,
+	IPoint,
 	IPointsGroup
 } from './types';
 
@@ -32,14 +32,22 @@ export const dataReducer = (
 		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: [...getSavedPointsGroups(state), action.payload]
+				pointsGroups: [
+					...getSavedPointsGroups(state).map(pg => ({
+						...pg,
+						isActive: false
+					})),
+					{ ...action.payload, isActive: true }
+				]
 			};
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
 			return {
 				...state,
 				pointsGroups: [
-					...getUnsavedPointsGroups(state),
-					...action.payload
+					...getUnsavedPointsGroups(state).map(
+						withFirstPointsGroupActive
+					),
+					...action.payload.map(asAllInactive)
 				]
 			};
 		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
@@ -51,10 +59,6 @@ export const dataReducer = (
 			};
 		case dataTypeKeys.GET_AHCS_FAILED:
 			return { ...state, error: action.payload };
-		case dataTypeKeys.GET_DBSCAN_SUCCEEDED:
-			return { ...state, dbscan: action.payload };
-		case dataTypeKeys.GET_DBSCAN_FAILED:
-			return { ...state, error: action.payload };
 		case dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
 			return { ...state, points: action.payload };
 		case dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
@@ -62,7 +66,7 @@ export const dataReducer = (
 				...state,
 				pointsGroups: [
 					...getSavedPointsGroups(state),
-					...action.payload
+					...action.payload.map(withFirstPointsGroupActive)
 				]
 			};
 		case dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED:
@@ -72,9 +76,22 @@ export const dataReducer = (
 					pg.pointsGroupId
 						? pg
 						: {
-								...pg,
-								pointsGroupId: action.payload
+								...action.payload
 						  }
+				)
+			};
+		case dataTypeKeys.DELETE_POINTS_GROUP_SUCCEEDED:
+			return {
+				...state,
+				pointsGroups: state.pointsGroups.filter(
+					removePointsGroupId(action.payload)
+				)
+			};
+		case dataTypeKeys.SET_ACTIVE_POINTS_GROUP:
+			return {
+				...state,
+				pointsGroups: state.pointsGroups.map(
+					setActivePointsGroup(action.payload)
 				)
 			};
 		default:
@@ -87,3 +104,22 @@ const getSavedPointsGroups = (dataState: DataState): IPointsGroup[] =>
 
 const getUnsavedPointsGroups = (dataState: DataState) =>
 	dataState.pointsGroups.filter(pg => !pg.pointsGroupId);
+
+const withFirstPointsGroupActive = (pg: IPointsGroup, i: number) =>
+	i === 0 ? { ...pg, isActive: true } : { ...pg, isActive: false };
+
+const removePointsGroupId = (pointsGroupId: number) => (
+	pointsGroup: IPointsGroup
+) => pointsGroup.pointsGroupId !== pointsGroupId;
+
+const asAllInactive = (pointsGroup: IPointsGroup) => ({
+	...pointsGroup,
+	isActive: false
+});
+
+const setActivePointsGroup = (pointsGroupId: number | undefined) => (
+	pg: IPointsGroup
+) =>
+	pg.pointsGroupId === pointsGroupId
+		? { ...pg, isActive: true }
+		: { ...pg, isActive: false };

@@ -15,7 +15,9 @@ export enum calcApi {
 
 const pointsGroupController = 'pointsGroup';
 export const pointsGroupApi = {
-	savePointsGroup: `/api/${pointsGroupController}/addPointsGroup`
+	savePointsGroup: `/api/${pointsGroupController}/addPointsGroup`,
+	deletePointsGroup: (pointsGroupId: number) =>
+		`/api/${pointsGroupController}/deletePointsGroup/${pointsGroupId}`
 };
 
 const pointsGroupControllerName = 'pointsGroup';

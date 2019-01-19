@@ -39,6 +39,7 @@ export interface IPointsGroup {
 	averageVerticalDisplacement: number;
 	itemId?: number;
 	points: IPoint[];
+	isActive: boolean;
 }
 
 export interface IPointsGroupFormInput {

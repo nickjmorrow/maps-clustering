@@ -39,6 +39,8 @@ namespace WebApplication
                 .HasForeignKey(ws => ws.WizardId);
             modelBuilder.Entity<UserFavoriteItem>()
                 .HasKey(ufi => new {ufi.ItemId, ufi.UserId});
+            modelBuilder.Entity<UserItem>()
+                .HasKey(ui => new {ui.UserId, ui.ItemId});
         }
     }
 }
