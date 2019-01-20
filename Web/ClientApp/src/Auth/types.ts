@@ -6,6 +6,5 @@ export interface IUser {
 	token: string;
 }
 
-export type userFavoriteItemId = itemId;
-export type itemId = number;
-export type IError = string;
+export type IUserFavoriteItemId = number;
+export type IItemId = number;

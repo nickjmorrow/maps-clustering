@@ -11,18 +11,19 @@ import {
 	populateUserStateFromLocalStorageIfAvailable
 } from './actions';
 import { api, USER } from './constants';
+import { addTokenToDefaultHeader } from './services';
 import {
-	addTokenToDefaultHeader,
 	isInLocalStorage,
-	removeFromLocalStorage
-} from './services';
+	removeFromLocalStorage,
+	addToLocalStorage
+} from '../Core';
 import { IUser } from './types';
 
 function* handleLoginAsync(action: IHandleLoginAction) {
 	try {
 		const { data } = yield call(axios.post, api.login, action.payload);
 		addTokenToDefaultHeader(data.token);
-		localStorage.setItem(USER, JSON.stringify(data));
+		addToLocalStorage(data, USER);
 
 		const actions = action.payload.additionalActions
 			? [...action.payload.additionalActions.map(f => put(f()))]

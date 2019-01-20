@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { IError } from 'src/Auth'; // TODO: move to core
+import { IError } from 'src/Core';
 
 export enum userTypeKeys {
 	FAVORITE_ITEM = 'FAVORITE_ITEM',

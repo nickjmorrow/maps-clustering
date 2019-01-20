@@ -1,9 +1,10 @@
-import { action } from 'typesafe-actions';
 import {
 	ILoginInfo,
 	IRegisterInfo
 } from 'njm-react-component-library/lib/types';
-import { IUser, IError } from './types';
+import { action } from 'typesafe-actions';
+import { IUser } from './types';
+import { IError } from '../Core';
 
 export enum authTypeKeys {
 	LOGIN = 'LOGIN',

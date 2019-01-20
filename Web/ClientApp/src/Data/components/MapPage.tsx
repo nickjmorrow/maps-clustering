@@ -58,9 +58,6 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 		this.setState({ currentClusterOption });
 	};
 
-	// TODO
-	handlePointsChange = (option: IOption) => alert('hey');
-
 	savePointsGroup = (pointsGroup: IPointsGroup) =>
 		this.props.onSavePointsGroup(pointsGroup);
 
