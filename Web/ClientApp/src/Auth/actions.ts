@@ -35,8 +35,10 @@ export type ActionTypes =
 	| IPopulateUserStateFromLocalStorageIfAvailableActionFailed;
 
 export const handleLogin = {
-	request: (loginInfo: ILoginInfo): IHandleLoginAction =>
-		action(authTypeKeys.LOGIN, loginInfo),
+	request: (payload: {
+		loginInfo: ILoginInfo;
+		additionalActions?: any[];
+	}): IHandleLoginAction => action(authTypeKeys.LOGIN, payload),
 	success: (user: IUser): IHandleLoginSucceededAction =>
 		action(authTypeKeys.LOGIN_SUCCEEDED, user),
 	failure: (error: IError): IHandleLoginFailedAction =>
@@ -84,7 +86,10 @@ export const populateUserStateFromLocalStorageIfAvailable = {
 
 export interface IHandleLoginAction {
 	type: authTypeKeys.LOGIN;
-	payload: ILoginInfo;
+	payload: {
+		loginInfo: ILoginInfo;
+		additionalActions?: any[];
+	};
 }
 
 export interface IHandleLoginSucceededAction {

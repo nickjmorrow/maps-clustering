@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { all, call, put, PutEffect, takeLatest } from 'redux-saga/effects';
-import { getUserFavoriteItems } from 'src/User/actions';
 import {
 	authTypeKeys,
 	handleLogin,
@@ -24,10 +23,12 @@ function* handleLoginAsync(action: IHandleLoginAction) {
 		const { data } = yield call(axios.post, api.login, action.payload);
 		addTokenToDefaultHeader(data.token);
 		localStorage.setItem(USER, JSON.stringify(data));
-		yield [
-			put(handleLogin.success(data)),
-			put(getUserFavoriteItems.request(data.userId))
-		];
+
+		const actions = action.payload.additionalActions
+			? [...action.payload.additionalActions.map(f => put(f()))]
+			: [];
+		actions.push(put(handleLogin.success(data)));
+		yield all(actions);
 	} catch (error) {
 		yield put(handleLogin.failure(error));
 	}

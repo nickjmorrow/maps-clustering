@@ -10,18 +10,25 @@ import {
 	IRegisterInfo,
 	ILoginInfo
 } from 'njm-react-component-library/lib/types';
+import { getUserFavoriteItems } from 'src/User';
 
 export const AuthModalInternal: React.SFC<IProps> = ({
 	handleLogin,
 	handleRegister,
 	isOpen,
 	isRegistering,
-	handleToggleIsOpen
+	handleToggleIsOpen,
+	handleGetUserFavoriteItems
 }) => {
+	const handleLoginInternal = (loginInfo: ILoginInfo) => {
+		const additionalActions = [handleGetUserFavoriteItems];
+		handleLogin({ loginInfo, additionalActions });
+	};
+
 	return (
 		<GenericAuthModal
 			onRegisterClick={handleRegister}
-			onLoginClick={handleLogin}
+			onLoginClick={handleLoginInternal}
 			isOpen={isOpen}
 			isRegistering={isRegistering}
 			onRequestClose={handleToggleIsOpen}
@@ -33,7 +40,8 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
 			handleLogin: handleLoginAction.request,
-			handleRegister: handleRegisterAction.request
+			handleRegister: handleRegisterAction.request,
+			handleGetUserFavoriteItems: getUserFavoriteItems.request
 		},
 		dispatch
 	);
@@ -45,8 +53,15 @@ export const AuthModal = connect(
 
 // types
 interface IDispatchProps {
-	handleLogin(loginInfo: ILoginInfo): void;
+	handleLogin({
+		loginInfo,
+		additionalActions
+	}: {
+		loginInfo: ILoginInfo;
+		additionalActions?: any[];
+	}): void;
 	handleRegister(registerInfo: IRegisterInfo): void;
+	handleGetUserFavoriteItems(): void;
 }
 
 interface IOwnProps {

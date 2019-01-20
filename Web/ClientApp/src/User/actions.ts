@@ -28,8 +28,8 @@ export const toggleFavoriteItem = {
 };
 
 export const getUserFavoriteItems = {
-	request: (userId: number): IGetUserFavoriteItemsAction =>
-		action(userTypeKeys.GET_USER_FAVORITE_ITEMS, userId),
+	request: (): IGetUserFavoriteItemsAction =>
+		action(userTypeKeys.GET_USER_FAVORITE_ITEMS),
 	success: (userItemIds: number[]): IGetUserFavoriteItemsActionSucceeded =>
 		action(userTypeKeys.GET_USER_FAVORITE_ITEMS_SUCCEEDED, userItemIds),
 	failure: (error: IError) =>
