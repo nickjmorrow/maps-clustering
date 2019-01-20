@@ -11,7 +11,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { IReduxState } from 'src/reducer';
-import { getColors as getMarkerColors } from 'src/services';
+import { getColors as getMarkerColors, googleMapURL } from '../../Core';
 import styled from 'styled-components';
 import {
 	Clusters,
@@ -110,7 +110,11 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 
 		return (
 			<div>
-				<Map markers={markers} defaultPosition={defaultPosition} />
+				<Map
+					markers={markers}
+					defaultPosition={defaultPosition}
+					googleMapUrl={googleMapURL}
+				/>
 				<Divider />
 				<MapControls>
 					<InfoPanel>

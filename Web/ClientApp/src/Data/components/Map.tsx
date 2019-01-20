@@ -7,11 +7,11 @@ import {
 	MarkerProps
 } from 'react-google-maps';
 import { compose, withProps } from 'recompose';
-import { googleMapURL } from '../../services';
-import { scale } from '../../constants';
+import { scale, googleMapURL } from '../../Core';
 
 interface Props {
 	markers?: MarkerProps[];
+	googleMapUrl?: string;
 	defaultPosition?: {
 		lat: number;
 		lng: number;
