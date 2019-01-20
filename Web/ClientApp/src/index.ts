@@ -1,1 +1,1 @@
-export { Landing } from './components';
+export { Landing } from './Core/components';

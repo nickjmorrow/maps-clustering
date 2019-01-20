@@ -21,7 +21,11 @@ import { IUser } from './types';
 
 function* handleLoginAsync(action: IHandleLoginAction) {
 	try {
-		const { data } = yield call(axios.post, api.login, action.payload);
+		const { data } = yield call(
+			axios.post,
+			api.login,
+			action.payload.loginInfo
+		);
 		addTokenToDefaultHeader(data.token);
 		addToLocalStorage(data, USER);
 

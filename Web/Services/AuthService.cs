@@ -18,12 +18,12 @@ namespace WebApplication.Services
         User Register(User user);
     }
 
-    public class UserService : IUserService
+    public class AuthService : IUserService
     {
         private DatabaseContext _context;
         private AppSettings _appSettings;
 
-        public UserService(DatabaseContext context, IOptions<AppSettings> appSettings)
+        public AuthService(DatabaseContext context, IOptions<AppSettings> appSettings)
         {
             this._context = context;
             this._appSettings = appSettings.Value;
@@ -36,7 +36,7 @@ namespace WebApplication.Services
                 var user = context.Users.SingleOrDefault(u => u.Email == authInfo.Email);
                 if (user == null)
                 {
-                    return new AuthResponse() {ErrorText = "No user could be found with that email"};
+                    return new AuthResponse() {ErrorText = $"No user could be found with the email: {authInfo.Email}"};
                 }
 
                 try

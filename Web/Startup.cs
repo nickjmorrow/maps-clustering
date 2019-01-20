@@ -82,7 +82,7 @@ namespace WebApplication
             services.AddScoped<FileHandlerService, FileHandlerService>();
             services
                 .AddScoped<AgglomerativeHierarchicalClusteringService, AgglomerativeHierarchicalClusteringService>();
-            services.AddScoped<UserService, UserService>();
+            services.AddScoped<AuthService, AuthService>();
             services.AddScoped<UserItemService, UserItemService>();
             services.AddScoped<ItemService, ItemService>();
             services.AddScoped<PointsGroupService, PointsGroupService>();

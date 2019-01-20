@@ -9,17 +9,17 @@ namespace WebApplication.Controllers
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        private readonly UserService _userService;
+        private readonly AuthService _authService;
 
-        public AuthController(UserService userService)
+        public AuthController(AuthService authService)
         {
-            this._userService = userService;
+            this._authService = authService;
         }
 
         [HttpPost("[action]")]
         public IActionResult Login([FromBody] AuthInfo authInfo)
         {        
-            var user = this._userService.Authenticate(authInfo);
+            var user = this._authService.Authenticate(authInfo);
 
             if (user == null)
             {
@@ -34,7 +34,7 @@ namespace WebApplication.Controllers
         {
             try
             {
-                return Ok(this._userService.Register(user));
+                return Ok(this._authService.Register(user));
             }
             catch (Exception e)
             {
