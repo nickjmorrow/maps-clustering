@@ -119,7 +119,6 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 					<InfoPanel>
 						<Typography variant="h1">Parameters</Typography>
 						<Typography variant="h2">Points</Typography>
-
 						{pointsGroups.map(this.renderPointsGroup)}
 						<Typography variant="h2">Cluster Type</Typography>
 						<LabeledRadioButtonInput
@@ -178,7 +177,7 @@ export const MapPage = connect(
 
 // types
 const initialState = {
-	clusterCount: 30,
+	clusterCount: 1,
 	currentClusterOption: clusterOptions[0],
 	markerColors: [] as string[]
 };

@@ -8,11 +8,15 @@ import {
 } from 'react-google-maps';
 import { compose, withProps } from 'recompose';
 import { googleMapURL } from '../../services';
-import { manhattanPosition, scale } from '../../constants';
+import { scale } from '../../constants';
 
 interface Props {
 	markers?: MarkerProps[];
 	defaultPosition?: {
+		lat: number;
+		lng: number;
+	};
+	center?: {
 		lat: number;
 		lng: number;
 	};
@@ -31,11 +35,14 @@ export const Map: React.ComponentClass<Props> = compose(
 	withScriptjs,
 	withGoogleMap
 )((props: Props) => {
-	const { markers = [], defaultPosition = manhattanPosition } = props;
+	const { markers, defaultPosition, center = defaultPosition } = props;
 	return (
 		// TODO: defaultCenter should be calculated on the fly based on
 		// points chosen
-		<GoogleMap defaultZoom={13} defaultCenter={defaultPosition}>
+		<GoogleMap
+			defaultZoom={13}
+			defaultCenter={defaultPosition}
+			center={center}>
 			{markers && renderMarkers(markers)}
 		</GoogleMap>
 	);
