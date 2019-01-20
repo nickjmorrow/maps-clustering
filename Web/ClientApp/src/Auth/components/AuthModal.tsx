@@ -32,8 +32,8 @@ export const AuthModalInternal: React.SFC<IProps> = ({
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
-			handleLogin: handleLoginAction,
-			handleRegister: handleRegisterAction
+			handleLogin: handleLoginAction.request,
+			handleRegister: handleRegisterAction.request
 		},
 		dispatch
 	);

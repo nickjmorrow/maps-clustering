@@ -1,12 +1,17 @@
 import axios from 'axios';
-import { all, call, put, takeLatest } from 'redux-saga/effects';
-import { action as typesafeAction } from 'typesafe-actions';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import {
+	createPointsGroup,
 	dataTypeKeys,
+	deletePointsGroup,
+	getAhcs,
 	GetAhcsAction,
+	getPointsGroups,
 	ICreatePointsGroupAction,
+	IDeletePointsGroupAction,
 	ISavePointsGroupAction,
-	IDeletePointsGroupAction
+	populatePointsGroupsStateFromLocalStorageIfAvailable,
+	savePointsGroup
 } from './actions';
 import {
 	calcApi,
@@ -38,24 +43,14 @@ function* createPointsGroupAsync(action: ICreatePointsGroupAction) {
 			pointsGroupId: undefined
 		};
 
-		yield put(
-			typesafeAction(
-				dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED,
-				pointsGroup
-			)
-		);
+		yield put(createPointsGroup.success(pointsGroup));
 
 		localStorage.setItem(
 			localStorageKeys.pointsGroups,
 			JSON.stringify([pointsGroup])
 		);
 	} catch (error) {
-		yield put(
-			typesafeAction(
-				dataTypeKeys.CREATE_POINTS_GROUP_FAILED,
-				error.response.data
-			)
-		);
+		yield put(createPointsGroup.failure(error));
 	}
 }
 
@@ -75,42 +70,24 @@ function* handleGetAhcsAsync(action: GetAhcsAction) {
 			...action.payload,
 			ahcInfo: data
 		};
-		yield put(typesafeAction(dataTypeKeys.GET_AHCS_SUCCEEDED, pointsGroup));
+		yield put(getAhcs.success(pointsGroup));
 	} catch (error) {
-		yield put(
-			typesafeAction(dataTypeKeys.GET_AHCS_FAILED, error.response.data)
-		);
+		yield put(getAhcs.failure(error));
 	}
 }
 
 function* handlePopulatePointsFromLocalStorageIfAvailable() {
 	try {
-		const points = localStorage.getItem(localStorageKeys.points);
-		const actions = [];
-		if (points !== null) {
-			actions.push(
-				put(
-					typesafeAction(
-						dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
-						JSON.parse(points)
-					)
-				)
-			);
-		}
 		const pointsGroups = localStorage.getItem(
 			localStorageKeys.pointsGroups
 		);
 		if (pointsGroups !== null) {
-			actions.push(
-				put(
-					typesafeAction(
-						dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
-						JSON.parse(pointsGroups!)
-					)
+			yield put(
+				populatePointsGroupsStateFromLocalStorageIfAvailable.success(
+					JSON.parse(pointsGroups)
 				)
 			);
 		}
-		yield all(actions);
 	} catch (error) {
 		console.error(error);
 	}
@@ -126,9 +103,7 @@ function* watchHandlePopulatePointsFromLocalStorageIfAvailable() {
 function* handleGetPointsGroupsAsync() {
 	try {
 		const { data } = yield call(axios.get, pointsApi.getPointsGroups);
-		yield put(
-			typesafeAction(dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED, data)
-		);
+		yield put(getPointsGroups.success(data));
 	} catch (error) {
 		console.error(error);
 	}
@@ -149,9 +124,7 @@ function* handleSavePointsGroupAsync(action: ISavePointsGroupAction) {
 			action.payload
 		);
 		localStorage.removeItem(localStorageKeys.pointsGroups);
-		yield put(
-			typesafeAction(dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED, data)
-		);
+		yield put(savePointsGroup.success(data));
 	} catch (error) {
 		console.error(error);
 	}
@@ -170,9 +143,7 @@ function* handleDeletePointsGroupAsync(action: IDeletePointsGroupAction) {
 			axios.delete,
 			pointsGroupApi.deletePointsGroup(action.payload)
 		);
-		yield put(
-			typesafeAction(dataTypeKeys.DELETE_POINTS_GROUP_SUCCEEDED, data)
-		);
+		yield put(deletePointsGroup.success(data));
 	} catch (error) {
 		console.error(error);
 	}

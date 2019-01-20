@@ -4,11 +4,11 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { Landing } from '.';
 import {
 	populateUserStateFromLocalStorageIfAvailable,
-	isAuthenticatedSelector
+	getIsAuthenticated
 } from './Auth';
 import {
-	populatePointsStateFromLocalStorageIfAvailable,
-	getPointsGroups
+	getPointsGroups,
+	populatePointsGroupsStateFromLocalStorageIfAvailable
 } from './Data';
 import { IReduxState } from './reducer';
 
@@ -16,10 +16,10 @@ export class AppInternal extends React.Component<IProps> {
 	componentDidMount = () => {
 		const {
 			onPopulateUserStateFromLocalStorageIfAvailable,
-			onPopulatePointsStateFromLocalStorageIfAvailable
+			onPopulatePointsGroupsStateFromLocalStorageIfAvailable
 		} = this.props;
 		onPopulateUserStateFromLocalStorageIfAvailable();
-		onPopulatePointsStateFromLocalStorageIfAvailable();
+		onPopulatePointsGroupsStateFromLocalStorageIfAvailable();
 	};
 
 	componentWillReceiveProps = (nextProps: IProps) => {
@@ -35,7 +35,7 @@ export class AppInternal extends React.Component<IProps> {
 
 // types
 interface IDispatchProps {
-	onPopulatePointsStateFromLocalStorageIfAvailable(): void;
+	onPopulatePointsGroupsStateFromLocalStorageIfAvailable(): void;
 	onPopulateUserStateFromLocalStorageIfAvailable(): void;
 	onGetPointsGroups(): void;
 }
@@ -49,15 +49,17 @@ type IProps = IDispatchProps & IReduxProps;
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			onPopulatePointsStateFromLocalStorageIfAvailable: populatePointsStateFromLocalStorageIfAvailable,
-			onPopulateUserStateFromLocalStorageIfAvailable: populateUserStateFromLocalStorageIfAvailable,
+			onPopulatePointsGroupsStateFromLocalStorageIfAvailable:
+				populatePointsGroupsStateFromLocalStorageIfAvailable.request,
+			onPopulateUserStateFromLocalStorageIfAvailable:
+				populateUserStateFromLocalStorageIfAvailable.request,
 			onGetPointsGroups: getPointsGroups.request
 		},
 		dispatch
 	);
 
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
-	isAuthenticated: isAuthenticatedSelector(state)
+	isAuthenticated: getIsAuthenticated(state)
 });
 
 export const App = connect(

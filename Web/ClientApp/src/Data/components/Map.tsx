@@ -37,8 +37,6 @@ export const Map: React.ComponentClass<Props> = compose(
 )((props: Props) => {
 	const { markers, defaultPosition, center = defaultPosition } = props;
 	return (
-		// TODO: defaultCenter should be calculated on the fly based on
-		// points chosen
 		<GoogleMap
 			defaultZoom={13}
 			defaultCenter={defaultPosition}

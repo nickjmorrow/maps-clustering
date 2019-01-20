@@ -34,7 +34,7 @@ type IProps = IOwnProps & IDispatchProps;
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
-			handleLogOut: handleLogOutAction
+			handleLogOut: handleLogOutAction.request
 		},
 		dispatch
 	);

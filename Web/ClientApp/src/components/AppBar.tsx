@@ -1,7 +1,7 @@
 import { PopulatedAppBar as GenericAppBar } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { isAuthenticatedSelector } from 'src/Auth/selectors';
+import { getIsAuthenticated } from 'src/Auth/selectors';
 import { IReduxState } from 'src/reducer';
 import { AuthModal, LogOutModal } from 'src/Auth';
 import { routes } from 'src/Core/constants';
@@ -62,7 +62,7 @@ type IProps = IReduxProps;
 
 // redux
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
-	isAuthenticated: isAuthenticatedSelector(state)
+	isAuthenticated: getIsAuthenticated(state)
 });
 
 export const AppBar = connect(

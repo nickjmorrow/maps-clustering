@@ -3,8 +3,7 @@ import {
 	ILoginInfo,
 	IRegisterInfo
 } from 'njm-react-component-library/lib/types';
-import { IUser, userFavoriteItemId } from './types';
-import { error } from './types';
+import { IUser, IError } from './types';
 
 export enum authTypeKeys {
 	LOGIN = 'LOGIN',
@@ -16,17 +15,9 @@ export enum authTypeKeys {
 	LOGOUT = 'LOGOUT',
 	LOGOUT_SUCCEEDED = 'LOGOUT_SUCCEEDED',
 	LOGOUT_FAILED = 'LOGOUT_FAILED',
-	SET_CURRENT_USER = 'SET_CURRENT_USER',
-	SET_CURRENT_USER_SUCCEEDED = 'SET_CURRENT_USER_SUCCEEDED',
-	SET_CURRENT_USER_FAILED = 'SET_CURRENT_USER_FAILED',
-	FAVORITE_ITEM = 'FAVORITE_ITEM',
-	FAVORITE_ITEM_SUCCEEDED = 'FAVORITE_ITEM_SUCCEEDED',
-	FAVORITE_ITEM_FAILED = 'FAVORITE_ITEM_FAILED',
-	GET_USER_FAVORITE_ITEMS = 'GET_USER_FAVORITE_ITEMS',
-	GET_USER_FAVORITE_ITEMS_SUCCEEDED = 'GET_USER_FAVORITE_ITEMS_SUCCEEDED',
-	GET_USER_FAVORITE_ITEMS_FAILED = 'GET_USER_FAVORITE_ITEMS_FAILED',
 	POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE = 'POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE',
-	POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED'
+	POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED = 'POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED',
+	POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_FAILED = 'POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_FAILED'
 }
 
 export type ActionTypes =
@@ -39,41 +30,56 @@ export type ActionTypes =
 	| IHandleLogOutAction
 	| IHandleLogOutSucceededAction
 	| IHandleLogOutFailedAction
-	| ISetCurrentUserAction
-	| ISetCurrentUserActionSucceeded
-	| ISetCurrentUserActionFailed
-	| IFavoriteItemAction
-	| IFavoriteItemActionSucceeded
-	| IFavoriteItemActionFailed
-	| IGetUserFavoriteItemsAction
-	| IGetUserFavoriteItemsActionSucceeded
-	| IGetUserFavoriteItemsActionFailed
 	| IPopulateUserStateFromLocalStorageIfAvailableAction
-	| IPopulateUserStateFromLocalStorageIfAvailableActionSucceeded;
+	| IPopulateUserStateFromLocalStorageIfAvailableActionSucceeded
+	| IPopulateUserStateFromLocalStorageIfAvailableActionFailed;
 
-export const handleLogin = (loginInfo: ILoginInfo): IHandleLoginAction =>
-	action(authTypeKeys.LOGIN, loginInfo);
+export const handleLogin = {
+	request: (loginInfo: ILoginInfo): IHandleLoginAction =>
+		action(authTypeKeys.LOGIN, loginInfo),
+	success: (user: IUser): IHandleLoginSucceededAction =>
+		action(authTypeKeys.LOGIN_SUCCEEDED, user),
+	failure: (error: IError): IHandleLoginFailedAction =>
+		action(authTypeKeys.LOGIN_FAILED, error)
+};
 
-export const handleRegister = (
-	registerInfo: IRegisterInfo
-): IHandleRegisterAction => action(authTypeKeys.REGISTER, registerInfo);
+export const handleRegister = {
+	request: (registerInfo: IRegisterInfo): IHandleRegisterAction =>
+		action(authTypeKeys.REGISTER, registerInfo),
+	success: (user: IUser): IHandleRegisterSucceededAction =>
+		action(authTypeKeys.REGISTER_SUCCEEDED, user),
+	failure: (error: IError): IHandleRegisterFailedAction =>
+		action(authTypeKeys.REGISTER_FAILED, error)
+};
 
-export const setCurrentUser = (currentUser: IUser): ISetCurrentUserAction =>
-	action(authTypeKeys.SET_CURRENT_USER, currentUser);
+export const handleLogOut = {
+	request: (): IHandleLogOutAction => action(authTypeKeys.LOGOUT),
+	success: (): IHandleLogOutSucceededAction =>
+		action(authTypeKeys.LOGOUT_SUCCEEDED),
+	failure: (error: IError): IHandleLogOutFailedAction =>
+		action(authTypeKeys.LOGOUT_FAILED, error)
+};
 
-export const toggleFavoriteItem = (itemId: number): IFavoriteItemAction =>
-	action(authTypeKeys.FAVORITE_ITEM, itemId);
-
-export const handleLogOut = (): IHandleLogOutAction =>
-	action(authTypeKeys.LOGOUT);
-
-export const getUserFavoriteItems = (
-	userId: number
-): IGetUserFavoriteItemsAction =>
-	action(authTypeKeys.GET_USER_FAVORITE_ITEMS, userId);
-
-export const populateUserStateFromLocalStorageIfAvailable = () =>
-	action(authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
+export const populateUserStateFromLocalStorageIfAvailable = {
+	request: (): IPopulateUserStateFromLocalStorageIfAvailableAction =>
+		action(
+			authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE
+		),
+	success: (
+		user: IUser
+	): IPopulateUserStateFromLocalStorageIfAvailableActionSucceeded =>
+		action(
+			authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
+			user
+		),
+	failure: (
+		error: IError
+	): IPopulateUserStateFromLocalStorageIfAvailableActionFailed =>
+		action(
+			authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_FAILED,
+			error
+		)
+};
 
 export interface IHandleLoginAction {
 	type: authTypeKeys.LOGIN;
@@ -102,7 +108,7 @@ export interface IHandleRegisterSucceededAction {
 
 export interface IHandleRegisterFailedAction {
 	type: authTypeKeys.REGISTER_FAILED;
-	payload: error;
+	payload: IError;
 }
 
 export interface IHandleLogOutAction {
@@ -115,50 +121,7 @@ export interface IHandleLogOutSucceededAction {
 
 export interface IHandleLogOutFailedAction {
 	type: authTypeKeys.LOGOUT_FAILED;
-}
-
-export interface ISetCurrentUserAction {
-	type: authTypeKeys.SET_CURRENT_USER;
-	payload: IUser;
-}
-
-export interface ISetCurrentUserActionSucceeded {
-	type: authTypeKeys.SET_CURRENT_USER_SUCCEEDED;
-	payload: IUser;
-}
-
-export interface ISetCurrentUserActionFailed {
-	type: authTypeKeys.SET_CURRENT_USER_FAILED;
-	payload: error;
-}
-
-export interface IFavoriteItemAction {
-	type: authTypeKeys.FAVORITE_ITEM;
-	payload: number;
-}
-
-export interface IFavoriteItemActionSucceeded {
-	type: authTypeKeys.FAVORITE_ITEM_SUCCEEDED;
-	payload: number;
-}
-
-export interface IFavoriteItemActionFailed {
-	type: authTypeKeys.FAVORITE_ITEM_FAILED;
-	payload: string;
-}
-
-export interface IGetUserFavoriteItemsAction {
-	type: authTypeKeys.GET_USER_FAVORITE_ITEMS;
-}
-
-export interface IGetUserFavoriteItemsActionSucceeded {
-	type: authTypeKeys.GET_USER_FAVORITE_ITEMS_SUCCEEDED;
-	payload: userFavoriteItemId[];
-}
-
-export interface IGetUserFavoriteItemsActionFailed {
-	type: authTypeKeys.GET_USER_FAVORITE_ITEMS_FAILED;
-	payload: string;
+	payload: IError;
 }
 
 export interface IPopulateUserStateFromLocalStorageIfAvailableAction {
@@ -168,4 +131,9 @@ export interface IPopulateUserStateFromLocalStorageIfAvailableAction {
 export interface IPopulateUserStateFromLocalStorageIfAvailableActionSucceeded {
 	type: authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED;
 	payload: IUser;
+}
+
+export interface IPopulateUserStateFromLocalStorageIfAvailableActionFailed {
+	type: authTypeKeys.POPULATE_USER_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_FAILED;
+	payload: IError;
 }

@@ -8,4 +8,4 @@ export interface IUser {
 
 export type userFavoriteItemId = itemId;
 export type itemId = number;
-export type error = string;
+export type IError = string;

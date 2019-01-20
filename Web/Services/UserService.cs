@@ -53,8 +53,6 @@ namespace WebApplication.Services
                     return new AuthResponse() {ErrorText = "Password formatted incorrectly."};
                 }
                 
-                // TODO: Consider how to implement roles
-                // TODO: Learn how the [Authenticate] attribute is used to prevent requests
                 // successful authentication, so generate jwt token
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(this._appSettings.Secret);

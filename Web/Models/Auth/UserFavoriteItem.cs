@@ -10,5 +10,3 @@ namespace WebApplication.Models
         public int ItemId { get; set; }
     }
 }
-
-// TODO: how to define primary keys in this file and not database context?
