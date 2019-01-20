@@ -27,12 +27,6 @@ export interface IClusterOption extends IOption {
 
 export type AgglomerativeHierarchicalClusterConfig = IPoint[];
 
-export interface DbscanConfig {
-	points: IPoint[];
-	minimumPointsPerCluster: number;
-	maximumDistanceBetweenPoints: number;
-}
-
 export interface IPointsGroup {
 	pointsGroupId?: number;
 	name: string;
@@ -41,9 +35,20 @@ export interface IPointsGroup {
 	itemId?: number;
 	points: IPoint[];
 	isActive: boolean;
-	ahcInfo?: AgglomerativeHierarchicalClusterPoint[];
+	ahcInfo?: IAhcInfo;
 	dateCreated: Date;
 	itemPermissionType: ItemPermissionType;
+}
+
+export interface IAhcInfo {
+	ahcPoints: AgglomerativeHierarchicalClusterPoint[];
+	clusterSummaryInfo: Array<{
+		clusterAverageDistances: Array<{
+			clusterId: number;
+			averageDistance: number;
+		}>;
+		clusterCount: number;
+	}>;
 }
 
 export interface IPointsGroupFormInput {

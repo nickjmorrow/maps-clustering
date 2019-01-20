@@ -68,7 +68,10 @@ function* handleGetAhcsAsync(action: GetAhcsAction) {
 		);
 		const pointsGroup: IPointsGroup = {
 			...action.payload,
-			ahcInfo: data
+			ahcInfo: {
+				ahcPoints: data,
+				clusterSummaryInfo: []
+			}
 		};
 		yield put(getAhcs.success(pointsGroup));
 	} catch (error) {

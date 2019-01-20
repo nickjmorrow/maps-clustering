@@ -1,25 +1,22 @@
 import axios from 'axios';
 import { all, call, put, PutEffect, takeLatest } from 'redux-saga/effects';
 import {
+	addToLocalStorage,
+	isInLocalStorage,
+	removeFromLocalStorage
+} from '../Core';
+import {
 	authTypeKeys,
-	handleLogin,
-	handleLogOut,
-	handleRegister,
-	IHandleLoginAction,
-	IHandleLogOutAction,
-	IHandleRegisterAction,
+	onLogin,
+	onLogOut,
+	onRegister,
 	populateUserStateFromLocalStorageIfAvailable
 } from './actions';
 import { api, USER } from './constants';
 import { addTokenToDefaultHeader } from './services';
-import {
-	isInLocalStorage,
-	removeFromLocalStorage,
-	addToLocalStorage
-} from '../Core';
-import { IUser } from './types';
+import { IUser } from './reducer';
 
-function* handleLoginAsync(action: IHandleLoginAction) {
+function* handleLoginAsync(action: ReturnType<typeof onLogin.request>) {
 	try {
 		const { data } = yield call(
 			axios.post,
@@ -32,10 +29,10 @@ function* handleLoginAsync(action: IHandleLoginAction) {
 		const actions = action.payload.additionalActions
 			? [...action.payload.additionalActions.map(f => put(f()))]
 			: [];
-		actions.push(put(handleLogin.success(data)));
+		actions.push(put(onLogin.success(data)));
 		yield all(actions);
 	} catch (error) {
-		yield put(handleLogin.failure(error));
+		yield put(onLogin.failure(error));
 	}
 }
 
@@ -43,12 +40,12 @@ function* watchHandleLogin() {
 	yield takeLatest(authTypeKeys.LOGIN, handleLoginAsync);
 }
 
-function* handleRegisterAsync(action: IHandleRegisterAction) {
+function* handleRegisterAsync(action: ReturnType<typeof onRegister.request>) {
 	try {
 		const { data } = yield call(axios.post, api.register, action.payload);
-		yield put(handleRegister.success(data));
+		yield put(onRegister.success(data));
 	} catch (error) {
-		yield put(handleRegister.failure(error));
+		yield put(onRegister.failure(error));
 	}
 }
 
@@ -56,7 +53,9 @@ function* watchHandleRegister() {
 	yield takeLatest(authTypeKeys.REGISTER, handleRegisterAsync);
 }
 
-function* handleLogOutLocalStorage(action: IHandleLogOutAction) {
+function* handleLogOutLocalStorage(
+	action: ReturnType<typeof onLogOut.request>
+) {
 	try {
 		if (isInLocalStorage(USER)) {
 			removeFromLocalStorage(USER);
@@ -64,10 +63,10 @@ function* handleLogOutLocalStorage(action: IHandleLogOutAction) {
 		const actions: Array<PutEffect<any>> = action.payload
 			? [...action.payload.map(f => put(f()))]
 			: [];
-		actions.push(put(handleLogOut.success()));
+		actions.push(put(onLogOut.success()));
 		yield all(actions);
 	} catch (error) {
-		yield put(handleLogOut.failure(error));
+		yield put(onLogOut.failure(error));
 	}
 }
 
@@ -97,7 +96,7 @@ function* watchHandlePopulateUserStateFromLocalStorageIfAvailable() {
 	);
 }
 
-export const sagas = [
+export const authSagas = [
 	watchHandleLogin,
 	watchHandleRegister,
 	watchHandleLogOutLocalStorage,

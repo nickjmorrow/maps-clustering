@@ -1,9 +1,9 @@
 import { LogOutModal as GenericLogOutModal } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { removeUnsavedPointsGroups } from 'src/Data';
-import { handleLogOut as handleLogOutAction } from '../actions';
+import { bindActionCreators, Dispatch, Action } from 'redux';
+import { onRemoveUnsavedPointsGroups } from 'src/Data';
+import { onLogOut } from '../actions';
 
 export const LogOutModalInternal: React.SFC<IProps> = ({
 	isOpen,
@@ -11,7 +11,9 @@ export const LogOutModalInternal: React.SFC<IProps> = ({
 	handleLogOut,
 	handleRemoveUnsavedPointsGroups
 }) => {
-	const logOutActions: any[] = [handleRemoveUnsavedPointsGroups];
+	const logOutActions: Array<() => Action> = [
+		handleRemoveUnsavedPointsGroups
+	];
 	return (
 		<GenericLogOutModal
 			isOpen={isOpen}
@@ -21,9 +23,6 @@ export const LogOutModalInternal: React.SFC<IProps> = ({
 	);
 };
 
-// TODO: figure out how to pass in an array of
-// action creators that can be fired off within the LogOut saga
-
 // types
 interface IOwnProps {
 	isOpen: boolean;
@@ -31,8 +30,8 @@ interface IOwnProps {
 }
 
 interface IDispatchProps {
-	handleLogOut(actions?: any[]): void;
-	handleRemoveUnsavedPointsGroups(): void;
+	handleLogOut: typeof onLogOut.request;
+	handleRemoveUnsavedPointsGroups: typeof onRemoveUnsavedPointsGroups;
 }
 
 type IProps = IOwnProps & IDispatchProps;
@@ -41,8 +40,8 @@ type IProps = IOwnProps & IDispatchProps;
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
-			handleLogOut: handleLogOutAction.request,
-			handleRemoveUnsavedPointsGroups: removeUnsavedPointsGroups
+			handleLogOut: onLogOut.request,
+			handleRemoveUnsavedPointsGroups: onRemoveUnsavedPointsGroups
 		},
 		dispatch
 	);

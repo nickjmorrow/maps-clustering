@@ -1,16 +1,10 @@
 import { AuthModal as GenericAuthModal } from 'njm-react-component-library';
-import {
-	ILoginInfo,
-	IRegisterInfo
-} from 'njm-react-component-library/lib/types';
+import { ILoginInfo } from 'njm-react-component-library/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { getPointsGroups } from 'src/Data';
-import {
-	handleLogin as handleLoginAction,
-	handleRegister as handleRegisterAction
-} from '../actions';
+import { onLogin, onRegister } from '../actions';
 
 export const AuthModalInternal: React.SFC<IProps> = ({
 	handleLogin,
@@ -39,8 +33,8 @@ export const AuthModalInternal: React.SFC<IProps> = ({
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
-			handleLogin: handleLoginAction.request,
-			handleRegister: handleRegisterAction.request,
+			handleLogin: onLogin.request,
+			handleRegister: onRegister.request,
 			handleGetPointsGroups: getPointsGroups.request
 		},
 		dispatch
@@ -53,14 +47,8 @@ export const AuthModal = connect(
 
 // types
 interface IDispatchProps {
-	handleLogin({
-		loginInfo,
-		additionalActions
-	}: {
-		loginInfo: ILoginInfo;
-		additionalActions?: any[];
-	}): void;
-	handleRegister(registerInfo: IRegisterInfo): void;
+	handleLogin: typeof onLogin.request;
+	handleRegister: typeof onRegister.request;
 	handleGetPointsGroups(): void;
 }
 

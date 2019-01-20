@@ -252,12 +252,15 @@ const getClusters = (
 		case clusterTypes.ahcs:
 			// if clusterInfo is not present, request for it and return
 			// unclustered points
-			if (activePointsGroup.ahcInfo === undefined) {
+			if (
+				activePointsGroup.ahcInfo === undefined ||
+				activePointsGroup.ahcInfo.ahcPoints === undefined
+			) {
 				onGetAhcs(activePointsGroup);
 				return unclusteredPoints;
 			}
 
-			return activePointsGroup.ahcInfo.map(ahc => {
+			return activePointsGroup.ahcInfo.ahcPoints.map(ahc => {
 				return {
 					...ahc,
 					clusterId:
@@ -279,16 +282,15 @@ const getPointsForMap = (
 		return [];
 	}
 	const { points } = activePointsGroup;
-	if (!activePointsGroup.ahcInfo) {
+	if (!activePointsGroup.ahcInfo || activePointsGroup.ahcInfo!.ahcPoints) {
 		return points;
 	}
 	const canShowAgglomerativeHierarchicalClusters =
-		activePointsGroup.ahcInfo![0].agglomerativeHierarchicalClusterInfos
-			.length > 0;
+		activePointsGroup.ahcInfo![0].ahcPoints.length > 0;
 	switch (currentClusterOption.value) {
 		case clusterTypes.ahcs:
 			return canShowAgglomerativeHierarchicalClusters
-				? activePointsGroup.ahcInfo!
+				? activePointsGroup.ahcInfo!.ahcPoints
 				: points;
 		default:
 			return points;
@@ -310,6 +312,8 @@ const getFillColorFunc = (
 		case clusterTypes.ahcs:
 			if (
 				activePointsGroup.ahcInfo === undefined ||
+				!activePointsGroup.ahcInfo!.ahcPoints ||
+				!activePointsGroup.ahcInfo[0] ||
 				value >
 					activePointsGroup.ahcInfo[0]
 						.agglomerativeHierarchicalClusterInfos.length

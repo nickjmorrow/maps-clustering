@@ -1,20 +1,29 @@
-import { ActionTypes, authTypeKeys } from './actions';
-import { IUser } from './types';
-
-export interface IAuthState {
-	readonly authenticationInfo: IUser | null;
-	readonly error: string | null;
-}
+import { Reducer } from 'redux';
+import { ActionType } from 'typesafe-actions';
+import * as actions from './actions';
+import { authTypeKeys } from './actions';
 
 const initialState: IAuthState = {
 	authenticationInfo: null,
 	error: null
 };
 
-export const authReducer = (
-	state: IAuthState,
-	action: ActionTypes
-): IAuthState => {
+export interface IUser {
+	name: string;
+	email: string;
+	password: string;
+	userId: number;
+	token: string;
+}
+
+export interface IAuthState {
+	readonly authenticationInfo: IUser | null;
+	readonly error: string | null;
+}
+
+type AuthAction = ActionType<typeof actions>;
+
+export const authReducer: Reducer<IAuthState, AuthAction> = (state, action) => {
 	state = state || initialState;
 
 	switch (action.type) {

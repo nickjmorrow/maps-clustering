@@ -41,8 +41,7 @@ export const getAhcs = {
 };
 
 export const getPointsGroups = {
-	request: (): IGetPointsGroupsAction =>
-		action(dataTypeKeys.GET_POINTS_GROUPS),
+	request: () => action(dataTypeKeys.GET_POINTS_GROUPS),
 	success: (payload: IPointsGroup[]): IGetPointsGroupsActionSucceeded =>
 		action(dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED, payload)
 };
@@ -83,7 +82,7 @@ export const setActivePointsGroup = (
 ): ISetActivePointsGroupAction =>
 	action(dataTypeKeys.SET_ACTIVE_POINTS_GROUP, payload);
 
-export const removeUnsavedPointsGroups = (): IRemoveUnsavedPointsGroupsAction =>
+export const onRemoveUnsavedPointsGroups = (): IRemoveUnsavedPointsGroupsAction =>
 	action(dataTypeKeys.REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS);
 
 export type ActionTypes =
