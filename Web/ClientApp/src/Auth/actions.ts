@@ -53,7 +53,8 @@ export const handleRegister = {
 };
 
 export const handleLogOut = {
-	request: (): IHandleLogOutAction => action(authTypeKeys.LOGOUT),
+	request: (additionalActions?: any[]): IHandleLogOutAction =>
+		action(authTypeKeys.LOGOUT, additionalActions),
 	success: (): IHandleLogOutSucceededAction =>
 		action(authTypeKeys.LOGOUT_SUCCEEDED),
 	failure: (error: IError): IHandleLogOutFailedAction =>
@@ -113,10 +114,7 @@ export interface IHandleRegisterFailedAction {
 
 export interface IHandleLogOutAction {
 	type: authTypeKeys.LOGOUT;
-	payload?(): {
-		type: string;
-		payload?: any;
-	};
+	payload?: any[];
 }
 
 export interface IHandleLogOutSucceededAction {

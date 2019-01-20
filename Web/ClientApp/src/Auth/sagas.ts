@@ -1,14 +1,15 @@
 import axios from 'axios';
-import { call, put, takeLatest, all } from 'redux-saga/effects';
+import { all, call, put, PutEffect, takeLatest } from 'redux-saga/effects';
+import { getUserFavoriteItems } from 'src/User/actions';
 import {
 	authTypeKeys,
 	handleLogin,
 	handleLogOut,
 	handleRegister,
 	IHandleLoginAction,
+	IHandleLogOutAction,
 	IHandleRegisterAction,
-	populateUserStateFromLocalStorageIfAvailable,
-	IHandleLogOutAction
+	populateUserStateFromLocalStorageIfAvailable
 } from './actions';
 import { api, USER } from './constants';
 import {
@@ -17,7 +18,6 @@ import {
 	removeFromLocalStorage
 } from './services';
 import { IUser } from './types';
-import { getUserFavoriteItems } from 'src/User/actions';
 
 function* handleLoginAsync(action: IHandleLoginAction) {
 	try {
@@ -55,11 +55,10 @@ function* handleLogOutLocalStorage(action: IHandleLogOutAction) {
 		if (isInLocalStorage(USER)) {
 			removeFromLocalStorage(USER);
 		}
-		const actions = [];
+		const actions: Array<PutEffect<any>> = action.payload
+			? [...action.payload.map(f => put(f()))]
+			: [];
 		actions.push(put(handleLogOut.success()));
-		if (action.payload) {
-			actions.push(put(action.payload()));
-		}
 		yield all(actions);
 	} catch (error) {
 		yield put(handleLogOut.failure(error));
