@@ -113,6 +113,10 @@ export interface IHandleRegisterFailedAction {
 
 export interface IHandleLogOutAction {
 	type: authTypeKeys.LOGOUT;
+	payload?(): {
+		type: string;
+		payload?: any;
+	};
 }
 
 export interface IHandleLogOutSucceededAction {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, all } from 'redux-saga/effects';
 import {
 	authTypeKeys,
 	handleLogin,
@@ -7,7 +7,8 @@ import {
 	handleRegister,
 	IHandleLoginAction,
 	IHandleRegisterAction,
-	populateUserStateFromLocalStorageIfAvailable
+	populateUserStateFromLocalStorageIfAvailable,
+	IHandleLogOutAction
 } from './actions';
 import { api, USER } from './constants';
 import {
@@ -49,12 +50,17 @@ function* watchHandleRegister() {
 	yield takeLatest(authTypeKeys.REGISTER, handleRegisterAsync);
 }
 
-function* handleLogOutLocalStorage() {
+function* handleLogOutLocalStorage(action: IHandleLogOutAction) {
 	try {
 		if (isInLocalStorage(USER)) {
 			removeFromLocalStorage(USER);
 		}
-		yield put(handleLogOut.success());
+		const actions = [];
+		actions.push(put(handleLogOut.success()));
+		if (action.payload) {
+			actions.push(put(action.payload()));
+		}
+		yield all(actions);
 	} catch (error) {
 		yield put(handleLogOut.failure(error));
 	}

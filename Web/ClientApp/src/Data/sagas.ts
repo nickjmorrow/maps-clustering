@@ -76,7 +76,7 @@ function* handleGetAhcsAsync(action: GetAhcsAction) {
 	}
 }
 
-function* handlePopulatePointsFromLocalStorageIfAvailable() {
+function* handlePopulatePointsGroupsFromLocalStorageIfAvailable() {
 	try {
 		const pointsGroups = localStorage.getItem(
 			localStorageKeys.pointsGroups
@@ -93,10 +93,10 @@ function* handlePopulatePointsFromLocalStorageIfAvailable() {
 	}
 }
 
-function* watchHandlePopulatePointsFromLocalStorageIfAvailable() {
+function* watchPopulatePointsGroupsFromLocalStorageIfAvailable() {
 	yield takeLatest(
-		dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE,
-		handlePopulatePointsFromLocalStorageIfAvailable
+		dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE,
+		handlePopulatePointsGroupsFromLocalStorageIfAvailable
 	);
 }
 
@@ -159,7 +159,7 @@ function* watchDeletePointsGroup() {
 export const sagas = [
 	watchCreatePointsGroup,
 	watchGetAhcs,
-	watchHandlePopulatePointsFromLocalStorageIfAvailable,
+	watchPopulatePointsGroupsFromLocalStorageIfAvailable,
 	watchGetPointsGroups,
 	watchSavePointsGroup,
 	watchDeletePointsGroup

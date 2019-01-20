@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LogOutModal as GenericLogOutModal } from 'njm-react-component-library';
 import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import { Dispatch, bindActionCreators, Action } from 'redux';
 import { handleLogOut as handleLogOutAction } from '../actions';
 
 export const LogOutModalInternal: React.SFC<IProps> = ({
@@ -18,14 +18,18 @@ export const LogOutModalInternal: React.SFC<IProps> = ({
 	);
 };
 
+// TODO: figure out how to pass in an array of 
+// action creators that can be fired off within the LogOut saga
+
 // types
 interface IOwnProps {
-	isOpen: boolean;
-	onRequestClose(): void;
+    isOpen: boolean;
+    logoutActions: (func(): void)[];
+    onRequestClose(): void;
 }
 
 interface IDispatchProps {
-	handleLogOut(): void;
+	handleLogOut(action?: Action): void;
 }
 
 type IProps = IOwnProps & IDispatchProps;

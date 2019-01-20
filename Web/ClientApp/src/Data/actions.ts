@@ -18,7 +18,8 @@ export enum dataTypeKeys {
 	SAVE_POINTS_GROUP_SUCCEEDED = 'SAVE_POINTS_GROUP_SUCCEEDED',
 	DELETE_POINTS_GROUP = 'DELETE_POINTS_GROUP',
 	DELETE_POINTS_GROUP_SUCCEEDED = 'DELETE_POINTS_GROUP_SUCCEEDED',
-	SET_ACTIVE_POINTS_GROUP = 'SET_ACTIVE_POINTS_GROUP'
+	SET_ACTIVE_POINTS_GROUP = 'SET_ACTIVE_POINTS_GROUP',
+	REMOVE_UNSAVED_POINTS_GROUPS = 'REMOVE_UNSAVED_POINTS_GROUPS'
 }
 
 export const createPointsGroup = {
@@ -82,6 +83,9 @@ export const setActivePointsGroup = (
 ): ISetActivePointsGroupAction =>
 	action(dataTypeKeys.SET_ACTIVE_POINTS_GROUP, payload);
 
+export const removeUnsavedPointsGroups = (): IRemoveUnsavedPointsGroupsAction =>
+	action(dataTypeKeys.REMOVE_UNSAVED_POINTS_GROUPS);
+
 export type ActionTypes =
 	| ICreatePointsGroupAction
 	| ICreatePointsGroupSucceededAction
@@ -99,7 +103,8 @@ export type ActionTypes =
 	| ISavePointsGroupActionSucceeded
 	| IDeletePointsGroupAction
 	| IDeletePointsGroupActionSucceeded
-	| ISetActivePointsGroupAction;
+	| ISetActivePointsGroupAction
+	| IRemoveUnsavedPointsGroupsAction;
 
 export interface ICreatePointsGroupAction {
 	type: dataTypeKeys.CREATE_POINTS_GROUP;
@@ -181,4 +186,8 @@ export interface IDeletePointsGroupActionSucceeded {
 export interface ISetActivePointsGroupAction {
 	type: dataTypeKeys.SET_ACTIVE_POINTS_GROUP;
 	payload: number;
+}
+
+export interface IRemoveUnsavedPointsGroupsAction {
+	type: dataTypeKeys.REMOVE_UNSAVED_POINTS_GROUPS;
 }

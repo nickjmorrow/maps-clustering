@@ -41,6 +41,7 @@ export interface IPointsGroup {
 	points: IPoint[];
 	isActive: boolean;
 	ahcInfo?: AgglomerativeHierarchicalClusterPoint[];
+	isDefault?: boolean;
 }
 
 export interface IPointsGroupFormInput {

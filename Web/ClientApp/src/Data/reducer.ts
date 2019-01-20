@@ -95,6 +95,13 @@ export const dataReducer = (
 					setActivePointsGroup(action.payload)
 				)
 			};
+		case dataTypeKeys.REMOVE_UNSAVED_POINTS_GROUPS:
+			return {
+				...state,
+				pointsGroups: state.pointsGroups.filter(
+					pg => !pg.pointsGroupId || pg.isDefault
+				)
+			};
 		default:
 			return state;
 	}
