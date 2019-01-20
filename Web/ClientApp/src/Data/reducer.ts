@@ -5,6 +5,7 @@ import {
 	IPoint,
 	IPointsGroup
 } from './types';
+import { ItemPermissionType } from 'src/Core';
 
 export interface DataState {
 	readonly points: IPoint[];
@@ -95,12 +96,16 @@ export const dataReducer = (
 					setActivePointsGroup(action.payload)
 				)
 			};
-		case dataTypeKeys.REMOVE_UNSAVED_POINTS_GROUPS:
+		case dataTypeKeys.REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS:
 			return {
 				...state,
-				pointsGroups: state.pointsGroups.filter(
-					pg => !pg.pointsGroupId || pg.isDefault
-				)
+				pointsGroups: state.pointsGroups
+					.filter(
+						pg =>
+							!pg.pointsGroupId ||
+							pg.itemPermissionType === ItemPermissionType.Public
+					)
+					.map(withFirstPointsGroupActive)
 			};
 		default:
 			return state;

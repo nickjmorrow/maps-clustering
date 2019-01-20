@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Models;
 using Web.Services;
 using WebApplication.Models;
 
@@ -11,7 +12,7 @@ namespace WebApplication.Controllers
     public class PointsGroupController : Controller
     {
         private readonly PointsGroupService _pointsGroupService;
-        private int _userId => Int32.Parse(this.User.Identity.Name);
+        private int _userId => UserIdProvider.GetUserId(this.User);
 
         public PointsGroupController(PointsGroupService pointsGroupService)
         {

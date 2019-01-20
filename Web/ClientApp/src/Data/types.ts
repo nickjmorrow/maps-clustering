@@ -1,4 +1,5 @@
 import { IOption } from 'njm-react-component-library/lib/types';
+import { ItemPermissionType } from 'src/Core';
 
 export interface IPoint {
 	pointId: number;
@@ -41,7 +42,8 @@ export interface IPointsGroup {
 	points: IPoint[];
 	isActive: boolean;
 	ahcInfo?: AgglomerativeHierarchicalClusterPoint[];
-	isDefault?: boolean;
+	dateCreated: Date;
+	itemPermissionType: ItemPermissionType;
 }
 
 export interface IPointsGroupFormInput {

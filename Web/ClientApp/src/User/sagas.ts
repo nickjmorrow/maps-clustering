@@ -1,19 +1,14 @@
 import axios from 'axios';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import {
-	getUserFavoriteItems,
-	userTypeKeys,
-	toggleFavoriteItem,
-	IFavoriteItemAction
-} from './actions';
+import { userActions, userTypeKeys, IFavoriteItemAction } from './actions';
 import { api } from './constants';
 
 function* handleGetUserFavoriteItems() {
 	try {
 		const { data } = yield call(axios.get, api.getUserFavoriteItems);
-		yield put(getUserFavoriteItems.success(data));
+		yield put(userActions.getUserFavoriteItems.success(data));
 	} catch (error) {
-		yield put(getUserFavoriteItems.failure(error));
+		yield put(userActions.getUserFavoriteItems.failure(error));
 	}
 }
 
@@ -31,9 +26,9 @@ function* handleToggleFavoriteItemAsync(action: IFavoriteItemAction) {
 			api.toggleFavoriteItem(action.payload),
 			action.payload
 		);
-		yield put(toggleFavoriteItem.success(data));
+		yield put(userActions.toggleFavoriteItem.success(data));
 	} catch (error) {
-		yield put(toggleFavoriteItem.failure(error));
+		yield put(userActions.toggleFavoriteItem.failure(error));
 	}
 }
 

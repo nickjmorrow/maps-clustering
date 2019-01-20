@@ -11,9 +11,17 @@ CREATE TABLE dbo.itemTypes (
     name VARCHAR(255) NOT NULL
 )
 
+CREATE TABLE dbo.itemPermissionTypes (
+    itemPermissionTypeId INT NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+    description VARCHAR(100) NOT NULL
+)
+
 CREATE TABLE dbo.items (
     itemId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-    itemTypeId INT FOREIGN KEY REFERENCES dbo.itemTypes(itemTypeId),
+    itemTypeId INT NOT NULL FOREIGN KEY REFERENCES dbo.itemTypes(itemTypeId),
+    itemPermissionTypeId INT NOT NULL FOREIGN KEY REFERENCES dbo.itemPermissionTypes(itemPermissionTypeId),
+    dateCreated DATETIME NOT NULL DEFAULT GETDATE(),
+    dateDeleted DATETIME NULL
 )
 
 CREATE TABLE dbo.userItems (
@@ -25,4 +33,6 @@ CREATE TABLE dbo.userFavorites (
     userId iNT NOT NULL FOREIGN KEY REFERENCES dbo.users(userId),
     itemId INT NOT NULL FOREIGN KEY REFERENCES dbo.items(itemId)
 )
+
+
 

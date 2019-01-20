@@ -1,28 +1,28 @@
-import * as React from 'react';
 import { AuthModal as GenericAuthModal } from 'njm-react-component-library';
+import {
+	ILoginInfo,
+	IRegisterInfo
+} from 'njm-react-component-library/lib/types';
+import * as React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { getPointsGroups } from 'src/Data';
 import {
 	handleLogin as handleLoginAction,
 	handleRegister as handleRegisterAction
 } from '../actions';
-import { Dispatch, bindActionCreators } from 'redux';
-import {
-	IRegisterInfo,
-	ILoginInfo
-} from 'njm-react-component-library/lib/types';
-import { getUserFavoriteItems } from 'src/User';
 
 export const AuthModalInternal: React.SFC<IProps> = ({
 	handleLogin,
 	handleRegister,
 	isOpen,
 	isRegistering,
-	handleToggleIsOpen,
-	handleGetUserFavoriteItems
+	handleToggleIsOpen
 }) => {
 	const handleLoginInternal = (loginInfo: ILoginInfo) => {
-		const additionalActions = [handleGetUserFavoriteItems];
+		const additionalActions = [getPointsGroups.request];
 		handleLogin({ loginInfo, additionalActions });
+		handleToggleIsOpen();
 	};
 
 	return (
@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 		{
 			handleLogin: handleLoginAction.request,
 			handleRegister: handleRegisterAction.request,
-			handleGetUserFavoriteItems: getUserFavoriteItems.request
+			handleGetPointsGroups: getPointsGroups.request
 		},
 		dispatch
 	);
@@ -61,7 +61,7 @@ interface IDispatchProps {
 		additionalActions?: any[];
 	}): void;
 	handleRegister(registerInfo: IRegisterInfo): void;
-	handleGetUserFavoriteItems(): void;
+	handleGetPointsGroups(): void;
 }
 
 interface IOwnProps {

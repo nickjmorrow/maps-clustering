@@ -11,17 +11,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { IReduxState } from 'src/reducer';
-import { getColors as getMarkerColors, googleMapURL } from '../../Core';
 import styled from 'styled-components';
 import {
 	Clusters,
 	deletePointsGroup,
+	getAhcs,
 	Map,
 	Parameters,
 	savePointsGroup,
-	setActivePointsGroup,
-	getAhcs
+	setActivePointsGroup
 } from '../';
+import { getColors as getMarkerColors, ItemPermissionType } from '../../Core';
 import { clusterOptions, clusterTypes } from '../constants';
 import {
 	getAgglomerativeHierarchicalClustersFromState,
@@ -41,7 +41,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 		const activePointsGroup = nextProps.pointsGroups.find(
 			pg => pg.isActive
 		)!;
-		if (!activePointsGroup) {
+		if (!activePointsGroup || !activePointsGroup.points) {
 			this.setState({ markerColors: [] });
 			return;
 		}
@@ -69,14 +69,15 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 			{!pg.pointsGroupId && (
 				<button onClick={() => this.savePointsGroup(pg)}>Save</button>
 			)}
-			{pg.pointsGroupId && (
-				<SmallCloseIcon
-					onClick={() =>
-						this.props.onDeletePointsGroup(pg.pointsGroupId!)
-					}>
-					Delete
-				</SmallCloseIcon>
-			)}
+			{pg.pointsGroupId &&
+				pg.itemPermissionType !== ItemPermissionType.Public && (
+					<SmallCloseIcon
+						onClick={() =>
+							this.props.onDeletePointsGroup(pg.pointsGroupId!)
+						}>
+						Delete
+					</SmallCloseIcon>
+				)}
 		</PointsGroupWrapper>
 	);
 
@@ -110,16 +111,12 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 
 		return (
 			<div>
-				<Map
-					markers={markers}
-					defaultPosition={defaultPosition}
-					googleMapUrl={googleMapURL}
-				/>
+				<Map markers={markers} defaultPosition={defaultPosition} />
 				<Divider />
 				<MapControls>
 					<InfoPanel>
 						<Typography variant="h1">Parameters</Typography>
-						<Typography variant="h2">Points</Typography>
+						<Typography variant="h2">Point Groups</Typography>
 						{pointsGroups.map(this.renderPointsGroup)}
 						<Typography variant="h2">Cluster Type</Typography>
 						<LabeledRadioButtonInput
@@ -239,7 +236,7 @@ const getClusters = (
 	activePointsGroup: IPointsGroup,
 	onGetAhcs: (pointsGroup: IPointsGroup) => void
 ): ClusteredPoint[] => {
-	if (!activePointsGroup) {
+	if (!activePointsGroup || !activePointsGroup.points) {
 		return [];
 	}
 	const unclusteredPoints = activePointsGroup.points.map(p => ({
@@ -334,10 +331,10 @@ const getMarkers = (
 	currentClusterOption: IOption,
 	activePointsGroup: IPointsGroup
 ) => {
-	if (!activePointsGroup) {
+	if (!activePointsGroup || !pointsForMap) {
 		return [];
 	}
-	// const { points } = activePointsGroup;
+
 	return pointsForMap.map(mp => ({
 		position: {
 			lat: mp.verticalDisplacement,

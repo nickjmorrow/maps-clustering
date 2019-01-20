@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Web.Models;
 using WebApplication;
+using WebApplication.Enums;
+using WebApplication.Models;
 
 namespace Web.Services
 {
@@ -14,26 +16,34 @@ namespace Web.Services
             this._context = context;
         }
 
-        public IEnumerable<T> GetValidItems<T>(int userId, IEnumerable<T> items)
+        public IEnumerable<T> GetValidItems<T>(int? userId, IEnumerable<T> items)
         where T : IItemBound
         {
             // TODO: can this be a delegate/event? 
-            var userPermissionedItems = this.GetUserPermissionedItems(userId, items);
-            var validItems = this.GetNotDeletedItems(userId, userPermissionedItems);
+            var userPermissionedItems = this.GetPermissionedItems(userId, items);
+            var validItems = this.GetNotDeletedItems(userPermissionedItems);
+            
             return validItems;
         }
 
-        private IEnumerable<T> GetUserPermissionedItems<T>(int userId, IEnumerable<T> items)
+        private IEnumerable<T> GetPermissionedItems<T>(int? userId, IEnumerable<T> items)
             where T : IItemBound
         {
-            var userItems = this._context.UserItems
-                .Where(ui => ui.UserId == userId)
-                .ToList();
+            var publicItems = this._context.Items
+                .Where(i => i.ItemPermissionType == ItemPermissionType.Public);
+            
+            var userItems = userId.HasValue
+                ? this._context.UserItems
+                    .Where(ui => ui.UserId == userId)
+                    .ToList()
+                : new List<UserItem>() { };
+            
             return items
-                .Where(i => userItems.Any(ui => ui.ItemId == i.ItemId));
+                .Where(i => userItems.Any(ui => ui.ItemId == i.ItemId) 
+                            || publicItems.Any(pi => pi.ItemId == i.ItemId));
         }
 
-        private IEnumerable<T> GetNotDeletedItems<T>(int userId, IEnumerable<T> items)
+        private IEnumerable<T> GetNotDeletedItems<T>(IEnumerable<T> items)
             where T : IItemBound
         {
             var notDeletedItems = this._context.Items.Where(i => !i.DateDeleted.HasValue);

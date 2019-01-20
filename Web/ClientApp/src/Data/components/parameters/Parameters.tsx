@@ -36,7 +36,7 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 		} = this.props;
 
 		const activePointsGroup = pointsGroups.find(pg => pg.isActive)!;
-		if (!activePointsGroup) {
+		if (!activePointsGroup || !activePointsGroup.points) {
 			return null;
 		}
 		const { points } = activePointsGroup;

@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Warlock.Services;
+using Web.Services;
 
 namespace WebApplication.Controllers
 {
@@ -9,44 +10,18 @@ namespace WebApplication.Controllers
     [Route("api/[controller]")]
     public class UserItemController : Controller
     {
-        private readonly UserItemService _userItemService;
+        private readonly ItemService _itemService;
         private int _userId => Int32.Parse(this.User.Identity.Name);
 
-        public UserItemController(UserItemService userItemService)
+        public UserItemController(ItemService itemService)
         {
-            this._userItemService = userItemService;
+            this._itemService = itemService;
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetUserItems()
+        public IActionResult GetItems()
         {
-            return Ok(this._userItemService.GetUserItems(this._userId));
+            return Ok(this._itemService.GetItems(this._userId));
         }
-
-        [HttpGet("[action]")]
-        public IActionResult GetUserFavoriteItems()
-        {
-            return Ok(this._userItemService.GetUserFavoriteItems(this._userId));
-        }
-
-        [HttpPost("[action]")]
-        public IActionResult AddUserItem([FromQuery(Name = "itemId")] int itemId)
-        {
-            return Ok(this._userItemService.AddUserItem(this._userId, itemId));
-        }
-
-        [HttpDelete("[action]")]
-        public IActionResult RemoveUserItem([FromQuery(Name = "itemId")] int itemId)
-        {
-            return Ok(this._userItemService.RemoveUserItem(this._userId, itemId));
-        }
-
-        [HttpPost("[action]")]
-        public IActionResult ToggleFavoriteItem([FromQuery(Name = "itemId")] int itemId)
-        {
-            return Ok(this._userItemService.ToggleFavoriteItem(this._userId, itemId));
-        }
-        
-        
     }
 }

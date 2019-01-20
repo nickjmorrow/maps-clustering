@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,11 +40,27 @@ namespace Web.Services
         
         // TODO: let me rename a pointsGroup
 
-        public IEnumerable<PointsGroup> GetPointsGroups(int userId)
+        public IEnumerable<PointsGroupDTO> GetPointsGroups(int? userId)
         {
-            var pointsGroups = this._context.PointsGroups
+            var allPointsGroups = this._context.PointsGroups
                 .Include(pg => pg.Points);
-            return this._itemFilterer.GetValidItems(userId, pointsGroups);
+            return this._itemFilterer
+                .GetValidItems(userId, allPointsGroups)
+                .Select(pg => 
+                {
+                    var item = this._context.Items.Single(i => i.ItemId == pg.ItemId);
+                    return new PointsGroupDTO()
+                    {
+                        PointsGroupId = pg.PointsGroupId,
+                        Name = pg.Name,
+                        Points = pg.Points,
+                        AverageHorizontalDisplacement = pg.AverageHorizontalDisplacement,
+                        AverageVerticalDisplacement = pg.AverageVerticalDisplacement,
+                        DateCreated = item.DateCreated,
+                        ItemPermissionType = item.ItemPermissionType
+                    };
+                })
+                .ToList();
         }
 
         public async Task<PointsGroup> AddPointsGroupAsync(int userId, PointsGroupInput pointsGroupInput)
@@ -92,22 +109,11 @@ namespace Web.Services
 
         public async Task<int> DeletePointsGroupAsync(int pointsGroupId)
         {
-            var pointsGroup = this._context.PointsGroups.First(pg => pg.PointsGroupId == pointsGroupId);
-            var points = this._context.Points.Where(p => p.PointsGroupId == pointsGroupId);
-            this._context.Points.RemoveRange(points);
+            var pointsGroup = this._context.PointsGroups.Single(pg => pg.PointsGroupId == pointsGroupId);
+            var item = this._context.Items.Single(i => i.ItemId == pointsGroup.ItemId);
+            item.DateDeleted = DateTime.Now;
             await this._context.SaveChangesAsync();
-
-            var userItem = this._context.UserItems.First(ui => ui.ItemId == pointsGroup.ItemId);
-            this._context.UserItems.Remove(userItem);
-            await this._context.SaveChangesAsync();
-
-            var item = this._context.Items.First(i => i.ItemId == pointsGroup.ItemId);
-            this._context.Items.Remove(item);
-            await this._context.SaveChangesAsync();
-            
-            this._context.PointsGroups.Remove(pointsGroup);
-            await this._context.SaveChangesAsync();
-            return pointsGroupId;
+            return pointsGroup.PointsGroupId;
         }
     }
 }

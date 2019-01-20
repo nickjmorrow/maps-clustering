@@ -1,6 +1,7 @@
-const userItemController = 'userItem';
+const itemController = 'item';
 export const api = {
 	toggleFavoriteItem: (itemId: number) =>
-		`api/${userItemController}/toggleFavoriteItem?itemId=${itemId}`,
-	getUserFavoriteItems: `api/${userItemController}/getUserFavoriteItems`
+		`api/${itemController}/toggleFavoriteItem?itemId=${itemId}`,
+	getUserFavoriteItems: `api/${itemController}/getUserFavoriteItems`,
+	getItems: `api/${itemController}/getItems`
 };

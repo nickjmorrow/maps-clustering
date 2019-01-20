@@ -13,3 +13,4 @@ CREATE TABLE dbo.points (
     verticalDisplacement FLOAT NOT NULL,
     pointsGroupId INT NOT NULL FOREIGN KEY REFERENCES dbo.pointsGroups(pointsGroupId)
 )
+

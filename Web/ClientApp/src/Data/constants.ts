@@ -1,4 +1,5 @@
 import { IOption } from 'njm-react-component-library';
+import { apiKey } from 'src/secrets';
 
 export enum fileApi {
 	get = '/api/data/get',
@@ -71,3 +72,5 @@ export enum mapFormFields {
 	file = 'FILE',
 	mapName = 'MAP_NAME'
 }
+
+export const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=3.exp&libraries=geometry,drawing,places`;
