@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import {
 	createPointsGroup,
 	dataTypeKeys,
@@ -97,7 +97,7 @@ function* handlePopulatePointsGroupsFromLocalStorageIfAvailable() {
 }
 
 function* watchPopulatePointsGroupsFromLocalStorageIfAvailable() {
-	yield takeLatest(
+	yield takeEvery(
 		dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE,
 		handlePopulatePointsGroupsFromLocalStorageIfAvailable
 	);
@@ -113,10 +113,7 @@ function* handleGetPointsGroupsAsync() {
 }
 
 function* watchGetPointsGroups() {
-	yield takeLatest(
-		dataTypeKeys.GET_POINTS_GROUPS,
-		handleGetPointsGroupsAsync
-	);
+	yield takeEvery(dataTypeKeys.GET_POINTS_GROUPS, handleGetPointsGroupsAsync);
 }
 
 function* handleSavePointsGroupAsync(action: ISavePointsGroupAction) {
