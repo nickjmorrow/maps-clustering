@@ -1,11 +1,8 @@
-import { IReduxState } from 'src/reducer';
-import { IPoint, AgglomerativeHierarchicalClusterPoint } from './types';
+import { IDataState } from './reducer';
 
-const getData = (state: IReduxState) => state.data;
-export const getPoints = (state: IReduxState): IPoint[] =>
-	getData(state).points;
+interface IExpectedReduxState {
+	data: IDataState;
+}
 
-export const getAgglomerativeHierarchicalClustersFromState = (
-	state: IReduxState
-): AgglomerativeHierarchicalClusterPoint[] =>
-	getData(state).agglomerativeHierarchicalClusters;
+export const getActivePointsGroup = (state: IExpectedReduxState) =>
+	state.data.pointsGroups.find(pg => pg.isActive)!;

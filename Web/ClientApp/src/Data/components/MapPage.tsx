@@ -1,46 +1,29 @@
 import {
-	border,
-	borderRadius,
 	colors,
 	IOption,
 	LabeledRadioButtonInput,
-	transitions,
 	Typography
 } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
 import { IReduxState } from 'src/reducer';
 import styled from 'styled-components';
-import {
-	Clusters,
-	deletePointsGroup,
-	getAhcs,
-	Map,
-	Parameters,
-	savePointsGroup,
-	setActivePointsGroup
-} from '../';
-import { getColors as getMarkerColors, ItemPermissionType } from '../../Core';
+import { Clusters, Map, Parameters } from '../';
+import { getColors as getMarkerColors } from '../../Core';
 import { clusterOptions, clusterTypes } from '../constants';
 import {
-	getAgglomerativeHierarchicalClustersFromState,
-	getPoints
-} from '../selectors';
-import {
 	AgglomerativeHierarchicalClusterPoint,
-	ClusteredPoint,
 	IPoint,
 	IPointsGroup
 } from '../types';
+import { PointsGroups } from './PointsGroups';
+import { getActivePointsGroup } from '../selectors';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
 
 	componentWillReceiveProps = (nextProps: IProps) => {
-		const activePointsGroup = nextProps.pointsGroups.find(
-			pg => pg.isActive
-		)!;
+		const activePointsGroup = nextProps.activePointsGroup;
 		if (!activePointsGroup || !activePointsGroup.points) {
 			this.setState({ markerColors: [] });
 			return;
@@ -58,46 +41,16 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 		this.setState({ currentClusterOption });
 	};
 
-	savePointsGroup = (pointsGroup: IPointsGroup) =>
-		this.props.onSavePointsGroup(pointsGroup);
-
-	renderPointsGroup = (pg: IPointsGroup) => (
-		<PointsGroupWrapper
-			key={pg.pointsGroupId}
-			onClick={() => this.props.onSetActivePointsGroup(pg.pointsGroupId)}>
-			<Typography>{pg.name}</Typography>
-			{!pg.pointsGroupId && (
-				<button onClick={() => this.savePointsGroup(pg)}>Save</button>
-			)}
-			{pg.pointsGroupId &&
-				pg.itemPermissionType !== ItemPermissionType.Public && (
-					<SmallCloseIcon
-						onClick={() =>
-							this.props.onDeletePointsGroup(pg.pointsGroupId!)
-						}>
-						Delete
-					</SmallCloseIcon>
-				)}
-		</PointsGroupWrapper>
-	);
-
 	render() {
-		const { pointsGroups, onGetAhcs } = this.props;
+		const { pointsGroups, activePointsGroup } = this.props;
 		const {
 			currentClusterOption,
 			clusterCount: clusterCount,
 			markerColors
 		} = this.state;
 
-		const activePointsGroup = pointsGroups.find(pg => pg.isActive)!;
-
-		const pointsForMap = getPointsForMap(
-			currentClusterOption,
-			activePointsGroup
-		);
-
 		const markers = getMarkers(
-			pointsForMap,
+			activePointsGroup,
 			clusterCount,
 			markerColors,
 			currentClusterOption
@@ -116,7 +69,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 					<InfoPanel>
 						<Typography variant="h1">Parameters</Typography>
 						<Typography variant="h2">Point Groups</Typography>
-						{pointsGroups.map(this.renderPointsGroup)}
+						<PointsGroups pointsGroups={pointsGroups} />
 						<Typography variant="h2">Cluster Type</Typography>
 						<LabeledRadioButtonInput
 							options={clusterOptions}
@@ -133,12 +86,9 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 						<Typography variant="h1">Results</Typography>
 						<Typography variant="h2">Clusters</Typography>
 						<Clusters
-							clusteredPoints={getClusters(
-								currentClusterOption,
-								clusterCount,
-								activePointsGroup,
-								onGetAhcs
-							)}
+							activePointsGroup={activePointsGroup}
+							currentClusterOption={currentClusterOption}
+							clusterCount={clusterCount}
 						/>
 					</InfoPanel>
 				</MapControls>
@@ -149,27 +99,13 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 
 // redux
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
-	points: getPoints(state),
-	agglomerativeHierarchicalClusters: getAgglomerativeHierarchicalClustersFromState(
-		state
-	),
-	pointsGroups: state.data.pointsGroups
+	pointsGroups: state.data.pointsGroups,
+	activePointsGroup: getActivePointsGroup(state)
 });
-
-const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
-	bindActionCreators(
-		{
-			onSavePointsGroup: savePointsGroup.request,
-			onDeletePointsGroup: deletePointsGroup.request,
-			onSetActivePointsGroup: setActivePointsGroup,
-			onGetAhcs: getAhcs.request
-		},
-		dispatch
-	);
 
 export const MapPage = connect(
 	mapStateToProps,
-	mapDispatchToProps
+	null
 )(MapPageInternal);
 
 // types
@@ -181,20 +117,12 @@ const initialState = {
 
 type IState = typeof initialState;
 
-interface IDispatchProps {
-	onSavePointsGroup(pointsGroup: IPointsGroup): void;
-	onDeletePointsGroup(pointsGroupId: number): void;
-	onSetActivePointsGroup(pointsGroupId: number | undefined): void;
-	onGetAhcs(pointsGroup: IPointsGroup): void;
-}
-
 interface IReduxProps {
-	points: IPoint[];
-	agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
 	pointsGroups: IPointsGroup[];
+	activePointsGroup: IPointsGroup;
 }
 
-type IProps = IReduxProps & IDispatchProps;
+type IProps = IReduxProps;
 
 // css
 const InfoPanel = styled.div`
@@ -214,64 +142,7 @@ const Divider = styled.div`
 	background-color: ${colors.darkGray};
 `;
 
-const PointsGroupWrapper = styled.div`
-	padding: 4px;
-	border-radius: ${borderRadius.default};
-	border: 1px solid transparent;
-	width: min-content;
-	cursor: pointer;
-	&: hover {
-		border: ${border.default};
-		transition: ${transitions.fast};
-	}
-`;
-
-const SmallCloseIcon = styled.button``;
-
 // helpers
-const getClusters = (
-	currentClusterOption: IOption,
-	clusterCount: number,
-	activePointsGroup: IPointsGroup,
-	onGetAhcs: (pointsGroup: IPointsGroup) => void
-): ClusteredPoint[] => {
-	if (!activePointsGroup || !activePointsGroup.points) {
-		return [];
-	}
-	const unclusteredPoints = activePointsGroup.points.map(p => ({
-		...p,
-		clusterId: p.pointId
-	}));
-
-	if (currentClusterOption.value === clusterTypes.none) {
-		return unclusteredPoints;
-	}
-
-	switch (currentClusterOption.value) {
-		case clusterTypes.ahcs:
-			// if clusterInfo is not present, request for it and return
-			// unclustered points
-			if (
-				activePointsGroup.ahcInfo === undefined ||
-				activePointsGroup.ahcInfo.ahcPoints === undefined
-			) {
-				onGetAhcs(activePointsGroup);
-				return unclusteredPoints;
-			}
-
-			return activePointsGroup.ahcInfo.ahcPoints.map(ahc => {
-				return {
-					...ahc,
-					clusterId:
-						ahc.agglomerativeHierarchicalClusterInfos[
-							clusterCount - 1
-						].clusterId
-				};
-			});
-		default:
-			return unclusteredPoints;
-	}
-};
 
 const getPointsForMap = (
 	currentClusterOption: IOption,
@@ -321,11 +192,16 @@ const getFillColorFunc = (
 	}
 };
 const getMarkers = (
-	pointsForMap: any[],
+	activePointsGroup: IPointsGroup,
 	value: number,
 	markerColors: string[],
 	currentClusterOption: IOption
 ) => {
+	const pointsForMap = getPointsForMap(
+		currentClusterOption,
+		activePointsGroup
+	);
+
 	if (!pointsForMap) {
 		return [];
 	}
@@ -344,7 +220,7 @@ const getMarkers = (
 				markerColors,
 				value,
 				pointsForMap
-			)(mp)
+			)(mp as AgglomerativeHierarchicalClusterPoint & IPoint)
 		}
 	}));
 };

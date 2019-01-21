@@ -7,7 +7,7 @@ import {
 } from './types';
 import { ItemPermissionType } from 'src/Core';
 
-export interface DataState {
+export interface IDataState {
 	readonly points: IPoint[];
 	readonly error: string;
 	readonly agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
@@ -15,7 +15,7 @@ export interface DataState {
 	readonly pointsGroups: IPointsGroup[];
 }
 
-const initialState: DataState = {
+const initialState: IDataState = {
 	points: [],
 	agglomerativeHierarchicalClusters: [],
 	dbscan: [],
@@ -24,9 +24,9 @@ const initialState: DataState = {
 };
 
 export const dataReducer = (
-	state: DataState,
+	state: IDataState,
 	action: ActionTypes
-): DataState => {
+): IDataState => {
 	state = state || initialState;
 
 	switch (action.type) {
@@ -112,7 +112,7 @@ export const dataReducer = (
 	}
 };
 
-const getSavedPointsGroups = (dataState: DataState): IPointsGroup[] =>
+const getSavedPointsGroups = (dataState: IDataState): IPointsGroup[] =>
 	dataState.pointsGroups.filter(pg => pg.pointsGroupId);
 
 const removePointsGroupId = (pointsGroupId: number) => (
