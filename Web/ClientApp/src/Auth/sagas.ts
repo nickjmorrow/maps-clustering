@@ -1,21 +1,27 @@
-import axios from 'axios';
-import { all, call, put, PutEffect, takeLatest } from 'redux-saga/effects';
 import {
+	all,
+	put,
+	PutEffect,
+	takeLatest,
+	call
+} from '@redux-saga/core/effects';
+import {
+	addTokenToDefaultHeader,
 	addToLocalStorage,
-	isInLocalStorage,
-	removeFromLocalStorage
-} from '../Core';
-import {
+	api,
 	authTypeKeys,
+	isInLocalStorage,
+	IUser,
 	onLogin,
 	onLogOut,
 	onRegister,
-	populateUserStateFromLocalStorageIfAvailable
-} from './actions';
-import { api, USER } from './constants';
-import { addTokenToDefaultHeader } from './services';
-import { IUser } from './reducer';
+	populateUserStateFromLocalStorageIfAvailable,
+	removeFromLocalStorage,
+	USER
+} from 'njm-react-component-library';
+import axios from 'axios';
 
+// import 'regenerator-runtime';
 function* handleLoginAsync(action: ReturnType<typeof onLogin.request>) {
 	try {
 		const { data } = yield call(

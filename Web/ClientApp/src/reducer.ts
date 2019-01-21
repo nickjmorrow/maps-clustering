@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { routerReducer, RouterState } from 'react-router-redux';
 import { dataReducer, DataState } from './Data';
-import { authReducer, IAuthState } from './Auth';
+import { authReducer, IAuthState } from 'njm-react-component-library';
 
 export const rootReducer = combineReducers({
 	routing: routerReducer,

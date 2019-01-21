@@ -159,7 +159,7 @@ function* watchDeletePointsGroup() {
 	);
 }
 
-export const sagas = [
+export const dataSagas = [
 	watchCreatePointsGroup,
 	watchGetAhcs,
 	watchPopulatePointsGroupsFromLocalStorageIfAvailable,

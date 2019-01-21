@@ -100,8 +100,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 			pointsForMap,
 			clusterCount,
 			markerColors,
-			currentClusterOption,
-			activePointsGroup
+			currentClusterOption
 		);
 
 		const defaultPosition = activePointsGroup && {
@@ -277,65 +276,57 @@ const getClusters = (
 const getPointsForMap = (
 	currentClusterOption: IOption,
 	activePointsGroup: IPointsGroup
-): IPoint[] | AgglomerativeHierarchicalClusterPoint[] => {
+) => {
 	if (!activePointsGroup) {
 		return [];
 	}
 	const { points } = activePointsGroup;
-	if (!activePointsGroup.ahcInfo || activePointsGroup.ahcInfo!.ahcPoints) {
-		return points;
-	}
-	const canShowAgglomerativeHierarchicalClusters =
-		activePointsGroup.ahcInfo![0].ahcPoints.length > 0;
+	const canShowAhcs =
+		activePointsGroup.ahcInfo &&
+		activePointsGroup.ahcInfo!.ahcPoints &&
+		activePointsGroup.ahcInfo!.ahcPoints.length > 0;
+
 	switch (currentClusterOption.value) {
 		case clusterTypes.ahcs:
-			return canShowAgglomerativeHierarchicalClusters
-				? activePointsGroup.ahcInfo!.ahcPoints
-				: points;
+			return canShowAhcs ? activePointsGroup.ahcInfo!.ahcPoints : points;
 		default:
 			return points;
 	}
 };
+
+const defaultFillColorFunc = (
+	p: IPoint | AgglomerativeHierarchicalClusterPoint
+) => 'red';
+
 const getFillColorFunc = (
-	currentClusterOption: IOption | null,
+	currentClusterOption: IOption,
 	markerColors: string[],
 	value: number,
-	activePointsGroup: IPointsGroup
+	pointsForMap: IPoint[]
 ) => {
-	const defaultFillColorFunc = (
-		p: IPoint | AgglomerativeHierarchicalClusterPoint
-	) => 'red';
-	if (!currentClusterOption || markerColors.length === 0) {
-		return defaultFillColorFunc;
-	}
 	switch (currentClusterOption.value) {
 		case clusterTypes.ahcs:
-			if (
-				activePointsGroup.ahcInfo === undefined ||
-				!activePointsGroup.ahcInfo!.ahcPoints ||
-				!activePointsGroup.ahcInfo[0] ||
-				value >
-					activePointsGroup.ahcInfo[0]
-						.agglomerativeHierarchicalClusterInfos.length
-			) {
-				return defaultFillColorFunc;
-			}
-			return (p: AgglomerativeHierarchicalClusterPoint) =>
+			const ahcPoints = pointsForMap as AgglomerativeHierarchicalClusterPoint[];
+			const canUseAhcs =
+				ahcPoints[0].agglomerativeHierarchicalClusterInfos;
+			const ahcFillColorFunc = (
+				p: AgglomerativeHierarchicalClusterPoint
+			) =>
 				markerColors[
 					p.agglomerativeHierarchicalClusterInfos[value - 1].clusterId
 				];
+			return canUseAhcs ? ahcFillColorFunc : defaultFillColorFunc;
 		default:
 			return defaultFillColorFunc;
 	}
 };
 const getMarkers = (
-	pointsForMap: Array<AgglomerativeHierarchicalClusterPoint | IPoint>,
+	pointsForMap: any[],
 	value: number,
 	markerColors: string[],
-	currentClusterOption: IOption,
-	activePointsGroup: IPointsGroup
+	currentClusterOption: IOption
 ) => {
-	if (!activePointsGroup || !pointsForMap) {
+	if (!pointsForMap) {
 		return [];
 	}
 
@@ -352,7 +343,7 @@ const getMarkers = (
 				currentClusterOption,
 				markerColors,
 				value,
-				activePointsGroup
+				pointsForMap
 			)(mp)
 		}
 	}));
