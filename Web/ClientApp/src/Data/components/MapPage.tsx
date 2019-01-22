@@ -16,7 +16,7 @@ import {
 	IPoint,
 	IPointsGroup
 } from '../types';
-import { PointsGroups } from './PointsGroups';
+import { PointsGroupList } from './PointsGroupList';
 import { getActivePointsGroup } from '../selectors';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
@@ -68,8 +68,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 				<MapControls>
 					<InfoPanel>
 						<Typography variant="h1">Parameters</Typography>
-						<Typography variant="h2">Point Groups</Typography>
-						<PointsGroups pointsGroups={pointsGroups} />
+						<PointsGroupList pointsGroups={pointsGroups} />
 						<Typography variant="h2">Cluster Type</Typography>
 						<LabeledRadioButtonInput
 							options={clusterOptions}

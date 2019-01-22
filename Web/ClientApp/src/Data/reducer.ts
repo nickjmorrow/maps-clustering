@@ -72,21 +72,24 @@ export const dataReducer = (
 				]
 			};
 		case dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED:
+			const newPointsGroups = state.pointsGroups.map(pg =>
+				pg.pointsGroupId
+					? pg
+					: {
+							...action.payload
+					  }
+			);
 			return {
 				...state,
-				pointsGroups: state.pointsGroups.map(pg =>
-					pg.pointsGroupId
-						? pg
-						: {
-								...action.payload
-						  }
-				)
+				pointsGroups: ensureActivePointsGroup(newPointsGroups)
 			};
 		case dataTypeKeys.DELETE_POINTS_GROUP_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: state.pointsGroups.filter(
-					removePointsGroupId(action.payload)
+				pointsGroups: ensureActivePointsGroup(
+					state.pointsGroups.filter(
+						pg => pg.pointsGroupId !== action.payload
+					)
 				)
 			};
 		case dataTypeKeys.SET_ACTIVE_POINTS_GROUP:
@@ -114,10 +117,6 @@ export const dataReducer = (
 
 const getSavedPointsGroups = (dataState: IDataState): IPointsGroup[] =>
 	dataState.pointsGroups.filter(pg => pg.pointsGroupId);
-
-const removePointsGroupId = (pointsGroupId: number) => (
-	pointsGroup: IPointsGroup
-) => pointsGroup.pointsGroupId !== pointsGroupId;
 
 const setActivePointsGroup = (pointsGroupId: number | undefined) => (
 	pg: IPointsGroup
@@ -147,3 +146,11 @@ const withFirstPointsGroupActive = (
 
 const getUnsavedPointsGroups = (pointsGroup: IPointsGroup[]) =>
 	pointsGroup.filter(pg => !pg.pointsGroupId);
+
+const ensureActivePointsGroup = (pointsGroups: IPointsGroup[]) => {
+	const hasActivePointsGroup =
+		pointsGroups.filter(pg => pg.isActive).length > 0;
+	return hasActivePointsGroup
+		? pointsGroups
+		: pointsGroups.map(withFirstPointsGroupActive);
+};
