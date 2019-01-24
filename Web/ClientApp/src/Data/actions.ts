@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { IPoint, IPointsGroup, IPointsGroupFormInput } from './types';
+import { IPointsGroup, IPointsGroupFormInput } from './types';
 
 export enum dataTypeKeys {
 	CREATE_POINTS_GROUP = 'CREATE_POINTS_GROUP',
@@ -24,26 +24,24 @@ export enum dataTypeKeys {
 }
 
 export const createPointsGroup = {
-	request: (payload: IPointsGroupFormInput): ICreatePointsGroupAction =>
+	request: (payload: IPointsGroupFormInput) =>
 		action(dataTypeKeys.CREATE_POINTS_GROUP, payload),
-	success: (payload: IPointsGroup): ICreatePointsGroupSucceededAction =>
+	success: (payload: IPointsGroup) =>
 		action(dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED, payload),
-	failure: (payload: string): GetMapPointsFailedAction =>
+	failure: (payload: string) =>
 		action(dataTypeKeys.CREATE_POINTS_GROUP_FAILED, payload)
 };
 
 export const getAhcs = {
-	request: (payload: IPointsGroup): GetAhcsAction =>
-		action(dataTypeKeys.GET_AHCS, payload),
-	success: (payload: IPointsGroup): GetAhcsActionSucceeded =>
+	request: (payload: IPointsGroup) => action(dataTypeKeys.GET_AHCS, payload),
+	success: (payload: IPointsGroup) =>
 		action(dataTypeKeys.GET_AHCS_SUCCEEDED, payload),
-	failure: (payload: string): GetAhcsActionFailed =>
-		action(dataTypeKeys.GET_AHCS_FAILED, payload)
+	failure: (payload: string) => action(dataTypeKeys.GET_AHCS_FAILED, payload)
 };
 
 export const getPointsGroups = {
 	request: () => action(dataTypeKeys.GET_POINTS_GROUPS),
-	success: (payload: IPointsGroup[]): IGetPointsGroupsActionSucceeded =>
+	success: (payload: IPointsGroup[]) =>
 		action(dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED, payload)
 };
 
@@ -58,13 +56,11 @@ export const populatePointsStateFromLocalStorageIfAvailable = () =>
 	action(dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE);
 
 export const populatePointsGroupsStateFromLocalStorageIfAvailable = {
-	request: (): IPopulatePointsGroupStateFromLocalStorageIfAvailable =>
+	request: () =>
 		action(
 			dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE
 		),
-	success: (
-		pointsGroups: IPointsGroup[]
-	): IPopulatePointsGroupStateFromLocalStorageIfAvailableSucceeded =>
+	success: (pointsGroups: IPointsGroup[]) =>
 		action(
 			dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
 			pointsGroups
@@ -78,119 +74,11 @@ export const savePointsGroup = {
 		action(dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED, pointsGroup)
 };
 
-export const setActivePointsGroup = (
-	payload: number
-): ISetActivePointsGroupAction =>
+export const setActivePointsGroup = (payload: number) =>
 	action(dataTypeKeys.SET_ACTIVE_POINTS_GROUP, payload);
 
 export const setClusterCount = (payload: number) =>
 	action(dataTypeKeys.SET_CLUSTER_COUNT, payload);
 
-export const onRemoveUnsavedPointsGroups = (): IRemoveUnsavedPointsGroupsAction =>
+export const onRemoveUnsavedPointsGroups = () =>
 	action(dataTypeKeys.REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS);
-
-export type ActionTypes =
-	| ICreatePointsGroupAction
-	| ICreatePointsGroupSucceededAction
-	| GetMapPointsFailedAction
-	| GetAhcsAction
-	| GetAhcsActionSucceeded
-	| GetAhcsActionFailed
-	| IPopulatePointsStateFromLocalStorageIfAvailable
-	| IPopulatePointsStateFromLocalStorageIfAvailableSucceeded
-	| IPopulatePointsGroupStateFromLocalStorageIfAvailable
-	| IPopulatePointsGroupStateFromLocalStorageIfAvailableSucceeded
-	| IGetPointsGroupsAction
-	| IGetPointsGroupsActionSucceeded
-	| ISavePointsGroupAction
-	| ISavePointsGroupActionSucceeded
-	| IDeletePointsGroupAction
-	| IDeletePointsGroupActionSucceeded
-	| ISetActivePointsGroupAction
-	| IRemoveUnsavedPointsGroupsAction;
-
-export interface ICreatePointsGroupAction {
-	type: dataTypeKeys.CREATE_POINTS_GROUP;
-	payload: IPointsGroupFormInput;
-}
-
-export interface ICreatePointsGroupSucceededAction {
-	type: dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED;
-	payload: IPointsGroup;
-}
-
-export interface GetMapPointsFailedAction {
-	type: dataTypeKeys.CREATE_POINTS_GROUP_FAILED;
-	payload: string;
-}
-
-export interface GetAhcsAction {
-	type: dataTypeKeys.GET_AHCS;
-	payload: IPointsGroup;
-}
-
-export interface GetAhcsActionSucceeded {
-	type: dataTypeKeys.GET_AHCS_SUCCEEDED;
-	payload: IPointsGroup;
-}
-
-export interface GetAhcsActionFailed {
-	type: dataTypeKeys.GET_AHCS_FAILED;
-	payload: string;
-}
-
-export interface IPopulatePointsStateFromLocalStorageIfAvailable {
-	type: dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE;
-}
-
-export interface IPopulatePointsStateFromLocalStorageIfAvailableSucceeded {
-	type: dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED;
-	payload: IPoint[];
-}
-
-export interface IGetPointsGroupsAction {
-	type: dataTypeKeys.GET_POINTS_GROUPS;
-}
-
-export interface IGetPointsGroupsActionSucceeded {
-	type: dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED;
-	payload: IPointsGroup[];
-}
-
-export interface ISavePointsGroupAction {
-	type: dataTypeKeys.SAVE_POINTS_GROUP;
-	payload: IPointsGroup;
-}
-
-export interface ISavePointsGroupActionSucceeded {
-	type: dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED;
-	payload: IPointsGroup;
-}
-
-export interface IPopulatePointsGroupStateFromLocalStorageIfAvailable {
-	type: dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE;
-}
-
-export interface IPopulatePointsGroupStateFromLocalStorageIfAvailableSucceeded {
-	type: dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED;
-	payload: IPointsGroup[];
-}
-
-export interface IDeletePointsGroupAction {
-	type: dataTypeKeys.DELETE_POINTS_GROUP;
-	payload: number;
-}
-
-export interface IDeletePointsGroupActionSucceeded {
-	type: dataTypeKeys.DELETE_POINTS_GROUP_SUCCEEDED;
-	payload: number;
-}
-
-export interface ISetActivePointsGroupAction {
-	type: dataTypeKeys.SET_ACTIVE_POINTS_GROUP;
-	payload: number;
-}
-
-export interface IRemoveUnsavedPointsGroupsAction {
-	type: dataTypeKeys.REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS;
-}

@@ -7,7 +7,6 @@ namespace Calc
 {
     public class AgglomerativeHierarchicalClusteringService
     {
-        public IDictionary< Type { get; set; }
         public IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModel(IEnumerable<Point> points, 
             int minimumClusters = 1)
         {
@@ -150,13 +149,8 @@ namespace Calc
             var horizontalDistance =
                 Math.Abs(startingPoint.HorizontalDisplacement - endingPoint.HorizontalDisplacement);
             var verticalDistance = Math.Abs(startingPoint.VerticalDisplacement - endingPoint.VerticalDisplacement);
-            
-            return Math.Sqrt(Math.Pow(horizontalDistance, 2) + Math.Pow(verticalDistance, 2));
-        }
 
-        internal class ClusterDistance
-        {
-            public TYPE Type { get; set; }
+            return Math.Sqrt(Math.Pow(horizontalDistance, 2) + Math.Pow(verticalDistance, 2));
         }
     }
 }

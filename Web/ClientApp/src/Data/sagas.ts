@@ -1,15 +1,11 @@
 import axios from 'axios';
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
 	createPointsGroup,
 	dataTypeKeys,
 	deletePointsGroup,
 	getAhcs,
-	GetAhcsAction,
 	getPointsGroups,
-	ICreatePointsGroupAction,
-	IDeletePointsGroupAction,
-	ISavePointsGroupAction,
 	populatePointsGroupsStateFromLocalStorageIfAvailable,
 	savePointsGroup
 } from './actions';
@@ -27,7 +23,9 @@ function* watchCreatePointsGroup() {
 	yield takeLatest(dataTypeKeys.CREATE_POINTS_GROUP, createPointsGroupAsync);
 }
 
-function* createPointsGroupAsync(action: ICreatePointsGroupAction) {
+function* createPointsGroupAsync(
+	action: ReturnType<typeof createPointsGroup.request>
+) {
 	try {
 		const { name, file } = action.payload;
 		const { data } = yield call(
@@ -58,7 +56,7 @@ function* watchGetAhcs() {
 	yield takeLatest(dataTypeKeys.GET_AHCS, handleGetAhcsAsync);
 }
 
-function* handleGetAhcsAsync(action: GetAhcsAction) {
+function* handleGetAhcsAsync(action: ReturnType<typeof getAhcs.request>) {
 	const { points } = action.payload;
 	try {
 		const { data } = yield call(
@@ -116,7 +114,9 @@ function* watchGetPointsGroups() {
 	yield takeEvery(dataTypeKeys.GET_POINTS_GROUPS, handleGetPointsGroupsAsync);
 }
 
-function* handleSavePointsGroupAsync(action: ISavePointsGroupAction) {
+function* handleSavePointsGroupAsync(
+	action: ReturnType<typeof savePointsGroup.request>
+) {
 	try {
 		const { data } = yield call(
 			axios.post,
@@ -137,7 +137,9 @@ function* watchSavePointsGroup() {
 	);
 }
 
-function* handleDeletePointsGroupAsync(action: IDeletePointsGroupAction) {
+function* handleDeletePointsGroupAsync(
+	action: ReturnType<typeof deletePointsGroup.request>
+) {
 	try {
 		const { data } = yield call(
 			axios.delete,
