@@ -18,6 +18,7 @@ import {
 } from '../types';
 import { PointsGroupList } from './PointsGroupList';
 import { getActivePointsGroup } from '../selectors';
+import { FileUploadForm } from './FileUploadForm';
 
 export class MapPageInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
@@ -80,6 +81,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 							clusterCount={clusterCount}
 							onClusterCountChange={this.handleClusterCountChange}
 						/>
+						<FileUploadForm />
 					</InfoPanel>
 					<InfoPanel>
 						<Typography variant="h1">Results</Typography>
@@ -88,6 +90,7 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 							activePointsGroup={activePointsGroup}
 							currentClusterOption={currentClusterOption}
 							clusterCount={clusterCount}
+							markerColors={markerColors}
 						/>
 					</InfoPanel>
 				</MapControls>
@@ -201,25 +204,23 @@ const getMarkers = (
 		activePointsGroup
 	);
 
-	if (!pointsForMap) {
-		return [];
-	}
-
-	return pointsForMap.map(mp => ({
-		position: {
-			lat: mp.verticalDisplacement,
-			lng: mp.horizontalDisplacement
-		},
-		label: {
-			text: mp.name
-		},
-		icon: {
-			fillColor: getFillColorFunc(
-				currentClusterOption,
-				markerColors,
-				value,
-				pointsForMap
-			)(mp as AgglomerativeHierarchicalClusterPoint & IPoint)
-		}
-	}));
+	return pointsForMap
+		? pointsForMap.map(mp => ({
+				position: {
+					lat: mp.verticalDisplacement,
+					lng: mp.horizontalDisplacement
+				},
+				label: {
+					text: mp.name
+				},
+				icon: {
+					fillColor: getFillColorFunc(
+						currentClusterOption,
+						markerColors,
+						value,
+						pointsForMap
+					)(mp as AgglomerativeHierarchicalClusterPoint & IPoint)
+				}
+		  }))
+		: [];
 };

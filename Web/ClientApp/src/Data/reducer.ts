@@ -23,6 +23,7 @@ const initialState: IDataState = {
 	error: ''
 };
 
+// TODO: add tests
 export const dataReducer = (
 	state: IDataState,
 	action: ActionTypes
@@ -33,20 +34,19 @@ export const dataReducer = (
 		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: [
+				pointsGroups: ensureActivePointsGroup([
 					...getSavedPointsGroups(state).map(pg => ({
 						...pg,
 						isActive: false
 					})),
 					{ ...action.payload, isActive: true }
-				]
+				])
 			};
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: firstUnsavedOrJustFirst(
-					state.pointsGroups,
-					action.payload
+				pointsGroups: ensureActivePointsGroup(
+					firstUnsavedOrJustFirst(state.pointsGroups, action.payload)
 				)
 			};
 		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
@@ -61,15 +61,13 @@ export const dataReducer = (
 			};
 		case dataTypeKeys.GET_AHCS_FAILED:
 			return { ...state, error: action.payload };
-		case dataTypeKeys.POPULATE_POINTS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
-			return { ...state, points: action.payload };
 		case dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: [
+				pointsGroups: ensureActivePointsGroup([
 					...getSavedPointsGroups(state),
 					...action.payload.map(withFirstPointsGroupActive)
-				]
+				])
 			};
 		case dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED:
 			const newPointsGroups = state.pointsGroups.map(pg =>
@@ -150,7 +148,16 @@ const getUnsavedPointsGroups = (pointsGroup: IPointsGroup[]) =>
 const ensureActivePointsGroup = (pointsGroups: IPointsGroup[]) => {
 	const hasActivePointsGroup =
 		pointsGroups.filter(pg => pg.isActive).length > 0;
-	return hasActivePointsGroup
-		? pointsGroups
-		: pointsGroups.map(withFirstPointsGroupActive);
+	const pointsGroupsWithActive = hasActivePointsGroup
+		? pointsGroups.sort(defaultsAreLast).sort(unsavedIsFirst)
+		: pointsGroups
+				.sort(defaultsAreLast)
+				.sort(unsavedIsFirst)
+				.map(withFirstPointsGroupActive);
+	return pointsGroupsWithActive;
 };
+
+const defaultsAreLast = (pg: IPointsGroup) =>
+	pg.itemPermissionType === ItemPermissionType.Private ? -1 : 1;
+
+const unsavedIsFirst = (pg: IPointsGroup) => (pg.pointsGroupId ? 1 : -1);

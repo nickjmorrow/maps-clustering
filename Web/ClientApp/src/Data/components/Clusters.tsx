@@ -11,7 +11,8 @@ export const ClustersInternal: React.SFC<IProps> = ({
 	activePointsGroup,
 	currentClusterOption,
 	clusterCount,
-	onGetAhcs
+	onGetAhcs,
+	markerColors
 }) => {
 	const clusteredPoints = getClusters(
 		currentClusterOption,
@@ -41,8 +42,7 @@ export const ClustersInternal: React.SFC<IProps> = ({
 			const points = clusteredPoints.filter(p => p.clusterId === c);
 			const renderedPoints = points.map(asRenderedPoints);
 			return (
-				<Cluster key={c}>
-					<Typography variant="h3">{`Cluster ${c}`}</Typography>
+				<Cluster key={c} color={markerColors[c]}>
 					{renderedPoints}
 				</Cluster>
 			);
@@ -61,6 +61,7 @@ interface IOwnProps {
 	activePointsGroup: IPointsGroup;
 	currentClusterOption: IOption;
 	clusterCount: number;
+	markerColors: string[];
 }
 
 interface IDispatchProps {
@@ -84,8 +85,11 @@ export const Clusters = connect(
 )(ClustersInternal);
 
 // css
-const Cluster = styled.div`
+const Cluster = styled<{ color: string }, 'div'>('div')`
 	width: 300px;
+	border-left: 5px solid ${props => props.color};
+	margin-bottom: 8px;
+	padding-left: 6px;
 `;
 
 const Wrapper = styled.div`

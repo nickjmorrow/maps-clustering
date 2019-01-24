@@ -16,34 +16,40 @@ import {
 } from '../actions';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Label } from './Label';
 
 class PointsGroupInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
 
-	toggleIsHovering = () =>
-		this.setState(prevState => ({
-			isHovering: !prevState.isHovering
-		}));
+	turnOnIsHovering = () => this.setState({ isHovering: true });
+	turnOffIsHovering = () => this.setState({ isHovering: false });
+	turnOnIsHoveringOverDeleteButton = () =>
+		this.setState({ isHoveringOverDeleteButton: true });
+	turnOffIsHoveringOverDeleteButton = () =>
+		this.setState({ isHoveringOverDeleteButton: false });
+	handleDeletePointsGroupInternal = () => {
+		const { handleDeletePointsGroup, pointsGroup } = this.props;
+		handleDeletePointsGroup(pointsGroup.pointsGroupId!);
+	};
+	handleSetActivePointsGroupInternal = () => {
+		const { handleSetActivePointsGroup, pointsGroup } = this.props;
+		if (!this.state.isHoveringOverDeleteButton) {
+			handleSetActivePointsGroup(pointsGroup.pointsGroupId!);
+		}
+	};
 
 	public render() {
-		const {
-			pointsGroup,
-			handleDeletePointsGroup,
-			handleSetActivePointsGroup,
-			handleSavePointsGroup
-		} = this.props;
-		const { isHovering } = this.state;
+		const { pointsGroup, handleSavePointsGroup } = this.props;
+		const { isHovering, isHoveringOverDeleteButton } = this.state;
 		const { isActive } = pointsGroup;
 
 		return (
 			<PointsGroupWrapper
 				key={pointsGroup.pointsGroupId}
-				onMouseEnter={this.toggleIsHovering}
-				onMouseLeave={this.toggleIsHovering}
+				onMouseEnter={this.turnOnIsHovering}
+				onMouseLeave={this.turnOffIsHovering}
 				isActive={isActive}
-				onClick={() =>
-					handleSetActivePointsGroup(pointsGroup.pointsGroupId!)
-				}>
+				onClick={this.handleSetActivePointsGroupInternal}>
 				<Typography variant="h4" noMargin={true} color={'inherit'}>
 					{pointsGroup.name}
 				</Typography>
@@ -52,22 +58,34 @@ class PointsGroupInternal extends React.Component<IProps, IState> {
 						Save
 					</button>
 				)}
-				{shouldShowDeleteButton(pointsGroup, isHovering) && (
+				{shouldShowDeleteButton(
+					pointsGroup,
+					isHovering,
+					isHoveringOverDeleteButton
+				) && (
 					<DeleteButton
-						onClick={() =>
-							handleDeletePointsGroup(pointsGroup.pointsGroupId!)
-						}
+						onClick={this.handleDeletePointsGroupInternal}
+						onMouseEnter={this.turnOnIsHoveringOverDeleteButton}
+						onMouseLeave={this.turnOffIsHoveringOverDeleteButton}
 					/>
 				)}
+				{pointsGroup.itemPermissionType === ItemPermissionType.Public &&
+					(isActive || isHovering) && (
+						<Label color={colors.white}>{'Default'}</Label>
+					)}
 			</PointsGroupWrapper>
 		);
 	}
 }
 
-const shouldShowDeleteButton = (pg: IPointsGroup, isHovering: boolean) =>
+const shouldShowDeleteButton = (
+	pg: IPointsGroup,
+	isHovering: boolean,
+	isHoveringOverDeleteButton: boolean
+) =>
 	pg.pointsGroupId &&
 	pg.itemPermissionType !== ItemPermissionType.Public &&
-	isHovering;
+	(isHovering || pg.isActive || isHoveringOverDeleteButton);
 
 // types
 export interface IOwnProps {
@@ -98,7 +116,8 @@ export const PointsGroup = connect(
 )(PointsGroupInternal);
 
 const initialState = {
-	isHovering: false
+	isHovering: false,
+	isHoveringOverDeleteButton: false
 };
 
 type IState = typeof initialState;
@@ -111,6 +130,7 @@ const PointsGroupWrapper = styled<{ isActive: boolean }, 'div'>('div')`
 	display: flex;
 	justify-content: space-between;
 	cursor: pointer;
+	margin: 6px 0px;
 	background-color: ${props =>
 		props.isActive ? colors.primaryLight : colors.white};
 	color: ${props => (props.isActive ? colors.white : colors.primaryDarkest)};
