@@ -1,11 +1,13 @@
-import { ActionTypes, dataTypeKeys } from './actions';
+import { ItemPermissionType, getColors } from 'src/Core';
+import { ActionType } from 'typesafe-actions';
+import * as actions from './actions';
+import { dataTypeKeys } from './actions';
 import {
 	AgglomerativeHierarchicalClusterPoint,
 	ClusteredPoint,
 	IPoint,
 	IPointsGroup
 } from './types';
-import { ItemPermissionType } from 'src/Core';
 
 export interface IDataState {
 	readonly points: IPoint[];
@@ -13,6 +15,7 @@ export interface IDataState {
 	readonly agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
 	readonly dbscan: ClusteredPoint[];
 	readonly pointsGroups: IPointsGroup[];
+	readonly clusterCount: number;
 }
 
 const initialState: IDataState = {
@@ -20,13 +23,15 @@ const initialState: IDataState = {
 	agglomerativeHierarchicalClusters: [],
 	dbscan: [],
 	pointsGroups: [],
-	error: ''
+	error: '',
+	clusterCount: 1
 };
 
 // TODO: add tests
+
 export const dataReducer = (
 	state: IDataState,
-	action: ActionTypes
+	action: ActionType<typeof actions>
 ): IDataState => {
 	state = state || initialState;
 
@@ -39,15 +44,20 @@ export const dataReducer = (
 						...pg,
 						isActive: false
 					})),
-					{ ...action.payload, isActive: true }
+					{
+						...action.payload,
+						isActive: true,
+						pointsColors: getColors(action.payload.points.length)
+					}
 				])
 			};
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: ensureActivePointsGroup(
-					firstUnsavedOrJustFirst(state.pointsGroups, action.payload)
-				)
+				pointsGroups: ensureActivePointsGroup([
+					...state.pointsGroups,
+					...action.payload
+				]).map(withColors)
 			};
 		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
 			return { ...state, error: action.payload };
@@ -67,19 +77,22 @@ export const dataReducer = (
 				pointsGroups: ensureActivePointsGroup([
 					...getSavedPointsGroups(state),
 					...action.payload.map(withFirstPointsGroupActive)
-				])
+				]).map(withColors)
 			};
 		case dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED:
-			const newPointsGroups = state.pointsGroups.map(pg =>
-				pg.pointsGroupId
-					? pg
-					: {
-							...action.payload
-					  }
-			);
 			return {
 				...state,
-				pointsGroups: ensureActivePointsGroup(newPointsGroups)
+				pointsGroups: ensureActivePointsGroup(
+					state.pointsGroups
+						.map(pg =>
+							pg.pointsGroupId
+								? pg
+								: {
+										...action.payload
+								  }
+						)
+						.map(withColors)
+				)
 			};
 		case dataTypeKeys.DELETE_POINTS_GROUP_SUCCEEDED:
 			return {
@@ -91,10 +104,18 @@ export const dataReducer = (
 				)
 			};
 		case dataTypeKeys.SET_ACTIVE_POINTS_GROUP:
+			const newPointsGroups = state.pointsGroups.map(
+				setActivePointsGroup(action.payload)
+			);
+			const activePointsGroup = newPointsGroups.find(pg => pg.isActive)!;
 			return {
 				...state,
-				pointsGroups: state.pointsGroups.map(
-					setActivePointsGroup(action.payload)
+				pointsGroups: newPointsGroups,
+				clusterCount: Math.min(
+					(activePointsGroup.ahcInfo &&
+						activePointsGroup.ahcInfo!.ahcPoints!.length) ||
+						state.clusterCount,
+					state.clusterCount
 				)
 			};
 		case dataTypeKeys.REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS:
@@ -107,6 +128,11 @@ export const dataReducer = (
 							pg.itemPermissionType === ItemPermissionType.Public
 					)
 					.map(withFirstPointsGroupActive)
+			};
+		case dataTypeKeys.SET_CLUSTER_COUNT:
+			return {
+				...state,
+				clusterCount: action.payload
 			};
 		default:
 			return state;
@@ -123,27 +149,11 @@ const setActivePointsGroup = (pointsGroupId: number | undefined) => (
 		? { ...pg, isActive: true }
 		: { ...pg, isActive: false };
 
-const firstUnsavedOrJustFirst = (
-	pointsGroups: IPointsGroup[],
-	savedPointsGroups: IPointsGroup[]
-) => {
-	const unsavedPointsGroupsAndSavedPointsGroups = [
-		...getUnsavedPointsGroups(pointsGroups),
-		...savedPointsGroups
-	];
-	return unsavedPointsGroupsAndSavedPointsGroups.map(
-		withFirstPointsGroupActive
-	);
-};
-
 const withFirstPointsGroupActive = (
 	pg: IPointsGroup,
 	i: number
 ): IPointsGroup =>
 	i === 0 ? { ...pg, isActive: true } : { ...pg, isActive: false };
-
-const getUnsavedPointsGroups = (pointsGroup: IPointsGroup[]) =>
-	pointsGroup.filter(pg => !pg.pointsGroupId);
 
 const ensureActivePointsGroup = (pointsGroups: IPointsGroup[]) => {
 	const hasActivePointsGroup =
@@ -161,3 +171,8 @@ const defaultsAreLast = (pg: IPointsGroup) =>
 	pg.itemPermissionType === ItemPermissionType.Private ? -1 : 1;
 
 const unsavedIsFirst = (pg: IPointsGroup) => (pg.pointsGroupId ? 1 : -1);
+
+const withColors = (pg: IPointsGroup): IPointsGroup => ({
+	...pg,
+	pointsColors: pg.pointsColors || getColors(pg.points.length)
+});

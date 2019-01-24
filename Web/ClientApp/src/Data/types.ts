@@ -38,6 +38,7 @@ export interface IPointsGroup {
 	ahcInfo?: IAhcInfo;
 	dateCreated: Date;
 	itemPermissionType: ItemPermissionType;
+	pointsColors: string[];
 }
 
 export interface IAhcInfo {

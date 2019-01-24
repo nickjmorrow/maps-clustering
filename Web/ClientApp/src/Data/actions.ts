@@ -19,7 +19,8 @@ export enum dataTypeKeys {
 	DELETE_POINTS_GROUP = 'DELETE_POINTS_GROUP',
 	DELETE_POINTS_GROUP_SUCCEEDED = 'DELETE_POINTS_GROUP_SUCCEEDED',
 	SET_ACTIVE_POINTS_GROUP = 'SET_ACTIVE_POINTS_GROUP',
-	REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS = 'REMOVE_UNSAVED_POINTS_GROUPS'
+	REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS = 'REMOVE_UNSAVED_POINTS_GROUPS',
+	SET_CLUSTER_COUNT = 'SET_CLUSTER_COUNT'
 }
 
 export const createPointsGroup = {
@@ -81,6 +82,9 @@ export const setActivePointsGroup = (
 	payload: number
 ): ISetActivePointsGroupAction =>
 	action(dataTypeKeys.SET_ACTIVE_POINTS_GROUP, payload);
+
+export const setClusterCount = (payload: number) =>
+	action(dataTypeKeys.SET_CLUSTER_COUNT, payload);
 
 export const onRemoveUnsavedPointsGroups = (): IRemoveUnsavedPointsGroupsAction =>
 	action(dataTypeKeys.REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS);

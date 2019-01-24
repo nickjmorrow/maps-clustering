@@ -7,6 +7,7 @@ import { clusterTypes } from 'src/Data/constants';
 import { IPointsGroup } from 'src/Data/types';
 import { IReduxState } from 'src/reducer';
 import { AhcParameters } from '.';
+import { setClusterCount } from 'src/Data/actions';
 // import { getDbscan } from 'src/Data/actions';
 
 export class ParametersInternal extends React.PureComponent<IProps, IState> {
@@ -27,13 +28,12 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 		onGetAhcs(pointsGroups.find(pg => pg.isActive)!);
 	};
 
+	handleClusterCountChangeInternal = (clusterCount: number) => {
+		this.props.onSetClusterCount(clusterCount);
+	};
+
 	render() {
-		const {
-			pointsGroups,
-			clusterCount,
-			currentClusterOption,
-			onClusterCountChange: handleClusterCountChange
-		} = this.props;
+		const { pointsGroups, clusterCount, currentClusterOption } = this.props;
 
 		const activePointsGroup = pointsGroups.find(pg => pg.isActive)!;
 		if (!activePointsGroup || !activePointsGroup.points) {
@@ -54,7 +54,9 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 						max={maxClusters}
 						clusterCount={clusterCount}
 						points={points}
-						onClusterCountChange={handleClusterCountChange}
+						onClusterCountChange={
+							this.handleClusterCountChangeInternal
+						}
 						onGetAgglomerativeHierarchicalClusters={
 							this.handleGetAhcs
 						}
@@ -69,16 +71,16 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 // types
 interface IOwnProps {
 	currentClusterOption: IOption | null;
-	clusterCount: number;
-	onClusterCountChange(clusterCount: number): void;
 }
 
 interface IDispatchProps {
-	onGetAhcs(pointsGroupId: IPointsGroup): void;
+	onSetClusterCount: typeof setClusterCount;
+	onGetAhcs: typeof getAhcs.request;
 }
 
 interface IReduxProps {
 	pointsGroups: IPointsGroup[];
+	clusterCount: number;
 }
 
 type IProps = IOwnProps & IDispatchProps & IReduxProps;
@@ -87,12 +89,14 @@ type IState = typeof initialState;
 
 // redux
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
-	pointsGroups: state.data.pointsGroups
+	pointsGroups: state.data.pointsGroups,
+	clusterCount: state.data.clusterCount
 });
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			onGetAhcs: getAhcs.request
+			onGetAhcs: getAhcs.request,
+			onSetClusterCount: setClusterCount
 		},
 		dispatch
 	);

@@ -6,14 +6,17 @@ import { clusterTypes } from '../constants';
 import { getAhcs } from '../actions';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { IReduxState } from 'src/reducer';
 
 export const ClustersInternal: React.SFC<IProps> = ({
 	activePointsGroup,
 	currentClusterOption,
 	clusterCount,
-	onGetAhcs,
-	markerColors
+	onGetAhcs
 }) => {
+	if (!activePointsGroup) {
+		return null;
+	}
 	const clusteredPoints = getClusters(
 		currentClusterOption,
 		clusterCount,
@@ -42,7 +45,7 @@ export const ClustersInternal: React.SFC<IProps> = ({
 			const points = clusteredPoints.filter(p => p.clusterId === c);
 			const renderedPoints = points.map(asRenderedPoints);
 			return (
-				<Cluster key={c} color={markerColors[c]}>
+				<Cluster key={c} color={activePointsGroup.pointsColors[c]}>
 					{renderedPoints}
 				</Cluster>
 			);
@@ -61,16 +64,22 @@ interface IOwnProps {
 	activePointsGroup: IPointsGroup;
 	currentClusterOption: IOption;
 	clusterCount: number;
-	markerColors: string[];
 }
 
 interface IDispatchProps {
 	onGetAhcs: typeof getAhcs.request;
 }
 
-type IProps = IDispatchProps & IOwnProps;
+interface IReduxProps {
+	clusterCount: number;
+}
+
+type IProps = IDispatchProps & IOwnProps & IReduxProps;
 
 // redux
+const mapStateToProps = (state: IReduxState): IReduxProps => ({
+	clusterCount: state.data.clusterCount
+});
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
@@ -80,7 +89,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 	);
 
 export const Clusters = connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(ClustersInternal);
 
@@ -125,7 +134,10 @@ const getClusters = (
 			// unclustered points
 			if (
 				activePointsGroup.ahcInfo === undefined ||
-				activePointsGroup.ahcInfo.ahcPoints === undefined
+				activePointsGroup.ahcInfo.ahcPoints === undefined ||
+				activePointsGroup.ahcInfo.ahcPoints[0]
+					.agglomerativeHierarchicalClusterInfos.length <
+					clusterCount - 1
 			) {
 				onGetAhcs(activePointsGroup);
 				return unclusteredPoints;
