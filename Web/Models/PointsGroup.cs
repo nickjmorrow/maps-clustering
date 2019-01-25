@@ -17,6 +17,7 @@ namespace WebApplication.Models
         public double AverageHorizontalDisplacement { get; set; }
         public double AverageVerticalDisplacement { get; set; }
         public int ItemId { get; set; }
+        public string AhcInfoJson { get; set; }
         
         public IEnumerable<Point> Points { get; set; }
     }
