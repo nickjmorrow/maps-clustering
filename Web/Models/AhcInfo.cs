@@ -5,10 +5,10 @@ namespace Web.Models
 {
     public class AhcInfo
     {
-        public IEnumerable<AhcPoint> AhcPoints { get; set; }
+        public IEnumerable<AhcPointDTO> AhcPoints { get; set; }
     }
 
-    public class AhcPoint : Point
+    public class AhcPointDTO : Point
     {
         public IEnumerable<ClusterInfo> ClusterInfos { get; set; }
     }

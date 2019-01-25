@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 using Web.Services;
@@ -31,10 +32,26 @@ namespace WebApplication.Controllers
             return Ok(await this._pointsGroupService.AddPointsGroupAsync(this._userId, pointsGroupInput));
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreatePointsGroup([FromBody] IFormFile file)
+        {
+            return Ok(await this._pointsGroupService.CreatePointsGroupAsync(pointsGroupInput));
+        }
+
         [HttpDelete("[action]/{pointsGroupId}")]
         public async Task<IActionResult> DeletePointsGroup(int pointsGroupId)
         {
             return Ok(await this._pointsGroupService.DeletePointsGroupAsync(pointsGroupId));
+        }
+        [HttpPost("[action]")]
+        public IActionResult ConvertFileToPoints(IFormFile file)
+        {
+            if (file.Length == 0)
+            {
+                return BadRequest();
+            }
+
+            return Ok(this._fileHandlerService.ConvertFileToPointsGroup(file));
         }
     }
 }

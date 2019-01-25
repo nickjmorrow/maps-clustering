@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Web.Models;
 using WebApplication.Enums;
 
 namespace WebApplication.Models.DTOs
@@ -13,5 +14,6 @@ namespace WebApplication.Models.DTOs
         public IEnumerable<Point> Points { get; set; }
         public DateTime DateCreated { get; set; }
         public ItemPermissionType ItemPermissionType { get; set; }
+        public AhcInfo AhcInfo { get; set; }
     }
 }

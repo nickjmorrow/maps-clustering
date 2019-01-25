@@ -3,6 +3,7 @@ namespace WebApplication.Enums
     public enum ItemPermissionType
     {
         Private = 1,
-        Public = 2
+        Default = 2,
+        Public = 3
     }
 }

@@ -2,14 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Calc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Warlock.Services;
+using Web.Models;
 using WebApplication;
 using WebApplication.Controllers;
+using WebApplication.Enums;
 using WebApplication.Models;
 using WebApplication.Models.DTOs;
+using WebApplication.Services;
 using ItemType = WebApplication.Enums.ItemType;
 
 namespace Web.Services
@@ -20,14 +26,20 @@ namespace Web.Services
         private DatabaseContext _context;
         private ItemService _itemService;
         private ItemFilterer _itemFilterer;
+        private FileHandlerService _fileHandlerService;
+        private AgglomerativeHierarchicalClusteringService _ahcService;
 
         public PointsGroupService(DatabaseContext context, 
             ItemService itemService, 
-            ItemFilterer itemFilterer)
+            ItemFilterer itemFilterer, 
+            FileHandlerService fileHandlerService,
+            AgglomerativeHierarchicalClusteringService ahcService)
         {
-            this._context = context;
-            this._itemService = itemService;
-            this._itemFilterer = itemFilterer;
+            _context = context;
+            _itemService = itemService;
+            _itemFilterer = itemFilterer;
+            _fileHandlerService = fileHandlerService;
+            _ahcService = ahcService;
         }
 
         // TODO: should think in terms of 'points groups', and users can be permissioned to whole groups
@@ -115,5 +127,86 @@ namespace Web.Services
             await this._context.SaveChangesAsync();
             return pointsGroup.PointsGroupId;
         }
+
+        /// <summary>
+        /// Create a <see cref="PointsGroupDTO"/> from a file.
+        /// </summary>
+        public async Task<PointsGroupDTO> CreatePointsGroup(IFormFile file)
+        {
+            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
+
+            return new PointsGroupDTO
+            {
+                Name = pointsGroup.Name,
+                AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
+                AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
+                Points = pointsGroup.Points,
+                DateCreated = DateTime.Now,
+                ItemPermissionType = ItemPermissionType.Public,
+                AhcInfo = new AhcInfo
+                {
+                    AhcPoints = this.GetAhcPoints(pointsGroup.Points)
+                }
+            };
+        }
+
+        /// <summary>
+        /// Persist a <see cref="PointsGroup"/> to the database. 
+        /// </summary>
+        public async Task<int> SavePointsGroup(PointsGroupDTO pointsGroupDto)
+        {
+            var pointsGroup = new PointsGroup
+            {
+                Name = pointsGroupDto.Name,
+                AverageHorizontalDisplacement = pointsGroupDto.AverageHorizontalDisplacement,
+                AverageVerticalDisplacement = pointsGroupDto.AverageVerticalDisplacement,
+                Points = pointsGroupDto.Points,
+                AhcInfoJson = JsonConvert.SerializeObject(pointsGroupDto.AhcInfo)
+            };
+
+            await this._context.AddAsync(pointsGroup);
+            return pointsGroup.PointsGroupId;
+        }
+
+        private IEnumerable<AhcPointDTO> GetAhcPoints(IEnumerable<Point> points)
+        {
+            return this.GetAhcPoints(
+                this._ahcService.GetModel(
+                    this.GetCalcPoints(points)));
+        }
+        
+        private IEnumerable<AhcPointDTO> GetAhcPoints(
+            IEnumerable<AgglomerativeHierarchicalClusterPoint> agglomerativeHierarchicalClusterPoints)
+        {
+            return agglomerativeHierarchicalClusterPoints.Select(ahcp => new AhcPointDTO
+            {
+                PointId = ahcp.PointId,
+                Name = ahcp.Name,
+                HorizontalDisplacement = ahcp.HorizontalDisplacement,
+                VerticalDisplacement = ahcp.VerticalDisplacement,
+                ClusterInfos = this.GetClusterInfos(ahcp.AgglomerativeHierarchicalClusterInfos)
+            });
+        }
+
+        private IEnumerable<Calc.Models.Point> GetCalcPoints(IEnumerable<Point> points)
+        {
+            return points.Select(p => new Calc.Models.Point
+            {
+                PointId = p.PointId,
+                Name = p.Name,
+                HorizontalDisplacement = p.HorizontalDisplacement,
+                VerticalDisplacement = p.VerticalDisplacement
+            });
+        }
+
+        private IEnumerable<ClusterInfo> GetClusterInfos(
+            IEnumerable<AgglomerativeHierarchicalClusterInfo> ahcClusterInfos)
+        {
+            return ahcClusterInfos.Select(ahcci => new ClusterInfo
+            {
+                ClusterId = ahcci.ClusterId,
+                ClusterCount = ahcci.ClusterCount
+            });
+        } 
     }
 }
