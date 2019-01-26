@@ -36,21 +36,6 @@ export const dataReducer = (
 	state = state || initialState;
 
 	switch (action.type) {
-		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
-			return {
-				...state,
-				pointsGroups: ensureActivePointsGroup([
-					...getSavedPointsGroups(state).map(pg => ({
-						...pg,
-						isActive: false
-					})),
-					{
-						...action.payload,
-						isActive: true,
-						pointsColors: getColors(action.payload.points.length)
-					}
-				])
-			};
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
 			return {
 				...state,
@@ -59,18 +44,33 @@ export const dataReducer = (
 					...action.payload
 				]).map(withColors)
 			};
-		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
-			return { ...state, error: action.payload };
-		case dataTypeKeys.GET_AHCS_SUCCEEDED:
-			const { pointsGroupId } = action.payload;
+		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: state.pointsGroups.map(pg =>
-					pg.pointsGroupId === pointsGroupId ? action.payload : pg
+				pointsGroups: ensureActivePointsGroup(
+					[
+						...getSavedPointsGroups(state).map(pg => ({
+							...pg,
+							isActive: false
+						})),
+						{
+							...action.payload,
+							isActive: true
+						}
+					].map(withColors)
 				)
 			};
-		case dataTypeKeys.GET_AHCS_FAILED:
+		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
 			return { ...state, error: action.payload };
+		case dataTypeKeys.ADD_POINTS_GROUP_SUCCEEDED:
+			return {
+				...state,
+				pointsGroups: [
+					...state.pointsGroups,
+					{ ...action.payload, isActive: true }
+				].map(withColors)
+			};
+
 		case dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
 			return {
 				...state,
