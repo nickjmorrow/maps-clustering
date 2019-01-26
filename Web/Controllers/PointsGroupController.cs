@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 using Web.Services;
 using WebApplication.Models;
+using WebApplication.Models.DTOs;
 
 namespace WebApplication.Controllers
 {
@@ -27,31 +28,27 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> AddPointsGroup([FromBody] PointsGroupInput pointsGroupInput)
+        public async Task<IActionResult> AddPointsGroup([FromBody] IFormFile file)
         {
-            return Ok(await this._pointsGroupService.AddPointsGroupAsync(this._userId, pointsGroupInput));
+            return Ok(await this._pointsGroupService.AddPointsGroupAsync(this._userId, file));
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> CreatePointsGroup([FromBody] IFormFile file)
+        public IActionResult CreatePointsGroup([FromBody] IFormFile file)
         {
-            return Ok(await this._pointsGroupService.CreatePointsGroupAsync(pointsGroupInput));
+            return Ok(this._pointsGroupService.CreatePointsGroupAsync(file));
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> SavePointsGroup([FromBody] PointsGroupDTO pointsGroupDto)
+        {
+            return Ok(await this._pointsGroupService.SavePointsGroupAsync(pointsGroupDto));
         }
 
         [HttpDelete("[action]/{pointsGroupId}")]
         public async Task<IActionResult> DeletePointsGroup(int pointsGroupId)
         {
             return Ok(await this._pointsGroupService.DeletePointsGroupAsync(pointsGroupId));
-        }
-        [HttpPost("[action]")]
-        public IActionResult ConvertFileToPoints(IFormFile file)
-        {
-            if (file.Length == 0)
-            {
-                return BadRequest();
-            }
-
-            return Ok(this._fileHandlerService.ConvertFileToPointsGroup(file));
         }
     }
 }

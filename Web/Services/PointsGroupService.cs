@@ -7,11 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NUnit.Framework;
-using Warlock.Services;
 using Web.Models;
 using WebApplication;
-using WebApplication.Controllers;
 using WebApplication.Enums;
 using WebApplication.Models;
 using WebApplication.Models.DTOs;
@@ -35,11 +32,11 @@ namespace Web.Services
             FileHandlerService fileHandlerService,
             AgglomerativeHierarchicalClusteringService ahcService)
         {
-            _context = context;
-            _itemService = itemService;
-            _itemFilterer = itemFilterer;
-            _fileHandlerService = fileHandlerService;
-            _ahcService = ahcService;
+            this._context = context;
+            this._itemService = itemService;
+            this._itemFilterer = itemFilterer;
+            this._fileHandlerService = fileHandlerService;
+            this._ahcService = ahcService;
         }
 
         // TODO: should think in terms of 'points groups', and users can be permissioned to whole groups
@@ -51,6 +48,8 @@ namespace Web.Services
         // TODO: let me upload a file to replace a pointsGroup
         
         // TODO: let me rename a pointsGroup
+        
+        // TODO: add tests here
 
         public IEnumerable<PointsGroupDTO> GetPointsGroups(int? userId)
         {
@@ -61,40 +60,21 @@ namespace Web.Services
                 .Select(pg => 
                 {
                     var item = this._context.Items.Single(i => i.ItemId == pg.ItemId);
-                    return new PointsGroupDTO()
-                    {
-                        PointsGroupId = pg.PointsGroupId,
-                        Name = pg.Name,
-                        Points = pg.Points,
-                        AverageHorizontalDisplacement = pg.AverageHorizontalDisplacement,
-                        AverageVerticalDisplacement = pg.AverageVerticalDisplacement,
-                        DateCreated = item.DateCreated,
-                        ItemPermissionType = item.ItemPermissionType
-                    };
+                    return this.GetPointsGroupDto(pg, item);
+
                 })
                 .ToList();
         }
 
-        public async Task<PointsGroup> AddPointsGroupAsync(int userId, PointsGroupInput pointsGroupInput)
+        /// <summary>
+        /// Create a <see cref="PointsGroup"/> and persist it to the database.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<PointsGroupDTO> AddPointsGroupAsync(int userId, IFormFile file)
         {
             // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
-            
-            var averageHorizontalDisplacement = pointsGroupInput.Points
-                .Select(p => p.HorizontalDisplacement)
-                .Average();
-
-            var averageVerticalDisplacement = pointsGroupInput.Points
-                .Select(p => p.VerticalDisplacement)
-                .Average();
-            
-            var pointsGroup = new PointsGroup()
-            {
-                Name = pointsGroupInput.Name,
-                AverageHorizontalDisplacement = averageHorizontalDisplacement,
-                AverageVerticalDisplacement = averageVerticalDisplacement,
-                ItemId = itemId
-            };
+            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
             
             // add pointsGroup
             await this._context.PointsGroups.AddAsync(pointsGroup);
@@ -102,21 +82,13 @@ namespace Web.Services
             await this._context.SaveChangesAsync();
                 
             // label points with pointsGroupId
-            var points = pointsGroupInput.Points.Select((p, i) =>
-            {
-                return new Point()
-                {
-                    PointsGroupId = pointsGroup.PointsGroupId,
-                    HorizontalDisplacement = p.HorizontalDisplacement,
-                    VerticalDisplacement = p.VerticalDisplacement,
-                    Name = p.Name
-                };
-            });
-            
+            var points = this.AssignPointsToPointsGroup(pointsGroup);
+
             // add associated points 
             await this._context.Points.AddRangeAsync(points);
             await this._context.SaveChangesAsync();
-            return pointsGroup;
+
+            return this.GetPointsGroupDto(pointsGroup, this._context.Items.Single(i => i.ItemId == itemId));
         }
 
         public async Task<int> DeletePointsGroupAsync(int pointsGroupId)
@@ -131,29 +103,17 @@ namespace Web.Services
         /// <summary>
         /// Create a <see cref="PointsGroupDTO"/> from a file.
         /// </summary>
-        public async Task<PointsGroupDTO> CreatePointsGroup(IFormFile file)
+        public PointsGroupDTO CreatePointsGroupAsync(IFormFile file)
         {
             var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
+            return this.GetPointsGroupDto(pointsGroup);
 
-            return new PointsGroupDTO
-            {
-                Name = pointsGroup.Name,
-                AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
-                AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
-                Points = pointsGroup.Points,
-                DateCreated = DateTime.Now,
-                ItemPermissionType = ItemPermissionType.Public,
-                AhcInfo = new AhcInfo
-                {
-                    AhcPoints = this.GetAhcPoints(pointsGroup.Points)
-                }
-            };
         }
 
         /// <summary>
         /// Persist a <see cref="PointsGroup"/> to the database. 
         /// </summary>
-        public async Task<int> SavePointsGroup(PointsGroupDTO pointsGroupDto)
+        public async Task<int> SavePointsGroupAsync(PointsGroupDTO pointsGroupDto)
         {
             var pointsGroup = new PointsGroup
             {
@@ -208,5 +168,64 @@ namespace Web.Services
                 ClusterCount = ahcci.ClusterCount
             });
         } 
+        
+        private IEnumerable<Point> AssignPointsToPointsGroup(PointsGroup pointsGroup)
+        {
+            if (pointsGroup.PointsGroupId == null)
+            {
+                throw new ArgumentException(
+                    $"Expected pointsGroup with name ${pointsGroup.Name} to have a pointsGroupId but was null.");
+            }
+            
+            return pointsGroup.Points.Select((p, i) =>
+            {
+                return new Point()
+                {
+                    PointsGroupId = pointsGroup.PointsGroupId,
+                    HorizontalDisplacement = p.HorizontalDisplacement,
+                    VerticalDisplacement = p.VerticalDisplacement,
+                    Name = p.Name
+                };
+            });
+        }
+        
+        /// <summary>
+        /// Used to get <see cref="PointsGroupDTO"/> from a persisted <see cref="PointsGroup"/>.
+        /// </summary>
+        private PointsGroupDTO GetPointsGroupDto(PointsGroup pointsGroup, Item item)
+        {
+            return new PointsGroupDTO()
+            {
+                PointsGroupId = pointsGroup.PointsGroupId,
+                Name = pointsGroup.Name,
+                Points = pointsGroup.Points,
+                AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
+                AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
+                DateCreated = item.DateCreated,
+                ItemPermissionType = item.ItemPermissionType,
+                AhcInfo = JsonConvert.DeserializeObject<AhcInfo>(pointsGroup.AhcInfoJson)
+            };
+        }
+        
+        /// <summary>
+        /// Used to get <see cref="PointsGroupDTO"/> from <see cref="PointsGroup"/>
+        /// that is not associated with a user and has not yet been persisted.
+        /// </summary>
+        private PointsGroupDTO GetPointsGroupDto(PointsGroup pointsGroup)
+        {
+            return new PointsGroupDTO
+            {
+                Name = pointsGroup.Name,
+                AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
+                AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
+                Points = pointsGroup.Points,
+                DateCreated = DateTime.Now,
+                ItemPermissionType = ItemPermissionType.Public,
+                AhcInfo = new AhcInfo
+                {
+                    AhcPoints = this.GetAhcPoints(pointsGroup.Points)
+                }
+            };
+        }
     }
 }
