@@ -66,15 +66,20 @@ namespace Web.Services
                 .ToList();
         }
 
+        public async Task<PointsGroupDTO> AddPointsGroupAsync(int userId, IFormFile file)
+        {
+            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
+            return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
+        }
+
         /// <summary>
         /// Create a <see cref="PointsGroup"/> and persist it to the database.
         /// </summary>
         /// <returns></returns>
-        public async Task<PointsGroupDTO> AddPointsGroupAsync(int userId, IFormFile file)
+        public async Task<PointsGroupDTO> AddPointsGroupAsyncInternal(int userId, PointsGroup pointsGroup)
         {
             // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
-            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
             pointsGroup.ItemId = itemId;
             
             await this._context.PointsGroups.AddAsync(pointsGroup);
@@ -107,26 +112,35 @@ namespace Web.Services
         public PointsGroupDTO CreatePointsGroupAsync(IFormFile file)
         {
             var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
-            return this.GetPointsGroupDto(pointsGroup);
+            pointsGroup.Points = pointsGroup.Points.Select((p, i) =>
+            {
+                p.PointId = i + 1;
+                return p;
+            }).ToList();
 
+            return this.GetPointsGroupDto(pointsGroup);
         }
 
         /// <summary>
         /// Persist a <see cref="PointsGroup"/> to the database. 
         /// </summary>
-        public async Task<int> SavePointsGroupAsync(PointsGroupDTO pointsGroupDto)
+        public async Task<PointsGroupDTO> SavePointsGroupAsync(int userId, PointsGroupDTO pointsGroupDto)
         {
             var pointsGroup = new PointsGroup
             {
                 Name = pointsGroupDto.Name,
                 AverageHorizontalDisplacement = pointsGroupDto.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroupDto.AverageVerticalDisplacement,
-                Points = pointsGroupDto.Points.ToList(),
-                AhcInfoJson = JsonConvert.SerializeObject(pointsGroupDto.AhcInfo)
+                Points = pointsGroupDto.Points.Select(p => new Point
+                    {
+                        HorizontalDisplacement = p.HorizontalDisplacement,
+                        VerticalDisplacement = p.VerticalDisplacement,
+                        Name = p.Name
+                    }
+                ).ToList()
             };
 
-            await this._context.AddAsync(pointsGroup);
-            return pointsGroup.PointsGroupId;
+            return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
         }
 
         private IEnumerable<AhcPointDTO> GetAhcPoints(IEnumerable<Point> points)

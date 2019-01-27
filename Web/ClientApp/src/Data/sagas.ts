@@ -6,11 +6,12 @@ import {
 	deletePointsGroup,
 	getPointsGroups,
 	populatePointsGroupsStateFromLocalStorageIfAvailable,
-	savePointsGroup,
+	savePointsGroupIfStoredLocally,
 	addPointsGroup
 } from './actions';
 import { formHeaders, localStorageKeys, pointsGroupApi } from './constants';
 import { IPointsGroup } from './types';
+import { getFromLocalStorage } from 'njm-react-component-library/lib/Core/services';
 
 function* handleGetPointsGroupsAsync() {
 	try {
@@ -29,7 +30,7 @@ function* createPointsGroupAsync(
 	action: ReturnType<typeof createPointsGroup.request>
 ) {
 	try {
-		const { name, file } = action.payload;
+		const file = action.payload;
 		const { data } = yield call(
 			axios.post,
 			pointsGroupApi.createPointsGroup,
@@ -39,7 +40,6 @@ function* createPointsGroupAsync(
 
 		const pointsGroup: IPointsGroup = {
 			...data,
-			name,
 			pointsGroupId: undefined
 		};
 
@@ -62,7 +62,7 @@ function* addPointsGroupAsync(
 	action: ReturnType<typeof addPointsGroup.request>
 ) {
 	try {
-		const { file } = action.payload;
+		const file = action.payload;
 		const { data } = yield call(
 			axios.post,
 			pointsGroupApi.addPointsGroup,
@@ -104,16 +104,21 @@ function* watchPopulatePointsGroupsFromLocalStorageIfAvailable() {
 }
 
 function* handleSavePointsGroupAsync(
-	action: ReturnType<typeof savePointsGroup.request>
+	action: ReturnType<typeof savePointsGroupIfStoredLocally.request>
 ) {
 	try {
-		const { data } = yield call(
-			axios.post,
-			pointsGroupApi.savePointsGroup,
-			action.payload
-		);
-		localStorage.removeItem(localStorageKeys.pointsGroups);
-		yield put(savePointsGroup.success(data));
+		const pointsGroups = getFromLocalStorage(localStorageKeys.pointsGroups);
+		if (pointsGroups) {
+			const { data } = yield call(
+				axios.post,
+				pointsGroupApi.savePointsGroup,
+				pointsGroups[0]
+			);
+			if (data) {
+				localStorage.removeItem(localStorageKeys.pointsGroups);
+			}
+			yield put(savePointsGroupIfStoredLocally.success(data));
+		}
 	} catch (error) {
 		console.error(error);
 	}
@@ -121,7 +126,7 @@ function* handleSavePointsGroupAsync(
 
 function* watchSavePointsGroup() {
 	yield takeLatest(
-		dataTypeKeys.SAVE_POINTS_GROUP,
+		dataTypeKeys.SAVE_POINTS_GROUP_IF_STORED_LOCALLY,
 		handleSavePointsGroupAsync
 	);
 }

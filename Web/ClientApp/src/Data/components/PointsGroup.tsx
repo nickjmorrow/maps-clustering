@@ -1,21 +1,17 @@
-import * as React from 'react';
-import { IPointsGroup } from '../types';
-import styled from 'styled-components';
 import {
 	borderRadius,
 	colors,
+	DeleteButton,
 	transitions,
-	Typography,
-	DeleteButton
+	Typography
 } from 'njm-react-component-library';
-import { ItemPermissionType } from 'src/Core';
-import {
-	savePointsGroup,
-	setActivePointsGroup,
-	deletePointsGroup
-} from '../actions';
-import { Dispatch, bindActionCreators } from 'redux';
+import * as React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { ItemPermissionType } from 'src/Core';
+import styled from 'styled-components';
+import { deletePointsGroup, setActivePointsGroup } from '../actions';
+import { IPointsGroup } from '../types';
 import { Label } from './Label';
 
 class PointsGroupInternal extends React.Component<IProps, IState> {
@@ -39,7 +35,7 @@ class PointsGroupInternal extends React.Component<IProps, IState> {
 	};
 
 	public render() {
-		const { pointsGroup, handleSavePointsGroup } = this.props;
+		const { pointsGroup } = this.props;
 		const { isHovering, isHoveringOverDeleteButton } = this.state;
 		const { isActive } = pointsGroup;
 
@@ -53,11 +49,6 @@ class PointsGroupInternal extends React.Component<IProps, IState> {
 				<Typography variant="h4" noMargin={true} color={'inherit'}>
 					{pointsGroup.name}
 				</Typography>
-				{!pointsGroup.pointsGroupId && (
-					<button onClick={() => handleSavePointsGroup(pointsGroup)}>
-						Save
-					</button>
-				)}
 				{shouldShowDeleteButton(
 					pointsGroup,
 					isHovering,
@@ -95,15 +86,13 @@ export interface IOwnProps {
 interface IDispatchProps {
 	handleDeletePointsGroup: typeof deletePointsGroup.request;
 	handleSetActivePointsGroup: typeof setActivePointsGroup;
-	handleSavePointsGroup: typeof savePointsGroup.request;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
 			handleDeletePointsGroup: deletePointsGroup.request,
-			handleSetActivePointsGroup: setActivePointsGroup,
-			handleSavePointsGroup: savePointsGroup.request
+			handleSetActivePointsGroup: setActivePointsGroup
 		},
 		dispatch
 	);

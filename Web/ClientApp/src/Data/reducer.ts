@@ -1,4 +1,4 @@
-import { ItemPermissionType, getColors } from 'src/Core';
+import { getColors, ItemPermissionType } from 'src/Core';
 import { ActionType } from 'typesafe-actions';
 import * as actions from './actions';
 import { dataTypeKeys } from './actions';
@@ -37,12 +37,20 @@ export const dataReducer = (
 
 	switch (action.type) {
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
+			const combinedPointsGroups = [
+				...state.pointsGroups,
+				...action.payload
+			];
 			return {
 				...state,
-				pointsGroups: ensureActivePointsGroup([
-					...state.pointsGroups,
-					...action.payload
-				]).map(withColors)
+				pointsGroups: ensureActivePointsGroup(
+					combinedPointsGroups.filter(
+						(pg, i) =>
+							combinedPointsGroups
+								.map(cpg => cpg.pointsGroupId)
+								.indexOf(pg.pointsGroupId) === i
+					)
+				).map(withColors)
 			};
 		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
 			return {
@@ -66,11 +74,13 @@ export const dataReducer = (
 			return {
 				...state,
 				pointsGroups: [
-					...state.pointsGroups,
+					...state.pointsGroups.map(pg => ({
+						...pg,
+						isActive: false
+					})),
 					{ ...action.payload, isActive: true }
 				].map(withColors)
 			};
-
 		case dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
 			return {
 				...state,
@@ -79,7 +89,7 @@ export const dataReducer = (
 					...action.payload.map(withFirstPointsGroupActive)
 				]).map(withColors)
 			};
-		case dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED:
+		case dataTypeKeys.SAVE_POINTS_GROUP_IF_STORED_LOCALLY_SUCCEEDED:
 			return {
 				...state,
 				pointsGroups: ensureActivePointsGroup(
@@ -92,6 +102,7 @@ export const dataReducer = (
 								  }
 						)
 						.map(withColors)
+						.filter(pg => pg.pointsGroupId)
 				)
 			};
 		case dataTypeKeys.DELETE_POINTS_GROUP_SUCCEEDED:

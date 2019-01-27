@@ -39,7 +39,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult CreatePointsGroup([FromBody] IFormFile file)
+        public IActionResult CreatePointsGroup(IFormFile file)
         {
             if (file.Length == 0)
             {
@@ -52,7 +52,7 @@ namespace WebApplication.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> SavePointsGroup([FromBody] PointsGroupDTO pointsGroupDto)
         {
-            return Ok(await this._pointsGroupService.SavePointsGroupAsync(pointsGroupDto));
+            return Ok(await this._pointsGroupService.SavePointsGroupAsync(this._userId, pointsGroupDto));
         }
 
         [HttpDelete("[action]/{pointsGroupId}")]

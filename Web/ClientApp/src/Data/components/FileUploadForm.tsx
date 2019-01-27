@@ -1,16 +1,14 @@
 import {
+	authSelectors,
 	FileInput,
 	IInitialInputInfo,
-	ITextInputInfo,
-	TextInput,
-	Typography,
-	authSelectors
+	Typography
 } from 'njm-react-component-library';
 import * as React from 'react';
-import { addPointsGroup, createPointsGroup } from '../actions';
-import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { IReduxState } from 'src/reducer';
+import { addPointsGroup, createPointsGroup } from '../actions';
 
 const { getIsAuthenticated } = authSelectors;
 
@@ -24,37 +22,24 @@ export class FileUploadFormInternal extends React.PureComponent<
 		if (fileList && fileList.length) {
 			const file = new FormData();
 			file.append('file', fileList[0]);
-			const pointsGroupInput = {
-				file,
-				name: this.state.textInputInfo.value
-			};
 			const {
 				isAuthenticated,
 				onCreatePointsGroup,
 				onAddPointsGroup
 			} = this.props;
 			if (isAuthenticated) {
-				onAddPointsGroup(pointsGroupInput);
+				onAddPointsGroup(file);
 			} else {
-				onCreatePointsGroup(pointsGroupInput);
+				onCreatePointsGroup(file);
 			}
 		}
 	};
 
-	handleTextChange = (text: string) =>
-		this.setState(prevState => ({
-			textInputInfo: { ...prevState.textInputInfo, value: text }
-		}));
-
 	render() {
-		const { inputInfo, textInputInfo } = this.state;
+		const { inputInfo } = this.state;
 		return (
 			<div>
 				<Typography variant="h2">{'Upload Points Group'}</Typography>
-				<TextInput
-					textInputInfo={textInputInfo}
-					onChange={this.handleTextChange}
-				/>
 				<FileInput
 					inputInfo={inputInfo}
 					onChange={this.handleFileChange}
@@ -69,13 +54,7 @@ const initialState = {
 	inputInfo: {
 		name: 'file',
 		type: 'file'
-	} as IInitialInputInfo,
-	textInputInfo: {
-		name: 'file name',
-		type: 'text',
-		value: '',
-		placeholder: 'Points Group Name'
-	} as ITextInputInfo
+	} as IInitialInputInfo
 };
 
 interface IReduxProps {

@@ -52,9 +52,4 @@ export interface IAhcInfo {
 	}>;
 }
 
-export interface IPointsGroupFormInput {
-	file: FormData;
-	name: string;
-}
-
 export type PointsGroupId = number;

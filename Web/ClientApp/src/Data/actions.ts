@@ -1,6 +1,6 @@
-import { action } from 'typesafe-actions';
-import { IPointsGroup, IPointsGroupFormInput } from './types';
 import { IError } from 'njm-react-component-library/lib/Core/types';
+import { action } from 'typesafe-actions';
+import { IPointsGroup } from './types';
 
 export enum dataTypeKeys {
 	CREATE_POINTS_GROUP = 'CREATE_POINTS_GROUP',
@@ -14,9 +14,9 @@ export enum dataTypeKeys {
 	GET_POINTS_GROUPS = 'GET_POINTS_GROUPS',
 	GET_POINTS_GROUPS_SUCCEEDED = 'GET_POINTS_GROUPS_SUCCEEDED',
 	GET_POINTS_GROUPS_FAILED = 'GET_POINTS_GROUPS_FAILED',
-	SAVE_POINTS_GROUP = 'SAVE_POINTS_GROUP',
-	SAVE_POINTS_GROUP_SUCCEEDED = 'SAVE_POINTS_GROUP_SUCCEEDED',
-	SAVE_POINTS_GROUP_FAILED = 'SAVE_POINTS_GROUP_FAILED',
+	SAVE_POINTS_GROUP_IF_STORED_LOCALLY = 'SAVE_POINTS_GROUP_IF_STORED_LOCALLY',
+	SAVE_POINTS_GROUP_IF_STORED_LOCALLY_SUCCEEDED = 'SAVE_POINTS_GROUP_IF_STORED_LOCALLY_SUCCEEDED',
+	SAVE_POINTS_GROUP_IF_STORED_LOCALLY_FAILED = 'SAVE_POINTS_GROUP_IF_STORED_LOCALLY_FAILED',
 	DELETE_POINTS_GROUP = 'DELETE_POINTS_GROUP',
 	DELETE_POINTS_GROUP_SUCCEEDED = 'DELETE_POINTS_GROUP_SUCCEEDED',
 	DELETE_POINTS_GROUP_FAILED = 'DELETE_POINTS_GROUP_FAILED',
@@ -26,7 +26,7 @@ export enum dataTypeKeys {
 }
 
 export const addPointsGroup = {
-	request: (payload: IPointsGroupFormInput) =>
+	request: (payload: FormData) =>
 		action(dataTypeKeys.ADD_POINTS_GROUP, payload),
 	success: (payload: IPointsGroup) =>
 		action(dataTypeKeys.ADD_POINTS_GROUP_SUCCEEDED, payload),
@@ -35,7 +35,7 @@ export const addPointsGroup = {
 };
 
 export const createPointsGroup = {
-	request: (payload: IPointsGroupFormInput) =>
+	request: (payload: FormData) =>
 		action(dataTypeKeys.CREATE_POINTS_GROUP, payload),
 	success: (payload: IPointsGroup) =>
 		action(dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED, payload),
@@ -43,13 +43,15 @@ export const createPointsGroup = {
 		action(dataTypeKeys.CREATE_POINTS_GROUP_FAILED, payload)
 };
 
-export const savePointsGroup = {
-	request: (pointsGroup: IPointsGroup) =>
-		action(dataTypeKeys.SAVE_POINTS_GROUP, pointsGroup),
+export const savePointsGroupIfStoredLocally = {
+	request: () => action(dataTypeKeys.SAVE_POINTS_GROUP_IF_STORED_LOCALLY),
 	success: (pointsGroup: IPointsGroup) =>
-		action(dataTypeKeys.SAVE_POINTS_GROUP_SUCCEEDED, pointsGroup),
+		action(
+			dataTypeKeys.SAVE_POINTS_GROUP_IF_STORED_LOCALLY_SUCCEEDED,
+			pointsGroup
+		),
 	failure: (payload: IError) =>
-		action(dataTypeKeys.SAVE_POINTS_GROUP_FAILED, payload)
+		action(dataTypeKeys.SAVE_POINTS_GROUP_IF_STORED_LOCALLY_FAILED, payload)
 };
 
 export const getPointsGroups = {
