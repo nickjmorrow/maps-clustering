@@ -210,7 +210,6 @@ namespace Web.Services
                 Points = pointsGroup.Points,
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
-                DateCreated = item.DateCreated,
                 ItemPermissionType = item.ItemPermissionType,
                 AhcInfo = JsonConvert.DeserializeObject<AhcInfo>(pointsGroup.AhcInfoJson)
             };
@@ -228,7 +227,6 @@ namespace Web.Services
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
                 Points = pointsGroup.Points,
-                DateCreated = DateTime.Now,
                 ItemPermissionType = ItemPermissionType.Public,
                 AhcInfo = new AhcInfo
                 {

@@ -5,21 +5,11 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { clusterTypes } from '../../constants';
 import { IPointsGroup } from '../../types';
 import { IReduxState } from '../../../reducer';
-import { AhcParameters } from '.';
+import { AhcParameters } from './AhcParameters';
 import { setClusterCount } from '../../actions';
 
-export class ParametersInternal extends React.PureComponent<IProps, IState> {
+class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;
-
-	handleMinimumPointsPerClusterChange = (minimumPoints: number) =>
-		this.setState({ minimumPointsPerCluster: minimumPoints });
-
-	handleMaximumDistanceBetweenPointsChange = (
-		maximumDistanceBetweenPoints: number
-	) =>
-		this.setState({
-			maximumDistanceBetweenPoints
-		});
 
 	handleClusterCountChangeInternal = (clusterCount: number) => {
 		this.props.onSetClusterCount(clusterCount);
@@ -36,9 +26,6 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 		const minClusters = 1;
 		const maxClusters = points.length;
 
-		if (!currentClusterOption) {
-			return null;
-		}
 		switch (currentClusterOption.value) {
 			case clusterTypes.ahcs:
 				return (
@@ -53,23 +40,25 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 					/>
 				);
 			default:
-				return <div>Hello</div>;
+				throw new Error(
+					`Unexpected clusterOption: ${currentClusterOption}`
+				);
 		}
 	}
 }
 
 // types
 interface IOwnProps {
-	currentClusterOption: IOption | null;
+	readonly currentClusterOption: IOption;
 }
 
 interface IDispatchProps {
-	onSetClusterCount: typeof setClusterCount;
+	readonly onSetClusterCount: typeof setClusterCount;
 }
 
 interface IReduxProps {
-	pointsGroups: IPointsGroup[];
-	clusterCount: number;
+	readonly pointsGroups: IPointsGroup[];
+	readonly clusterCount: number;
 }
 
 type IProps = IOwnProps & IDispatchProps & IReduxProps;

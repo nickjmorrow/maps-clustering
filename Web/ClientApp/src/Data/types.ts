@@ -36,7 +36,6 @@ export interface IPointsGroup {
 	points: IPoint[];
 	isActive: boolean;
 	ahcInfo: IAhcInfo;
-	dateCreated: Date;
 	itemPermissionType: ItemPermissionType;
 	pointsColors: string[];
 }

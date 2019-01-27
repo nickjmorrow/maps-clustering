@@ -6,8 +6,7 @@ import {
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../reducer';
-import { routes } from '../../Core/constants';
-import { AuthModal, LogOutModal } from '../components';
+import { AuthModal, LogOutModal } from '../../Auth';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import { clientId } from '../../secrets';
 
@@ -72,7 +71,6 @@ export class AppBarInternal extends React.PureComponent<
 			<div>
 				<GenericAppBar
 					links={[]}
-					authenticatedButtonProps={routes}
 					appName={'Location Clusterer'}
 					isAuthenticated={isAuthenticated}
 					onLogInClick={this.handleToggleAuthModal}

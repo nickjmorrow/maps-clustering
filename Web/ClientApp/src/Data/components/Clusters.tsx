@@ -43,7 +43,12 @@ export const ClustersInternal: React.SFC<IProps> = ({
 				</Cluster>
 			);
 		});
-	return <Wrapper>{renderedClusteredPoints}</Wrapper>;
+	return (
+		<Wrapper>
+			<Typography variant="h2">Clusters</Typography>
+			{renderedClusteredPoints}
+		</Wrapper>
+	);
 };
 
 // types

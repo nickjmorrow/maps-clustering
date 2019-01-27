@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import styled from 'styled-components';
-import { routes } from '../constants';
-import { AppBar } from './AppBar';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
 import { authActions, authSelectors } from 'njm-react-component-library';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { bindActionCreators, Dispatch } from 'redux';
+import styled from 'styled-components';
 import {
 	getPointsGroups,
+	MapPage,
 	populatePointsGroupsStateFromLocalStorageIfAvailable,
 	savePointsGroupIfStoredLocally
 } from '../../Data';
 import { IReduxState } from '../../reducer';
+import { AppBar } from './AppBar';
 
 const { getIsAuthenticated } = authSelectors;
 const { onPopulateUserStateFromLocalStorageIfAvailable } = authActions;
@@ -44,16 +44,12 @@ export class LandingInternal extends React.PureComponent<IProps> {
 			<BrowserRouter>
 				<Wrapper>
 					<AppBar />
-					<Switch>{renderedRoutes}</Switch>
+					<MapPage />
 				</Wrapper>
 			</BrowserRouter>
 		);
 	}
 }
-
-const renderedRoutes = routes.map(r => (
-	<Route exact={true} key={r.route} path={r.route} component={r.component} />
-));
 
 // css
 const Wrapper = styled.div`

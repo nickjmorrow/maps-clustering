@@ -12,7 +12,7 @@ import { ItemPermissionType } from '../../Core';
 import styled from 'styled-components';
 import { deletePointsGroup, setActivePointsGroup } from '../actions';
 import { IPointsGroup } from '../types';
-import { Label } from './Label';
+import { Label } from '../../Core/components/Label';
 
 class PointsGroupInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
@@ -60,7 +60,8 @@ class PointsGroupInternal extends React.Component<IProps, IState> {
 						onMouseLeave={this.turnOffIsHoveringOverDeleteButton}
 					/>
 				)}
-				{pointsGroup.itemPermissionType === ItemPermissionType.Public &&
+				{pointsGroup.itemPermissionType ===
+					ItemPermissionType.Default &&
 					(isActive || isHovering) && (
 						<Label color={colors.white}>{'Default'}</Label>
 					)}
@@ -75,7 +76,7 @@ const shouldShowDeleteButton = (
 	isHoveringOverDeleteButton: boolean
 ) =>
 	pg.pointsGroupId &&
-	pg.itemPermissionType !== ItemPermissionType.Public &&
+	pg.itemPermissionType !== ItemPermissionType.Default &&
 	(isHovering || pg.isActive || isHoveringOverDeleteButton);
 
 // types

@@ -5,6 +5,7 @@ import { dataTypeKeys } from './actions';
 import { IPointsGroup } from './types';
 import { clusterTypes } from './constants';
 import { IOption } from 'njm-react-component-library';
+import produce from 'immer';
 
 export interface IDataState {
 	readonly error: string;
@@ -23,80 +24,48 @@ export const initialState: IDataState = {
 	}
 };
 
-// TODO: add tests
-
 export const dataReducer = (
 	state: IDataState = initialState,
 	action: ActionType<typeof actions>
 ): IDataState => {
 	switch (action.type) {
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
-			const combinedPointsGroups = [
-				...state.pointsGroups,
-				...action.payload
-			];
-			return {
-				...state,
-				pointsGroups: ensureActivePointsGroup(
-					combinedPointsGroups.filter(
-						(pg, i) =>
-							combinedPointsGroups
-								.map(cpg => cpg.pointsGroupId)
-								.indexOf(pg.pointsGroupId) === i
-					)
-				).map(withColors)
-			};
+			return produce(state, draftState => {
+				const combinedPointsGroups = [
+					...state.pointsGroups,
+					...action.payload
+				];
+				const pointsGroups = ensureActivePointsGroup(
+					combinedPointsGroups.filter(removeDuplicatePointsGroups)
+				).map(withColors);
+				draftState.pointsGroups = pointsGroups;
+			});
+		case dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
 		case dataTypeKeys.CREATE_POINTS_GROUP_SUCCEEDED:
-			return {
-				...state,
-				pointsGroups: ensureActivePointsGroup(
-					[
-						...getSavedPointsGroups(state).map(pg => ({
-							...pg,
-							isActive: false
-						})),
-						{
-							...action.payload,
-							isActive: true
-						}
-					].map(withColors)
-				)
-			};
+			return produce(state, draftState => {
+				const pointsGroups = state.pointsGroups
+					.filter(toSavedPointsGroups)
+					.map(asInactive);
+				pointsGroups.unshift({ ...action.payload, isActive: true });
+				draftState.pointsGroups = pointsGroups;
+			});
 		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
 			return { ...state, error: action.payload };
 		case dataTypeKeys.ADD_POINTS_GROUP_SUCCEEDED:
 			return {
 				...state,
 				pointsGroups: [
-					...state.pointsGroups.map(pg => ({
-						...pg,
-						isActive: false
-					})),
-					{ ...action.payload, isActive: true }
+					{ ...action.payload, isActive: true },
+					...state.pointsGroups.map(asInactive)
 				].map(withColors)
-			};
-		case dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED:
-			return {
-				...state,
-				pointsGroups: ensureActivePointsGroup([
-					...getSavedPointsGroups(state),
-					...action.payload.map(withFirstPointsGroupActive)
-				]).map(withColors)
 			};
 		case dataTypeKeys.SAVE_POINTS_GROUP_IF_STORED_LOCALLY_SUCCEEDED:
 			return {
 				...state,
 				pointsGroups: ensureActivePointsGroup(
 					state.pointsGroups
-						.map(pg =>
-							pg.pointsGroupId
-								? pg
-								: {
-										...action.payload
-								  }
-						)
+						.map(replaceUnsavedPointsGroup(action.payload))
 						.map(withColors)
-						.filter(pg => pg.pointsGroupId)
 				)
 			};
 		case dataTypeKeys.DELETE_POINTS_GROUP_SUCCEEDED:
@@ -142,9 +111,6 @@ export const dataReducer = (
 	}
 };
 
-const getSavedPointsGroups = (dataState: IDataState): IPointsGroup[] =>
-	dataState.pointsGroups.filter(pg => pg.pointsGroupId);
-
 const setActivePointsGroup = (pointsGroupId: number | undefined) => (
 	pg: IPointsGroup
 ) =>
@@ -162,24 +128,42 @@ const ensureActivePointsGroup = (pointsGroups: IPointsGroup[]) => {
 	const hasActivePointsGroup =
 		pointsGroups.filter(pg => pg.isActive).length > 0;
 	const pointsGroupsWithActive = hasActivePointsGroup
-		? pointsGroups.sort(defaultsAreLast)
+		? pointsGroups.sort(defaultsAreLastAndDefaultsAreFirst)
 		: pointsGroups
-				.sort(defaultsAreLast)
-
+				.sort(defaultsAreLastAndDefaultsAreFirst)
 				.map(withFirstPointsGroupActive);
 	return pointsGroupsWithActive;
 };
 
-const defaultsAreLast = (pg: IPointsGroup) =>
+const defaultsAreLastAndDefaultsAreFirst = (pg: IPointsGroup) =>
 	pg.itemPermissionType === ItemPermissionType.Default
 		? -1
 		: pg.pointsGroupId === undefined
 		? 1
 		: 0;
 
-const unsavedIsFirst = (pg: IPointsGroup) => (pg.pointsGroupId ? 1 : -1);
-
 const withColors = (pg: IPointsGroup): IPointsGroup => ({
 	...pg,
 	pointsColors: pg.pointsColors || getColors(pg.points.length)
 });
+
+const removeDuplicatePointsGroups = (
+	pointsGroup: IPointsGroup,
+	index: number,
+	pointsGroups: IPointsGroup[]
+) =>
+	pointsGroups
+		.map(pg => pg.pointsGroupId)
+		.indexOf(pointsGroup.pointsGroupId) === index;
+
+const toSavedPointsGroups = (pointsGroup: IPointsGroup) =>
+	pointsGroup.pointsGroupId !== undefined;
+
+const asInactive = (pointsGroup: IPointsGroup) => ({
+	...pointsGroup,
+	isActive: false
+});
+
+const replaceUnsavedPointsGroup = (newPointsGroup: IPointsGroup) => (
+	pg: IPointsGroup
+) => (pg.pointsGroupId ? pg : newPointsGroup);

@@ -12,7 +12,6 @@ namespace WebApplication.Models.DTOs
         public double AverageHorizontalDisplacement { get; set; }
         public double AverageVerticalDisplacement { get; set; }
         public IEnumerable<Point> Points { get; set; }
-        public DateTime DateCreated { get; set; }
         public ItemPermissionType ItemPermissionType { get; set; }
         public AhcInfo AhcInfo { get; set; }
     }

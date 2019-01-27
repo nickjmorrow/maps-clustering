@@ -1,6 +1,7 @@
 import { Slider, Typography } from 'njm-react-component-library';
 import * as React from 'react';
 import { IPoint } from '../../types';
+import styled from 'styled-components';
 
 export const AhcParameters: React.SFC<IProps> = ({
 	min,
@@ -15,7 +16,7 @@ export const AhcParameters: React.SFC<IProps> = ({
 		);
 	const iterations = convertClusterCountToIterations(clusterCount, points);
 	return (
-		<div>
+		<Wrapper>
 			<Typography variant="h2">Number of Clusters</Typography>
 			<Slider
 				min={min}
@@ -23,7 +24,7 @@ export const AhcParameters: React.SFC<IProps> = ({
 				value={iterations}
 				onChange={handleClusterCountChangeInternal}
 			/>
-		</div>
+		</Wrapper>
 	);
 };
 
@@ -39,9 +40,14 @@ const convertClusterCountToIterations = (
 
 // types
 interface IProps {
-	min: number;
-	max: number;
-	clusterCount: number;
-	points: IPoint[];
-	onClusterCountChange(value: number): void;
+	readonly min: number;
+	readonly max: number;
+	readonly clusterCount: number;
+	readonly points: IPoint[];
+	readonly onClusterCountChange: (value: number) => void;
 }
+
+// css
+const Wrapper = styled.div`
+	max-width: 300px;
+`;

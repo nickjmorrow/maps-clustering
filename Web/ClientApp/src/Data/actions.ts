@@ -74,7 +74,7 @@ export const populatePointsGroupsStateFromLocalStorageIfAvailable = {
 		action(
 			dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE
 		),
-	success: (pointsGroups: IPointsGroup[]) =>
+	success: (pointsGroups: IPointsGroup) =>
 		action(
 			dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE_SUCCEEDED,
 			pointsGroups

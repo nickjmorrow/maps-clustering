@@ -46,7 +46,7 @@ function* createPointsGroupAsync(
 		yield put(createPointsGroup.success(pointsGroup));
 
 		localStorage.setItem(
-			localStorageKeys.pointsGroups,
+			localStorageKeys.pointsGroup,
 			JSON.stringify([pointsGroup])
 		);
 	} catch (error) {
@@ -81,13 +81,11 @@ function* watchAddPointsGroup() {
 
 function* handlePopulatePointsGroupsFromLocalStorageIfAvailable() {
 	try {
-		const pointsGroups = localStorage.getItem(
-			localStorageKeys.pointsGroups
-		);
-		if (pointsGroups !== null) {
+		const pointsGroup = localStorage.getItem(localStorageKeys.pointsGroup);
+		if (pointsGroup !== null) {
 			yield put(
 				populatePointsGroupsStateFromLocalStorageIfAvailable.success(
-					JSON.parse(pointsGroups)
+					JSON.parse(pointsGroup)
 				)
 			);
 		}
@@ -107,7 +105,7 @@ function* handleSavePointsGroupAsync(
 	action: ReturnType<typeof savePointsGroupIfStoredLocally.request>
 ) {
 	try {
-		const pointsGroups = getFromLocalStorage(localStorageKeys.pointsGroups);
+		const pointsGroups = getFromLocalStorage(localStorageKeys.pointsGroup);
 		if (pointsGroups) {
 			const { data } = yield call(
 				axios.post,
@@ -115,7 +113,7 @@ function* handleSavePointsGroupAsync(
 				pointsGroups[0]
 			);
 			if (data) {
-				localStorage.removeItem(localStorageKeys.pointsGroups);
+				localStorage.removeItem(localStorageKeys.pointsGroup);
 			}
 			yield put(savePointsGroupIfStoredLocally.success(data));
 		}
