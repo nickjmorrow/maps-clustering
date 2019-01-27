@@ -128,7 +128,7 @@ export const dataReducer = (
 					.filter(
 						pg =>
 							!pg.pointsGroupId ||
-							pg.itemPermissionType === ItemPermissionType.Public
+							pg.itemPermissionType === ItemPermissionType.Default
 					)
 					.map(withFirstPointsGroupActive)
 			};
@@ -162,16 +162,20 @@ const ensureActivePointsGroup = (pointsGroups: IPointsGroup[]) => {
 	const hasActivePointsGroup =
 		pointsGroups.filter(pg => pg.isActive).length > 0;
 	const pointsGroupsWithActive = hasActivePointsGroup
-		? pointsGroups.sort(defaultsAreLast).sort(unsavedIsFirst)
+		? pointsGroups.sort(defaultsAreLast)
 		: pointsGroups
 				.sort(defaultsAreLast)
-				.sort(unsavedIsFirst)
+
 				.map(withFirstPointsGroupActive);
 	return pointsGroupsWithActive;
 };
 
 const defaultsAreLast = (pg: IPointsGroup) =>
-	pg.itemPermissionType === ItemPermissionType.Private ? -1 : 1;
+	pg.itemPermissionType === ItemPermissionType.Default
+		? -1
+		: pg.pointsGroupId === undefined
+		? 1
+		: 0;
 
 const unsavedIsFirst = (pg: IPointsGroup) => (pg.pointsGroupId ? 1 : -1);
 
