@@ -1,34 +1,19 @@
-import { Typography, IOption } from 'njm-react-component-library';
+import { Typography } from 'njm-react-component-library';
 import * as React from 'react';
-import styled from 'styled-components';
-import { ClusteredPoint, IPointsGroup } from '../types';
-import { clusterTypes } from '../constants';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { IReduxState } from '../../reducer';
+import { ClusteredPoint, IPointsGroup } from '../types';
 
 export const ClustersInternal: React.SFC<IProps> = ({
 	activePointsGroup,
-	currentClusterOption,
 	clusterCount
 }) => {
 	if (!activePointsGroup) {
 		return null;
 	}
-	const clusteredPoints = getClusters(
-		currentClusterOption,
-		clusterCount,
-		activePointsGroup
-	);
-	const clusterIds = clusteredPoints.reduce(
-		(agg, cp) => {
-			const clusterId = cp.clusterId;
-			if (!agg.find(x => x === clusterId)) {
-				agg.push(clusterId);
-			}
-			return agg;
-		},
-		[] as number[]
-	);
+	const clusteredPoints = getClusters(clusterCount, activePointsGroup);
+	const clusterIds = [...new Set(clusteredPoints.map(cp => cp.clusterId))];
 	const asRenderedPoints = (p: ClusteredPoint) => (
 		<Typography key={p.pointId}>{p.name}</Typography>
 	);
@@ -53,13 +38,12 @@ export const ClustersInternal: React.SFC<IProps> = ({
 
 // types
 interface IOwnProps {
-	activePointsGroup: IPointsGroup;
-	currentClusterOption: IOption;
-	clusterCount: number;
+	readonly activePointsGroup: IPointsGroup;
+	readonly clusterCount: number;
 }
 
 interface IReduxProps {
-	clusterCount: number;
+	readonly clusterCount: number;
 }
 
 type IProps = IOwnProps & IReduxProps;
@@ -87,28 +71,12 @@ const Wrapper = styled.div`
 `;
 
 // helpers
-
 const getClusters = (
-	currentClusterOption: IOption,
 	clusterCount: number,
 	activePointsGroup: IPointsGroup
 ): ClusteredPoint[] => {
-	const unclusteredPoints = activePointsGroup.points.map(p => ({
-		...p,
-		clusterId: p.pointId
+	return activePointsGroup.ahcInfo.ahcPoints.map(ahc => ({
+		...ahc,
+		clusterId: ahc.clusterInfos[clusterCount - 1].clusterId
 	}));
-
-	switch (currentClusterOption.value) {
-		case clusterTypes.none:
-			return unclusteredPoints;
-		case clusterTypes.ahcs:
-			return activePointsGroup.ahcInfo.ahcPoints.map(ahc => {
-				return {
-					...ahc,
-					clusterId: ahc.clusterInfos[clusterCount - 1].clusterId
-				};
-			});
-		default:
-			return unclusteredPoints;
-	}
 };

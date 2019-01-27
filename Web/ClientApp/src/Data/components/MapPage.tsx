@@ -8,6 +8,7 @@ import { IReduxState } from '../../reducer';
 import { getActivePointsGroup } from '../selectors';
 import { IPointsGroup } from '../types';
 import { PointsGroupList } from './PointsGroupList';
+import { Summary } from './Summary';
 
 export const MapPageInternal: React.SFC<IReduxProps> = ({
 	pointsGroups,
@@ -40,10 +41,10 @@ export const MapPageInternal: React.SFC<IReduxProps> = ({
 				</InfoPanel>
 				<InfoPanel>
 					<Typography variant="h1">Results</Typography>
-					<Clusters
-						activePointsGroup={activePointsGroup}
-						currentClusterOption={currentClusterOption}
-					/>
+					<FlexRow>
+						<Clusters activePointsGroup={activePointsGroup} />
+						<Summary />
+					</FlexRow>
 				</InfoPanel>
 			</MapControls>
 		</div>
@@ -90,6 +91,12 @@ const Divider = styled.div`
 	background-color: ${colors.darkGray};
 `;
 
+const FlexRow = styled.div`
+	display: flex;
+	flex-direction: row;
+`;
+
+// helpers
 const getMarkers = (
 	activePointsGroup: IPointsGroup,
 	clusterCount: number,
