@@ -75,6 +75,10 @@ namespace WebApplication
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
+                }).AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = appSettings.GoogleClientId;
+                    googleOptions.ClientSecret = appSettings.GoogleClientSecret;
                 });
             
             

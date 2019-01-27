@@ -1,9 +1,4 @@
-import {
-	colors,
-	IOption,
-	LabeledRadioButtonInput,
-	Typography
-} from 'njm-react-component-library';
+import { colors, IOption, Typography } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IReduxState } from 'src/reducer';
@@ -27,8 +22,12 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 	};
 
 	render() {
-		const { pointsGroups, activePointsGroup, clusterCount } = this.props;
-		const { currentClusterOption } = this.state;
+		const {
+			pointsGroups,
+			activePointsGroup,
+			clusterCount,
+			currentClusterOption
+		} = this.props;
 
 		if (!activePointsGroup) {
 			return null;
@@ -55,12 +54,6 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 					<InfoPanel>
 						<Typography variant="h1">Parameters</Typography>
 						<PointsGroupList pointsGroups={pointsGroups} />
-						<Typography variant="h2">Cluster Type</Typography>
-						<LabeledRadioButtonInput
-							options={clusterOptions}
-							onClick={this.handleClusterTypeChange}
-							selectedOption={currentClusterOption}
-						/>
 						<Parameters
 							currentClusterOption={currentClusterOption}
 						/>
@@ -84,7 +77,8 @@ export class MapPageInternal extends React.Component<IProps, IState> {
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
 	pointsGroups: state.data.pointsGroups,
 	activePointsGroup: getActivePointsGroup(state),
-	clusterCount: state.data.clusterCount
+	clusterCount: state.data.clusterCount,
+	currentClusterOption: state.data.currentClusterOption
 });
 
 export const MapPage = connect(
@@ -103,6 +97,7 @@ interface IReduxProps {
 	pointsGroups: IPointsGroup[];
 	activePointsGroup: IPointsGroup;
 	clusterCount: number;
+	currentClusterOption: IOption;
 }
 
 type IProps = IReduxProps;

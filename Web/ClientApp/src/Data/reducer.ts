@@ -2,29 +2,25 @@ import { getColors, ItemPermissionType } from 'src/Core';
 import { ActionType } from 'typesafe-actions';
 import * as actions from './actions';
 import { dataTypeKeys } from './actions';
-import {
-	AgglomerativeHierarchicalClusterPoint,
-	ClusteredPoint,
-	IPoint,
-	IPointsGroup
-} from './types';
+import { IPointsGroup } from './types';
+import { clusterTypes } from './constants';
+import { IOption } from 'njm-react-component-library';
 
 export interface IDataState {
-	readonly points: IPoint[];
 	readonly error: string;
-	readonly agglomerativeHierarchicalClusters: AgglomerativeHierarchicalClusterPoint[];
-	readonly dbscan: ClusteredPoint[];
 	readonly pointsGroups: IPointsGroup[];
 	readonly clusterCount: number;
+	readonly currentClusterOption: IOption;
 }
 
 const initialState: IDataState = {
-	points: [],
-	agglomerativeHierarchicalClusters: [],
-	dbscan: [],
 	pointsGroups: [],
 	error: '',
-	clusterCount: 1
+	clusterCount: 1,
+	currentClusterOption: {
+		label: 'Agglomerative Hierarchical Clustering',
+		value: clusterTypes.ahcs
+	}
 };
 
 // TODO: add tests
