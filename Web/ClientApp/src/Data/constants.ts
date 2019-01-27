@@ -1,29 +1,27 @@
 import { IOption } from 'njm-react-component-library';
 import { apiKey } from 'src/secrets';
 
-export enum fileApi {
-	get = '/api/data/get',
-	upload = '/api/file/convertfiletopoints'
-}
+// export enum fileApi {
+// 	get = '/api/data/get',
+// 	upload = '/api/file/convertfiletopoints'
+// }
 
-export enum calcApi {
-	getAgglomerativeHierarchicalClusters = '/api/calc/getAgglomerativeHierarchicalClusters',
-	getExpectationMaximizationClusters = '/api/calc/getExpectationMaximizationClusters',
-	getDbscan = '/api/calc/getDBSCANClusters',
-	getMeanShiftClusters = '/api/calc/getMeanShiftClusters',
-	getKMeansClusters = '/api/calc/getKMeansClusters'
-}
+// export enum calcApi {
+// 	getAgglomerativeHierarchicalClusters = '/api/calc/getAgglomerativeHierarchicalClusters',
+// 	getExpectationMaximizationClusters = '/api/calc/getExpectationMaximizationClusters',
+// 	getDbscan = '/api/calc/getDBSCANClusters',
+// 	getMeanShiftClusters = '/api/calc/getMeanShiftClusters',
+// 	getKMeansClusters = '/api/calc/getKMeansClusters'
+// }
 
 const pointsGroupController = 'pointsGroup';
 export const pointsGroupApi = {
-	savePointsGroup: `/api/${pointsGroupController}/addPointsGroup`,
+	getPointsGroups: `/api/${pointsGroupController}/getPointsGroups`,
+	addPointsGroup: `/api/${pointsGroupController}/addPointsGroup`,
+	createPointsGroup: `/api/${pointsGroupController}/createPointsGroup`,
+	savePointsGroup: `/api/${pointsGroupController}/savePointsGroup`,
 	deletePointsGroup: (pointsGroupId: number) =>
 		`/api/${pointsGroupController}/deletePointsGroup/${pointsGroupId}`
-};
-
-const pointsGroupControllerName = 'pointsGroup';
-export const pointsApi = {
-	getPointsGroups: `api/${pointsGroupControllerName}/getPointsGroups`
 };
 
 export enum clusterTypes {

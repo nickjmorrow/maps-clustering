@@ -3,23 +3,24 @@ import {
 	IInitialInputInfo,
 	ITextInputInfo,
 	TextInput,
-	Typography
+	Typography,
+	authSelectors
 } from 'njm-react-component-library';
 import * as React from 'react';
-import { createPointsGroup } from '../actions';
+import { addPointsGroup, createPointsGroup } from '../actions';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { IReduxState } from 'src/reducer';
+
+const { getIsAuthenticated } = authSelectors;
 
 export class FileUploadFormInternal extends React.PureComponent<
-	IDispatchProps,
+	IProps,
 	typeof initialState
 > {
 	readonly state = initialState;
 
 	handleFileChange = (fileList: FileList | null) => {
-		// this.setState(prevState => ({
-		// 	inputInfo: { ...prevState.inputInfo, value: file }
-		// }));
 		if (fileList && fileList.length) {
 			const file = new FormData();
 			file.append('file', fileList[0]);
@@ -27,7 +28,16 @@ export class FileUploadFormInternal extends React.PureComponent<
 				file,
 				name: this.state.textInputInfo.value
 			};
-			this.props.onCreatePointsGroup(pointsGroupInput);
+			const {
+				isAuthenticated,
+				onCreatePointsGroup,
+				onAddPointsGroup
+			} = this.props;
+			if (isAuthenticated) {
+				onAddPointsGroup(pointsGroupInput);
+			} else {
+				onCreatePointsGroup(pointsGroupInput);
+			}
 		}
 	};
 
@@ -68,20 +78,32 @@ const initialState = {
 	} as ITextInputInfo
 };
 
-interface IDispatchProps {
-	onCreatePointsGroup: typeof createPointsGroup.request;
+interface IReduxProps {
+	isAuthenticated: boolean;
 }
 
+interface IDispatchProps {
+	onCreatePointsGroup: typeof createPointsGroup.request;
+	onAddPointsGroup: typeof addPointsGroup.request;
+}
+
+type IProps = IReduxProps & IDispatchProps;
+
 // redux
+const mapStateToProps = (state: IReduxState) => ({
+	isAuthenticated: getIsAuthenticated(state)
+});
+
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
-			onCreatePointsGroup: createPointsGroup.request
+			onCreatePointsGroup: createPointsGroup.request,
+			onAddPointsGroup: addPointsGroup.request
 		},
 		dispatch
 	);
 
 export const FileUploadForm = connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(FileUploadFormInternal);

@@ -28,14 +28,24 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> AddPointsGroup([FromBody] IFormFile file)
+        public async Task<IActionResult> AddPointsGroup(IFormFile file)
         {
+            if (file.Length == 0)
+            {
+                return BadRequest("The file did not exist.");
+            }
+            
             return Ok(await this._pointsGroupService.AddPointsGroupAsync(this._userId, file));
         }
 
         [HttpPost("[action]")]
         public IActionResult CreatePointsGroup([FromBody] IFormFile file)
         {
+            if (file.Length == 0)
+            {
+                return BadRequest("The file did not exist.");
+            }
+            
             return Ok(this._pointsGroupService.CreatePointsGroupAsync(file));
         }
 

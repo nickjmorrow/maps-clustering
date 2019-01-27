@@ -112,9 +112,7 @@ export const dataReducer = (
 				...state,
 				pointsGroups: newPointsGroups,
 				clusterCount: Math.min(
-					(activePointsGroup.ahcInfo &&
-						activePointsGroup.ahcInfo!.ahcPoints!.length) ||
-						state.clusterCount,
+					activePointsGroup.ahcInfo.ahcPoints.length,
 					state.clusterCount
 				)
 			};

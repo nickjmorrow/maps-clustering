@@ -2,13 +2,11 @@ import { IOption } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { getAhcs } from 'src/Data';
 import { clusterTypes } from 'src/Data/constants';
 import { IPointsGroup } from 'src/Data/types';
 import { IReduxState } from 'src/reducer';
 import { AhcParameters } from '.';
 import { setClusterCount } from 'src/Data/actions';
-// import { getDbscan } from 'src/Data/actions';
 
 export class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;
@@ -22,11 +20,6 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 		this.setState({
 			maximumDistanceBetweenPoints
 		});
-
-	handleGetAhcs = () => {
-		const { onGetAhcs, pointsGroups } = this.props;
-		onGetAhcs(pointsGroups.find(pg => pg.isActive)!);
-	};
 
 	handleClusterCountChangeInternal = (clusterCount: number) => {
 		this.props.onSetClusterCount(clusterCount);
@@ -57,9 +50,6 @@ export class ParametersInternal extends React.PureComponent<IProps, IState> {
 						onClusterCountChange={
 							this.handleClusterCountChangeInternal
 						}
-						onGetAgglomerativeHierarchicalClusters={
-							this.handleGetAhcs
-						}
 					/>
 				);
 			default:
@@ -75,7 +65,6 @@ interface IOwnProps {
 
 interface IDispatchProps {
 	onSetClusterCount: typeof setClusterCount;
-	onGetAhcs: typeof getAhcs.request;
 }
 
 interface IReduxProps {
@@ -95,7 +84,6 @@ const mapStateToProps = (state: IReduxState): IReduxProps => ({
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			onGetAhcs: getAhcs.request,
 			onSetClusterCount: setClusterCount
 		},
 		dispatch

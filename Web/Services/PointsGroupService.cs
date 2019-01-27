@@ -75,17 +75,18 @@ namespace Web.Services
             // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
             var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
+            pointsGroup.ItemId = itemId;
             
-            // add pointsGroup
             await this._context.PointsGroups.AddAsync(pointsGroup);
             await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
             await this._context.SaveChangesAsync();
-                
-            // label points with pointsGroupId
-            var points = this.AssignPointsToPointsGroup(pointsGroup);
 
-            // add associated points 
-            await this._context.Points.AddRangeAsync(points);
+            pointsGroup.AhcInfoJson = JsonConvert.SerializeObject(new AhcInfo()
+            {
+                AhcPoints = this.GetAhcPoints(pointsGroup.Points)
+            });
+            
+            this._context.Update(pointsGroup);
             await this._context.SaveChangesAsync();
 
             return this.GetPointsGroupDto(pointsGroup, this._context.Items.Single(i => i.ItemId == itemId));
@@ -120,7 +121,7 @@ namespace Web.Services
                 Name = pointsGroupDto.Name,
                 AverageHorizontalDisplacement = pointsGroupDto.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroupDto.AverageVerticalDisplacement,
-                Points = pointsGroupDto.Points,
+                Points = pointsGroupDto.Points.ToList(),
                 AhcInfoJson = JsonConvert.SerializeObject(pointsGroupDto.AhcInfo)
             };
 
@@ -130,15 +131,9 @@ namespace Web.Services
 
         private IEnumerable<AhcPointDTO> GetAhcPoints(IEnumerable<Point> points)
         {
-            return this.GetAhcPoints(
-                this._ahcService.GetModel(
-                    this.GetCalcPoints(points)));
-        }
-        
-        private IEnumerable<AhcPointDTO> GetAhcPoints(
-            IEnumerable<AgglomerativeHierarchicalClusterPoint> agglomerativeHierarchicalClusterPoints)
-        {
-            return agglomerativeHierarchicalClusterPoints.Select(ahcp => new AhcPointDTO
+            var calcPoints = this.GetCalcPoints(points);
+            var ahcPoints = this._ahcService.GetModel(calcPoints);
+            return ahcPoints.Select(ahcp => new AhcPointDTO
             {
                 PointId = ahcp.PointId,
                 Name = ahcp.Name,
@@ -169,7 +164,7 @@ namespace Web.Services
             });
         } 
         
-        private IEnumerable<Point> AssignPointsToPointsGroup(PointsGroup pointsGroup)
+        private IEnumerable<Point> FormatPoints(PointsGroup pointsGroup)
         {
             if (pointsGroup.PointsGroupId == null)
             {

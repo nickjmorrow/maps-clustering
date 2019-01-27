@@ -13,7 +13,7 @@ export interface ClusteredPoint extends IPoint {
 }
 
 export interface AgglomerativeHierarchicalClusterPoint extends IPoint {
-	agglomerativeHierarchicalClusterInfos: ClusterInfo[];
+	clusterInfos: ClusterInfo[];
 }
 
 export interface ClusterInfo {
@@ -35,7 +35,7 @@ export interface IPointsGroup {
 	itemId?: number;
 	points: IPoint[];
 	isActive: boolean;
-	ahcInfo?: IAhcInfo;
+	ahcInfo: IAhcInfo;
 	dateCreated: Date;
 	itemPermissionType: ItemPermissionType;
 	pointsColors: string[];

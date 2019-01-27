@@ -4,23 +4,25 @@ import {
 	createPointsGroup,
 	dataTypeKeys,
 	deletePointsGroup,
-	getAhcs,
 	getPointsGroups,
 	populatePointsGroupsStateFromLocalStorageIfAvailable,
-	savePointsGroup
+	savePointsGroup,
+	addPointsGroup
 } from './actions';
-import {
-	calcApi,
-	fileApi,
-	formHeaders,
-	localStorageKeys,
-	pointsApi,
-	pointsGroupApi
-} from './constants';
+import { formHeaders, localStorageKeys, pointsGroupApi } from './constants';
 import { IPointsGroup } from './types';
 
-function* watchCreatePointsGroup() {
-	yield takeLatest(dataTypeKeys.CREATE_POINTS_GROUP, createPointsGroupAsync);
+function* handleGetPointsGroupsAsync() {
+	try {
+		const { data } = yield call(axios.get, pointsGroupApi.getPointsGroups);
+		yield put(getPointsGroups.success(data));
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+function* watchGetPointsGroups() {
+	yield takeEvery(dataTypeKeys.GET_POINTS_GROUPS, handleGetPointsGroupsAsync);
 }
 
 function* createPointsGroupAsync(
@@ -30,7 +32,7 @@ function* createPointsGroupAsync(
 		const { name, file } = action.payload;
 		const { data } = yield call(
 			axios.post,
-			fileApi.upload,
+			pointsGroupApi.createPointsGroup,
 			file,
 			formHeaders
 		);
@@ -52,29 +54,29 @@ function* createPointsGroupAsync(
 	}
 }
 
-function* watchGetAhcs() {
-	yield takeLatest(dataTypeKeys.GET_AHCS, handleGetAhcsAsync);
+function* watchCreatePointsGroup() {
+	yield takeLatest(dataTypeKeys.CREATE_POINTS_GROUP, createPointsGroupAsync);
 }
 
-function* handleGetAhcsAsync(action: ReturnType<typeof getAhcs.request>) {
-	const { points } = action.payload;
+function* addPointsGroupAsync(
+	action: ReturnType<typeof addPointsGroup.request>
+) {
 	try {
+		const { file } = action.payload;
 		const { data } = yield call(
 			axios.post,
-			calcApi.getAgglomerativeHierarchicalClusters,
-			points
+			pointsGroupApi.addPointsGroup,
+			file,
+			formHeaders
 		);
-		const pointsGroup: IPointsGroup = {
-			...action.payload,
-			ahcInfo: {
-				ahcPoints: data,
-				clusterSummaryInfo: []
-			}
-		};
-		yield put(getAhcs.success(pointsGroup));
+		yield put(addPointsGroup.success(data));
 	} catch (error) {
-		yield put(getAhcs.failure(error));
+		yield put(addPointsGroup.failure(error));
 	}
+}
+
+function* watchAddPointsGroup() {
+	yield takeLatest(dataTypeKeys.ADD_POINTS_GROUP, addPointsGroupAsync);
 }
 
 function* handlePopulatePointsGroupsFromLocalStorageIfAvailable() {
@@ -99,19 +101,6 @@ function* watchPopulatePointsGroupsFromLocalStorageIfAvailable() {
 		dataTypeKeys.POPULATE_POINTS_GROUPS_STATE_FROM_LOCAL_STORAGE_IF_AVAILABLE,
 		handlePopulatePointsGroupsFromLocalStorageIfAvailable
 	);
-}
-
-function* handleGetPointsGroupsAsync() {
-	try {
-		const { data } = yield call(axios.get, pointsApi.getPointsGroups);
-		yield put(getPointsGroups.success(data));
-	} catch (error) {
-		console.error(error);
-	}
-}
-
-function* watchGetPointsGroups() {
-	yield takeEvery(dataTypeKeys.GET_POINTS_GROUPS, handleGetPointsGroupsAsync);
 }
 
 function* handleSavePointsGroupAsync(
@@ -159,10 +148,10 @@ function* watchDeletePointsGroup() {
 }
 
 export const dataSagas = [
-	watchCreatePointsGroup,
-	watchGetAhcs,
-	watchPopulatePointsGroupsFromLocalStorageIfAvailable,
 	watchGetPointsGroups,
+	watchAddPointsGroup,
+	watchCreatePointsGroup,
 	watchSavePointsGroup,
-	watchDeletePointsGroup
+	watchDeletePointsGroup,
+	watchPopulatePointsGroupsFromLocalStorageIfAvailable
 ];

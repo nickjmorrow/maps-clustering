@@ -3,16 +3,13 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { ClusteredPoint, IPointsGroup } from '../types';
 import { clusterTypes } from '../constants';
-import { getAhcs } from '../actions';
-import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { IReduxState } from 'src/reducer';
 
 export const ClustersInternal: React.SFC<IProps> = ({
 	activePointsGroup,
 	currentClusterOption,
-	clusterCount,
-	onGetAhcs
+	clusterCount
 }) => {
 	if (!activePointsGroup) {
 		return null;
@@ -20,8 +17,7 @@ export const ClustersInternal: React.SFC<IProps> = ({
 	const clusteredPoints = getClusters(
 		currentClusterOption,
 		clusterCount,
-		activePointsGroup,
-		onGetAhcs
+		activePointsGroup
 	);
 	const clusterIds = clusteredPoints.reduce(
 		(agg, cp) => {
@@ -33,12 +29,9 @@ export const ClustersInternal: React.SFC<IProps> = ({
 		},
 		[] as number[]
 	);
-	const includeClusterLabelling =
-		clusterIds.length !== clusteredPoints.length;
 	const asRenderedPoints = (p: ClusteredPoint) => (
 		<Typography key={p.pointId}>{p.name}</Typography>
 	);
-	const renderedUnclusteredPoints = clusteredPoints.map(asRenderedPoints);
 	const renderedClusteredPoints = clusterIds
 		.sort((a: number, b: number) => a - b)
 		.map((c: number) => {
@@ -50,13 +43,7 @@ export const ClustersInternal: React.SFC<IProps> = ({
 				</Cluster>
 			);
 		});
-	return (
-		<Wrapper>
-			{includeClusterLabelling
-				? renderedClusteredPoints
-				: renderedUnclusteredPoints}
-		</Wrapper>
-	);
+	return <Wrapper>{renderedClusteredPoints}</Wrapper>;
 };
 
 // types
@@ -66,32 +53,18 @@ interface IOwnProps {
 	clusterCount: number;
 }
 
-interface IDispatchProps {
-	onGetAhcs: typeof getAhcs.request;
-}
-
 interface IReduxProps {
 	clusterCount: number;
 }
 
-type IProps = IDispatchProps & IOwnProps & IReduxProps;
+type IProps = IOwnProps & IReduxProps;
 
 // redux
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
 	clusterCount: state.data.clusterCount
 });
-const mapDispatchToProps = (dispatch: Dispatch) =>
-	bindActionCreators(
-		{
-			onGetAhcs: getAhcs.request
-		},
-		dispatch
-	);
 
-export const Clusters = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(ClustersInternal);
+export const Clusters = connect(mapStateToProps)(ClustersInternal);
 
 // css
 const Cluster = styled<{ color: string }, 'div'>('div')`
@@ -113,43 +86,21 @@ const Wrapper = styled.div`
 const getClusters = (
 	currentClusterOption: IOption,
 	clusterCount: number,
-	activePointsGroup: IPointsGroup,
-	onGetAhcs: (pointsGroup: IPointsGroup) => void
+	activePointsGroup: IPointsGroup
 ): ClusteredPoint[] => {
-	if (!activePointsGroup || !activePointsGroup.points) {
-		return [];
-	}
 	const unclusteredPoints = activePointsGroup.points.map(p => ({
 		...p,
 		clusterId: p.pointId
 	}));
 
-	if (currentClusterOption.value === clusterTypes.none) {
-		return unclusteredPoints;
-	}
-
 	switch (currentClusterOption.value) {
+		case clusterTypes.none:
+			return unclusteredPoints;
 		case clusterTypes.ahcs:
-			// if clusterInfo is not present, request for it and return
-			// unclustered points
-			if (
-				activePointsGroup.ahcInfo === undefined ||
-				activePointsGroup.ahcInfo.ahcPoints === undefined ||
-				activePointsGroup.ahcInfo.ahcPoints[0]
-					.agglomerativeHierarchicalClusterInfos.length <
-					clusterCount - 1
-			) {
-				onGetAhcs(activePointsGroup);
-				return unclusteredPoints;
-			}
-
 			return activePointsGroup.ahcInfo.ahcPoints.map(ahc => {
 				return {
 					...ahc,
-					clusterId:
-						ahc.agglomerativeHierarchicalClusterInfos[
-							clusterCount - 1
-						].clusterId
+					clusterId: ahc.clusterInfos[clusterCount - 1].clusterId
 				};
 			});
 		default:

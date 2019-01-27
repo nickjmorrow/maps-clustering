@@ -161,15 +161,10 @@ const getFillColorFunc = (
 	switch (currentClusterOption.value) {
 		case clusterTypes.ahcs:
 			const ahcPoints = pointsForMap as AgglomerativeHierarchicalClusterPoint[];
-			const canUseAhcs =
-				ahcPoints[0].agglomerativeHierarchicalClusterInfos;
+			const canUseAhcs = ahcPoints[0].clusterInfos;
 			const ahcFillColorFunc = (
 				p: AgglomerativeHierarchicalClusterPoint
-			) =>
-				markerColors[
-					p.agglomerativeHierarchicalClusterInfos[clusterCount - 1]
-						.clusterId
-				];
+			) => markerColors[p.clusterInfos[clusterCount - 1].clusterId];
 			return canUseAhcs ? ahcFillColorFunc : defaultFillColorFunc;
 		default:
 			return defaultFillColorFunc;

@@ -19,6 +19,6 @@ namespace WebApplication.Models
         public int ItemId { get; set; }
         public string AhcInfoJson { get; set; }
         
-        public IEnumerable<Point> Points { get; set; }
+        public ICollection<Point> Points { get; set; }
     }
 }

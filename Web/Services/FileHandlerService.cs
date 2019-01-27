@@ -26,10 +26,10 @@ namespace WebApplication.Services
         {
             var json = this._fileConversionService.ConvertFileToJson(file);
             var points = this.ParseJsonToPoints(json);
-            return this.BuildPointsGroup(points);
+            return this.BuildPointsGroup(points, this.FormatFileName(file.FileName));
         }
-
-        private PointsGroup BuildPointsGroup(IEnumerable<Point> points)
+        
+        private PointsGroup BuildPointsGroup(IEnumerable<Point> points, string fileName)
         {
             var averageHorizontalDisplacement = points
                 .Select(p => p.HorizontalDisplacement)
@@ -41,7 +41,8 @@ namespace WebApplication.Services
 
             return new PointsGroup()
             {
-                Points = points,
+                Name = fileName,
+                Points = points.ToList(),
                 AverageHorizontalDisplacement = averageHorizontalDisplacement,
                 AverageVerticalDisplacement = averageVerticalDisplacement
             };
@@ -55,13 +56,17 @@ namespace WebApplication.Services
                 var coordinates = p["Point"]["coordinates"].ToString().Trim().Split(",");
                 return new Point()
                 {
-                    PointId = i,
                     Name = name,
                     HorizontalDisplacement = Convert.ToDouble(coordinates[0]),
                     VerticalDisplacement = Convert.ToDouble(coordinates[1]),
                 };
             });
             
+        }
+        
+        private string FormatFileName(string initialFileName)
+        {
+            return initialFileName.Split(".")[0];
         }
     }
 }

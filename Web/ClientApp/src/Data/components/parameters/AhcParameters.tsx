@@ -1,5 +1,5 @@
+import { Slider, Typography } from 'njm-react-component-library';
 import * as React from 'react';
-import { Typography, Button, Slider } from 'njm-react-component-library';
 import { IPoint } from 'src/Data/types';
 
 export const AhcParameters: React.SFC<IProps> = ({
@@ -7,8 +7,7 @@ export const AhcParameters: React.SFC<IProps> = ({
 	max,
 	clusterCount,
 	points,
-	onClusterCountChange: handleClusterCountChange,
-	onGetAgglomerativeHierarchicalClusters: handleGetAgglomerativeHierarchicalClusters
+	onClusterCountChange: handleClusterCountChange
 }) => {
 	const handleClusterCountChangeInternal = (newIterations: number) =>
 		handleClusterCountChange(
@@ -24,9 +23,6 @@ export const AhcParameters: React.SFC<IProps> = ({
 				value={iterations}
 				onChange={handleClusterCountChangeInternal}
 			/>
-			<Button onClick={handleGetAgglomerativeHierarchicalClusters}>
-				Load AHCs
-			</Button>
 		</div>
 	);
 };
@@ -48,5 +44,4 @@ interface IProps {
 	clusterCount: number;
 	points: IPoint[];
 	onClusterCountChange(value: number): void;
-	onGetAgglomerativeHierarchicalClusters(): void;
 }

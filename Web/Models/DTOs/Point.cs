@@ -6,7 +6,7 @@ namespace WebApplication.Models.DTOs
     [Table("points", Schema="dbo")]
     public class Point
     {
-        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PointId { get; set; }
         public string Name { get; set; }
         public double HorizontalDisplacement { get; set; }
