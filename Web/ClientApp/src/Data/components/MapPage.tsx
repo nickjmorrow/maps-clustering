@@ -85,7 +85,7 @@ const PointsGroupAndParametersWrapper = styled.div`
 const FlexColumn = styled.div`
 	display: flex;
 	flex-direction: column;
-	width: max-content;
+	width: 300px;
 `;
 
 const MapControls = styled.div`

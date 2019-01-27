@@ -116,7 +116,6 @@ type IState = typeof initialState;
 const PointsGroupWrapper = styled<{ isActive: boolean }, 'div'>('div')`
 	padding: 6px;
 	border-radius: ${borderRadius.default};
-	width: 12em;
 	display: flex;
 	justify-content: space-between;
 	cursor: pointer;
