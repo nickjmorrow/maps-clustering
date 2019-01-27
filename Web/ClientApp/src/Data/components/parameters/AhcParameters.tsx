@@ -1,6 +1,6 @@
 import { Slider, Typography } from 'njm-react-component-library';
 import * as React from 'react';
-import { IPoint } from 'src/Data/types';
+import { IPoint } from '../../types';
 
 export const AhcParameters: React.SFC<IProps> = ({
 	min,

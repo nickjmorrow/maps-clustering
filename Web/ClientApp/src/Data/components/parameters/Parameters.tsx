@@ -2,11 +2,11 @@ import { IOption } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { clusterTypes } from 'src/Data/constants';
-import { IPointsGroup } from 'src/Data/types';
-import { IReduxState } from 'src/reducer';
+import { clusterTypes } from '../../constants';
+import { IPointsGroup } from '../../types';
+import { IReduxState } from '../../../reducer';
 import { AhcParameters } from '.';
-import { setClusterCount } from 'src/Data/actions';
+import { setClusterCount } from '../../actions';
 
 export class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;

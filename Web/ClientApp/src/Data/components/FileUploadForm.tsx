@@ -7,7 +7,7 @@ import {
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { IReduxState } from 'src/reducer';
+import { IReduxState } from '../../reducer';
 import { addPointsGroup, createPointsGroup } from '../actions';
 
 const { getIsAuthenticated } = authSelectors;

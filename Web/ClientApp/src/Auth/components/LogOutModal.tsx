@@ -5,7 +5,7 @@ import {
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch, Action } from 'redux';
-import { onRemoveUnsavedPointsGroups } from 'src/Data';
+import { onRemoveUnsavedPointsGroups } from '../../Data';
 
 const { onLogOut } = authActions;
 

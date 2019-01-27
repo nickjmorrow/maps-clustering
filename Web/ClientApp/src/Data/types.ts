@@ -1,5 +1,5 @@
 import { IOption } from 'njm-react-component-library/lib/types';
-import { ItemPermissionType } from 'src/Core';
+import { ItemPermissionType } from '../Core';
 
 export interface IPoint {
 	pointId: number;

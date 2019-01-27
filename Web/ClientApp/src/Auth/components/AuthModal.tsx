@@ -6,7 +6,7 @@ import { ILoginInfo } from 'njm-react-component-library/lib/Auth/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { getPointsGroups } from 'src/Data';
+import { getPointsGroups } from '../../Data';
 
 const { onLogin, onRegister } = authActions;
 

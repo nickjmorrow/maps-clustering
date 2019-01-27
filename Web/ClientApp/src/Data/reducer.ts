@@ -1,4 +1,4 @@
-import { getColors, ItemPermissionType } from 'src/Core';
+import { getColors, ItemPermissionType } from '../Core';
 import { ActionType } from 'typesafe-actions';
 import * as actions from './actions';
 import { dataTypeKeys } from './actions';
@@ -13,7 +13,7 @@ export interface IDataState {
 	readonly currentClusterOption: IOption;
 }
 
-const initialState: IDataState = {
+export const initialState: IDataState = {
 	pointsGroups: [],
 	error: '',
 	clusterCount: 1,
@@ -26,11 +26,9 @@ const initialState: IDataState = {
 // TODO: add tests
 
 export const dataReducer = (
-	state: IDataState,
+	state: IDataState = initialState,
 	action: ActionType<typeof actions>
 ): IDataState => {
-	state = state || initialState;
-
 	switch (action.type) {
 		case dataTypeKeys.GET_POINTS_GROUPS_SUCCEEDED:
 			const combinedPointsGroups = [

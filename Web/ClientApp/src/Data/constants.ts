@@ -1,5 +1,5 @@
 import { IOption } from 'njm-react-component-library';
-import { apiKey } from 'src/secrets';
+import { apiKey } from '../secrets';
 
 // export enum fileApi {
 // 	get = '/api/data/get',

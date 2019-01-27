@@ -89,15 +89,15 @@
     "proxy": "http://localhost:5002/",
     "jest": {
         "collectCoverageFrom": [
-            "src/**/*.{js,jsx,ts,tsx}",
+            "../../**/*.{js,jsx,ts,tsx}",
             "!**/*.d.ts"
         ],
         "setupFiles": [
             "<rootDir>/config/polyfills.js"
         ],
         "testMatch": [
-            "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
-            "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"
+            "<rootDir>/../../**/__tests__/**/*.(j|t)s?(x)",
+            "<rootDir>/../../**/?(*.)(spec|test).(j|t)s?(x)"
         ],
         "testEnvironment": "node",
         "testURL": "http://localhost",
@@ -125,12 +125,7 @@
             "json",
             "node",
             "mjs"
-        ],
-        "globals": {
-            "ts-jest": {
-                "tsConfigFile": "/Users/nicholasmorrow/Projects/playground/WebApp/ClientApp/tsconfig.test.json"
-            }
-        }
+        ]
     },
     "babel": {
         "presets": [

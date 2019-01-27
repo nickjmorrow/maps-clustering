@@ -3,8 +3,8 @@ package-lock.json
 config/
 .vscode/
 scripts/
-/src/secrets.ts
-src/Core
-src/Items
-src/Spells
-src/Wizards
+/../../secrets.ts
+../../Core
+../../Items
+../../Spells
+../../Wizards

@@ -1,7 +1,7 @@
 import { colors, IOption, Typography } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IReduxState } from 'src/reducer';
+import { IReduxState } from '../../reducer';
 import styled from 'styled-components';
 import { Clusters, Map, Parameters } from '../';
 import { clusterOptions, clusterTypes } from '../constants';

@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { ItemPermissionType } from 'src/Core';
+import { ItemPermissionType } from '../../Core';
 import styled from 'styled-components';
 import { deletePointsGroup, setActivePointsGroup } from '../actions';
 import { IPointsGroup } from '../types';

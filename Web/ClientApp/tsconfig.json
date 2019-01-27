@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
+        "baseUrl": "src",
         "outDir": "build/dist",
         "module": "es2015",
         "target": "es6",
@@ -18,7 +18,11 @@
         "strictNullChecks": true,
         "suppressImplicitAnyIndexErrors": true,
         "noUnusedLocals": true,
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "paths": {
+            "Data/*": ["../../Data/*"],
+            "Core/*": ["../../Core/*"]
+        }
     },
     "exclude": [
         "node_modules",
@@ -27,6 +31,6 @@
         "acceptance-tests",
         "webpack",
         "jest",
-        "src/setupTests.ts"
+        "../../setupTests.ts"
     ]
 }

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ClusteredPoint, IPointsGroup } from '../types';
 import { clusterTypes } from '../constants';
 import { connect } from 'react-redux';
-import { IReduxState } from 'src/reducer';
+import { IReduxState } from '../../reducer';
 
 export const ClustersInternal: React.SFC<IProps> = ({
 	activePointsGroup,
