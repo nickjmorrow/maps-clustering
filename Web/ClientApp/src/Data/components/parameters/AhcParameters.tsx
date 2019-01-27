@@ -2,6 +2,7 @@ import { Slider, Typography } from 'njm-react-component-library';
 import * as React from 'react';
 import { IPoint } from '../../types';
 import styled from 'styled-components';
+import { TitleWrapper } from '../../../Core/components';
 
 export const AhcParameters: React.SFC<IProps> = ({
 	min,
@@ -18,7 +19,9 @@ export const AhcParameters: React.SFC<IProps> = ({
 	// const iterations = convertClusterCountToIterations(clusterCount, points);
 	return (
 		<Wrapper>
-			<Typography variant="h2">Number of Clusters</Typography>
+			<TitleWrapper>
+				<Typography variant="h2">Number of Clusters</Typography>
+			</TitleWrapper>
 			<Slider
 				min={min}
 				max={max}

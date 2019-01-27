@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { IReduxState } from '../../reducer';
 import { addPointsGroup, createPointsGroup } from '../../Data/actions';
+import styled from 'styled-components';
+import { TitleWrapper } from './TitleWrapper';
 
 const { getIsAuthenticated } = authSelectors;
 
@@ -38,16 +40,28 @@ export class FileUploadFormInternal extends React.PureComponent<
 	render() {
 		const { inputInfo } = this.state;
 		return (
-			<div>
-				<Typography variant="h2">{'Upload Points Group'}</Typography>
+			<Wrapper>
+				<TitleWrapper>
+					<Typography variant="h2">
+						{'Upload Points Group'}
+					</Typography>
+				</TitleWrapper>
 				<FileInput
 					inputInfo={inputInfo}
 					onChange={this.handleFileChange}
 				/>
-			</div>
+			</Wrapper>
 		);
 	}
 }
+
+// css
+const Wrapper = styled.div`
+	grid-area: fileuploadform;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`;
 
 // types
 const initialState = {

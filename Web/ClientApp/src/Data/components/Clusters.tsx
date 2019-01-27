@@ -2,6 +2,7 @@ import { Typography } from 'njm-react-component-library';
 import * as React from 'react';
 import styled from 'styled-components';
 import { ClusteredPoint, IPointsGroup } from '../types';
+import { TitleWrapper } from '../../Core/components';
 
 export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 	if (!activePointsGroup) {
@@ -26,8 +27,10 @@ export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 		});
 	return (
 		<Wrapper>
-			<Typography variant="h2">Clusters</Typography>
-			{renderedClusteredPoints}
+			<TitleWrapper>
+				<Typography variant="h2">Clusters</Typography>
+			</TitleWrapper>
+			<ClustersWrapper>{renderedClusteredPoints}</ClustersWrapper>
 		</Wrapper>
 	);
 };
@@ -39,17 +42,23 @@ interface IOwnProps {
 
 // css
 const Cluster = styled<{ color: string }, 'div'>('div')`
-	width: 300px;
+	width: max-content;
 	border-left: 5px solid ${props => props.color};
 	margin-bottom: 8px;
 	padding-left: 6px;
 `;
 
-const Wrapper = styled.div`
+const ClustersWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
-	min-height: 500px;
+	grid-area: clusters;
+`;
+
+const Wrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 `;
 
 // helpers
