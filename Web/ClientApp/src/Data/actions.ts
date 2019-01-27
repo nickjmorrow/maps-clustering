@@ -84,8 +84,10 @@ export const populatePointsGroupsStateFromLocalStorageIfAvailable = {
 export const setActivePointsGroup = (payload: number) =>
 	action(dataTypeKeys.SET_ACTIVE_POINTS_GROUP, payload);
 
-export const setClusterCount = (payload: number) =>
-	action(dataTypeKeys.SET_CLUSTER_COUNT, payload);
+export const setClusterCount = (payload: {
+	pointsGroupId: number | undefined;
+	clusterCount: number;
+}) => action(dataTypeKeys.SET_CLUSTER_COUNT, payload);
 
 export const onRemoveUnsavedPointsGroups = () =>
 	action(dataTypeKeys.REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS);

@@ -38,6 +38,7 @@ export interface IPointsGroup {
 	ahcInfo: IAhcInfo;
 	itemPermissionType: ItemPermissionType;
 	pointsColors: string[];
+	clusterCount: number;
 }
 
 export interface IAhcInfo {

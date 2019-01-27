@@ -12,16 +12,17 @@ export const AhcParameters: React.SFC<IProps> = ({
 }) => {
 	const handleClusterCountChangeInternal = (newIterations: number) =>
 		handleClusterCountChange(
-			convertIterationsToClusterCount(newIterations, points)
+			newIterations
+			// convertIterationsToClusterCount(newIterations, points)
 		);
-	const iterations = convertClusterCountToIterations(clusterCount, points);
+	// const iterations = convertClusterCountToIterations(clusterCount, points);
 	return (
 		<Wrapper>
 			<Typography variant="h2">Number of Clusters</Typography>
 			<Slider
 				min={min}
 				max={max}
-				value={iterations}
+				value={clusterCount}
 				onChange={handleClusterCountChangeInternal}
 			/>
 		</Wrapper>
@@ -29,14 +30,14 @@ export const AhcParameters: React.SFC<IProps> = ({
 };
 
 // helpers
-const convertIterationsToClusterCount = (
-	iterations: number,
-	points: IPoint[]
-) => points.length - iterations + 1;
-const convertClusterCountToIterations = (
-	clusterCount: number,
-	points: IPoint[]
-) => 1 + points.length - clusterCount;
+// const convertIterationsToClusterCount = (
+// 	iterations: number,
+// 	points: IPoint[]
+// ) => points.length - iterations + 1;
+// const convertClusterCountToIterations = (
+// 	clusterCount: number,
+// 	points: IPoint[]
+// ) => 1 + points.length - clusterCount;
 
 // types
 interface IProps {

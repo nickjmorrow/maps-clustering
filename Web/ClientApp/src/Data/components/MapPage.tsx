@@ -13,15 +13,13 @@ import { Summary } from './Summary';
 export const MapPageInternal: React.SFC<IReduxProps> = ({
 	pointsGroups,
 	activePointsGroup,
-	clusterCount,
 	currentClusterOption
 }) => {
 	if (!activePointsGroup) {
 		return null;
 	}
-	const { pointsColors } = activePointsGroup;
 
-	const markers = getMarkers(activePointsGroup, clusterCount, pointsColors);
+	const markers = getMarkers(activePointsGroup);
 
 	const defaultPosition = activePointsGroup && {
 		lat: activePointsGroup.averageVerticalDisplacement,
@@ -55,7 +53,6 @@ export const MapPageInternal: React.SFC<IReduxProps> = ({
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
 	pointsGroups: state.data.pointsGroups,
 	activePointsGroup: getActivePointsGroup(state),
-	clusterCount: state.data.clusterCount,
 	currentClusterOption: state.data.currentClusterOption
 });
 
@@ -68,7 +65,6 @@ export const MapPage = connect(
 interface IReduxProps {
 	readonly pointsGroups: IPointsGroup[];
 	readonly activePointsGroup: IPointsGroup;
-	readonly clusterCount: number;
 	readonly currentClusterOption: IOption;
 }
 
@@ -97,11 +93,8 @@ const FlexRow = styled.div`
 `;
 
 // helpers
-const getMarkers = (
-	activePointsGroup: IPointsGroup,
-	clusterCount: number,
-	pointsColors: string[]
-) => {
+const getMarkers = (activePointsGroup: IPointsGroup) => {
+	const { clusterCount, pointsColors, points } = activePointsGroup;
 	return activePointsGroup.ahcInfo.ahcPoints.map(mp => ({
 		position: {
 			lat: mp.verticalDisplacement,
@@ -111,7 +104,10 @@ const getMarkers = (
 			text: mp.name
 		},
 		icon: {
-			fillColor: pointsColors[mp.clusterInfos[clusterCount - 1].clusterId]
+			fillColor:
+				pointsColors[
+					mp.clusterInfos[points.length - clusterCount].clusterId
+				]
 		}
 	}));
 };

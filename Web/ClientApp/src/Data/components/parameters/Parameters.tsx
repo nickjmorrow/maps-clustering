@@ -7,21 +7,27 @@ import { IPointsGroup } from '../../types';
 import { IReduxState } from '../../../reducer';
 import { AhcParameters } from './AhcParameters';
 import { setClusterCount } from '../../actions';
+import { getActivePointsGroup } from '../../selectors';
 
 class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;
 
 	handleClusterCountChangeInternal = (clusterCount: number) => {
-		this.props.onSetClusterCount(clusterCount);
+		const { activePointsGroup, onSetClusterCount } = this.props;
+		onSetClusterCount({
+			pointsGroupId: activePointsGroup.pointsGroupId,
+			clusterCount
+		});
 	};
 
 	render() {
-		const { pointsGroups, clusterCount, currentClusterOption } = this.props;
-
-		const activePointsGroup = pointsGroups.find(pg => pg.isActive)!;
-		if (!activePointsGroup || !activePointsGroup.points) {
+		const { activePointsGroup, currentClusterOption } = this.props;
+		if (!activePointsGroup) {
 			return null;
 		}
+
+		const { clusterCount } = activePointsGroup;
+
 		const { points } = activePointsGroup;
 		const minClusters = 1;
 		const maxClusters = points.length;
@@ -57,8 +63,7 @@ interface IDispatchProps {
 }
 
 interface IReduxProps {
-	readonly pointsGroups: IPointsGroup[];
-	readonly clusterCount: number;
+	readonly activePointsGroup: IPointsGroup;
 }
 
 type IProps = IOwnProps & IDispatchProps & IReduxProps;
@@ -67,8 +72,7 @@ type IState = typeof initialState;
 
 // redux
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
-	pointsGroups: state.data.pointsGroups,
-	clusterCount: state.data.clusterCount
+	activePointsGroup: getActivePointsGroup(state)
 });
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(

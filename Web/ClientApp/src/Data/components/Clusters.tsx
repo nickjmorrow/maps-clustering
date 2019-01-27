@@ -1,17 +1,13 @@
 import { Typography } from 'njm-react-component-library';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { IReduxState } from '../../reducer';
 import { ClusteredPoint, IPointsGroup } from '../types';
 
-export const ClustersInternal: React.SFC<IProps> = ({
-	activePointsGroup,
-	clusterCount
-}) => {
+export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 	if (!activePointsGroup) {
 		return null;
 	}
+	const { clusterCount } = activePointsGroup;
 	const clusteredPoints = getClusters(clusterCount, activePointsGroup);
 	const clusterIds = [...new Set(clusteredPoints.map(cp => cp.clusterId))];
 	const asRenderedPoints = (p: ClusteredPoint) => (
@@ -39,21 +35,7 @@ export const ClustersInternal: React.SFC<IProps> = ({
 // types
 interface IOwnProps {
 	readonly activePointsGroup: IPointsGroup;
-	readonly clusterCount: number;
 }
-
-interface IReduxProps {
-	readonly clusterCount: number;
-}
-
-type IProps = IOwnProps & IReduxProps;
-
-// redux
-const mapStateToProps = (state: IReduxState): IReduxProps => ({
-	clusterCount: state.data.clusterCount
-});
-
-export const Clusters = connect(mapStateToProps)(ClustersInternal);
 
 // css
 const Cluster = styled<{ color: string }, 'div'>('div')`
@@ -75,8 +57,9 @@ const getClusters = (
 	clusterCount: number,
 	activePointsGroup: IPointsGroup
 ): ClusteredPoint[] => {
+	const ahcPoints = activePointsGroup.ahcInfo.ahcPoints;
 	return activePointsGroup.ahcInfo.ahcPoints.map(ahc => ({
 		...ahc,
-		clusterId: ahc.clusterInfos[clusterCount - 1].clusterId
+		clusterId: ahc.clusterInfos[ahcPoints.length - clusterCount].clusterId
 	}));
 };

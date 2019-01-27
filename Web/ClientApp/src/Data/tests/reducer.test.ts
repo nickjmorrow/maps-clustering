@@ -24,7 +24,8 @@ const getFakePointsGroup = (id: number): IPointsGroup => ({
 	pointsColors: [''],
 	isActive: false,
 	ahcInfo: (null as unknown) as IAhcInfo,
-	itemPermissionType: ItemPermissionType.Private
+	itemPermissionType: ItemPermissionType.Private,
+	clusterCount: id
 });
 
 describe('data reducer', () => {

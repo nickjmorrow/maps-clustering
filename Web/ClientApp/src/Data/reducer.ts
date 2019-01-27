@@ -1,23 +1,21 @@
-import { getColors, ItemPermissionType } from '../Core';
+import produce from 'immer';
+import { IOption } from 'njm-react-component-library';
 import { ActionType } from 'typesafe-actions';
+import { getColors, ItemPermissionType } from '../Core';
 import * as actions from './actions';
 import { dataTypeKeys } from './actions';
-import { IPointsGroup } from './types';
 import { clusterTypes } from './constants';
-import { IOption } from 'njm-react-component-library';
-import produce from 'immer';
+import { IPointsGroup } from './types';
 
 export interface IDataState {
 	readonly error: string;
 	readonly pointsGroups: IPointsGroup[];
-	readonly clusterCount: number;
 	readonly currentClusterOption: IOption;
 }
 
 export const initialState: IDataState = {
 	pointsGroups: [],
 	error: '',
-	clusterCount: 1,
 	currentClusterOption: {
 		label: 'Agglomerative Hierarchical Clustering',
 		value: clusterTypes.ahcs
@@ -78,16 +76,10 @@ export const dataReducer = (
 				)
 			};
 		case dataTypeKeys.SET_ACTIVE_POINTS_GROUP:
-			const newPointsGroups = state.pointsGroups.map(
-				setActivePointsGroup(action.payload)
-			);
-			const activePointsGroup = newPointsGroups.find(pg => pg.isActive)!;
 			return {
 				...state,
-				pointsGroups: newPointsGroups,
-				clusterCount: Math.min(
-					activePointsGroup.ahcInfo.ahcPoints.length,
-					state.clusterCount
+				pointsGroups: state.pointsGroups.map(
+					setActivePointsGroup(action.payload)
 				)
 			};
 		case dataTypeKeys.REMOVE_SAVED_AND_PRIVATE_POINTS_GROUPS:
@@ -102,9 +94,14 @@ export const dataReducer = (
 					.map(withFirstPointsGroupActive)
 			};
 		case dataTypeKeys.SET_CLUSTER_COUNT:
+			const { pointsGroupId, clusterCount } = action.payload;
 			return {
 				...state,
-				clusterCount: action.payload
+				pointsGroups: state.pointsGroups.map(pg =>
+					pg.pointsGroupId === pointsGroupId
+						? { ...pg, clusterCount }
+						: pg
+				)
 			};
 		default:
 			return state;
@@ -132,7 +129,12 @@ const ensureActivePointsGroup = (pointsGroups: IPointsGroup[]) => {
 		: pointsGroups
 				.sort(defaultsAreLastAndDefaultsAreFirst)
 				.map(withFirstPointsGroupActive);
-	return pointsGroupsWithActive;
+	return pointsGroupsWithActive.map(pg => {
+		if (!pg.clusterCount) {
+			pg.clusterCount = pg.points.length;
+		}
+		return pg;
+	});
 };
 
 const defaultsAreLastAndDefaultsAreFirst = (pg: IPointsGroup) =>
@@ -159,7 +161,7 @@ const removeDuplicatePointsGroups = (
 const toSavedPointsGroups = (pointsGroup: IPointsGroup) =>
 	pointsGroup.pointsGroupId !== undefined;
 
-const asInactive = (pointsGroup: IPointsGroup) => ({
+const asInactive = (pointsGroup: IPointsGroup): IPointsGroup => ({
 	...pointsGroup,
 	isActive: false
 });
