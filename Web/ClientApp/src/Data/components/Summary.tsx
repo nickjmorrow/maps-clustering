@@ -34,7 +34,6 @@ const Code = styled.span`
 	padding: 4px;
 	border-radius: ${borderRadius.default};
 	font-weight: 600;
-	margin-left: 12px;
 	white-space: nowrap;
 `;
 
@@ -52,11 +51,14 @@ const FlexCenter = styled.div`
 	display: flex;
 	align-items: center;
 	flex-direction: column;
+	@media (min-width: 800px) {
+		align-items: flex-start;
+	}
 `;
 
 const TextWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
+	align-items: center;
 	width: 400px;
 `;

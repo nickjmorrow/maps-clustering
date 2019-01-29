@@ -1,7 +1,6 @@
 import { authActions, authSelectors } from 'njm-react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
 import styled from 'styled-components';
 import {
@@ -41,12 +40,10 @@ export class LandingInternal extends React.PureComponent<IProps> {
 
 	render() {
 		return (
-			<BrowserRouter>
-				<Wrapper>
-					<AppBar />
-					<MapPage />
-				</Wrapper>
-			</BrowserRouter>
+			<Wrapper>
+				<AppBar />
+				<MapPage />
+			</Wrapper>
 		);
 	}
 }

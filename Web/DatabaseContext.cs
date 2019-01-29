@@ -27,16 +27,6 @@ namespace WebApplication
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<WizardSpell>()
-                .HasKey(ws => new {ws.SpellId, ws.WizardId});
-            modelBuilder.Entity<WizardSpell>()
-                .HasOne(ws => ws.Spell)
-                .WithMany(ws => ws.WizardSpells)
-                .HasForeignKey(ws => ws.SpellId);
-            modelBuilder.Entity<WizardSpell>()
-                .HasOne(ws => ws.Wizard)
-                .WithMany(ws => ws.WizardSpells)
-                .HasForeignKey(ws => ws.WizardId);
             modelBuilder.Entity<UserFavoriteItem>()
                 .HasKey(ufi => new {ufi.ItemId, ufi.UserId});
             modelBuilder.Entity<UserItem>()

@@ -61,6 +61,10 @@ const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin: 0 auto;
+	@media (min-width: 800px) {
+		align-items: flex-start;
+	}
 `;
 
 // types
