@@ -11,6 +11,7 @@ import {
 } from '../../Data';
 import { IReduxState } from '../../reducer';
 import { AppBar } from './AppBar';
+import { Footer } from './Footer';
 
 const { getIsAuthenticated } = authSelectors;
 const { onPopulateUserStateFromLocalStorageIfAvailable } = authActions;
@@ -43,6 +44,7 @@ export class LandingInternal extends React.PureComponent<IProps> {
 			<Wrapper>
 				<AppBar />
 				<MapPage />
+				<Footer />
 			</Wrapper>
 		);
 	}
