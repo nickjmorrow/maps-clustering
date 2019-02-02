@@ -53,9 +53,9 @@ export function* handleAuthenticateWithGoogleAsync(
 ) {
 	const { payload } = action;
 	const formattedGoogleResponse = {
-		name: payload.getBasicProfile().getName(),
-		email: payload.getBasicProfile().getEmail(),
-		tokenId: payload.getAuthResponse().id_token
+		name: payload.googleLoginResponse.getBasicProfile().getName(),
+		email: payload.googleLoginResponse.getBasicProfile().getEmail(),
+		token: payload.googleLoginResponse.getAuthResponse().id_token
 	};
 
 	try {
@@ -66,7 +66,11 @@ export function* handleAuthenticateWithGoogleAsync(
 		);
 		addTokenToDefaultHeader(data.token);
 		addToLocalStorage(data, localStorageKeys.USER);
-		yield put(authActions.onAuthenticateWithGoogle.success(data));
+		const actions = action.payload.additionalActions
+			? [...action.payload.additionalActions.map(f => put(f()))]
+			: [];
+		actions.push(put(authActions.onAuthenticateWithGoogle.success(data)));
+		yield all(actions);
 	} catch (error) {
 		yield put(authActions.onAuthenticateWithGoogle.failure(error));
 	}

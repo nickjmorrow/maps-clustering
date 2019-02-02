@@ -52,19 +52,11 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> AuthenticateWithGoogle([FromBody] UserView userView)
+        public async Task<IActionResult> AuthenticateWithGoogle([FromBody] User user)
         {
             var payload = GoogleJsonWebSignature
-                .ValidateAsync(userView.TokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
+                .ValidateAsync(user.Token, new GoogleJsonWebSignature.ValidationSettings()).Result;
             return Ok(await this._authService.AuthenticateGoogle(payload));
-        }
-
-        // TODO: use the User class here
-        public class UserView
-        {
-            public string Name { get; set; }
-            public string Email { get; set; }
-            public string TokenId { get; set; }
         }
     }
 }
