@@ -59,12 +59,13 @@ namespace WebApplication.Services
                 // successful authentication, so generate jwt token
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(this._appSettings.Secret);
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Name, user.UserId.ToString())
+                };
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, user.UserId.ToString()),
-                    }),
+                    Subject = new ClaimsIdentity(claims),
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                         SecurityAlgorithms.HmacSha256Signature)
@@ -78,6 +79,25 @@ namespace WebApplication.Services
 
                 return user;
             }
+        }
+
+        private string GetToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(this._appSettings.Secret);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, user.UserId.ToString())
+            };
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
         }
 
         public async Task<User> AuthenticateGoogle(GoogleJsonWebSignature.Payload payload)
@@ -97,19 +117,22 @@ namespace WebApplication.Services
                 user = newUser;
             }
 
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this._appSettings.Secret));
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub,
-                    user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, user.UserId.ToString())
             };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(key,
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
 
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("ME5Et32c3jxB0BfYQnRbs9OnGiJxLgfMyLyWFBY2"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(String.Empty, String.Empty, claims,
-                expires: DateTime.Now.AddSeconds(55 * 60), signingCredentials: creds);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            user.Token = tokenHandler.WriteToken(token);
 
             return new User
             {
