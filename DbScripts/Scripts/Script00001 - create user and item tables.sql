@@ -2,7 +2,7 @@ CREATE TABLE dbo.Users (
     userId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(MAX) NOT NULL,
+    password VARCHAR(MAX) NULL,
     token VARCHAR(MAX) NULL
 )
 

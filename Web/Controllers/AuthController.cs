@@ -1,5 +1,12 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using WebApplication.Helpers;
 using WebApplication.Models;
 using WebApplication.Services;
 
@@ -42,6 +49,22 @@ namespace WebApplication.Controllers
                     $"User could not be registered: Exception: {e}"
                 });
             };
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AuthenticateWithGoogle([FromBody] UserView userView)
+        {
+            var payload = GoogleJsonWebSignature
+                .ValidateAsync(userView.TokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
+            return Ok(await this._authService.AuthenticateGoogle(payload));
+        }
+
+        // TODO: use the User class here
+        public class UserView
+        {
+            public string Name { get; set; }
+            public string Email { get; set; }
+            public string TokenId { get; set; }
         }
     }
 }

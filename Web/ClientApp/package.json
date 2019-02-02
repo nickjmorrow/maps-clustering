@@ -23,7 +23,7 @@
         "html-webpack-plugin": "2.29.0",
         "immer": "^1.12.1",
         "jest": "20.0.4",
-        "njm-react-component-library": "^3.5.43",
+        "njm-react-component-library": "^3.5.45",
         "npm": "^6.4.1",
         "object-assign": "4.1.1",
         "postcss-flexbugs-fixes": "3.2.0",

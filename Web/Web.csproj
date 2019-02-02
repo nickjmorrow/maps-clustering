@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="dbup4-core" Version="4.0.0-beta0003" />
     <PackageReference Include="dbup4-sqlserver" Version="4.0.0-beta0003" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.38.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.1" />
     <PackageReference Include="NUnit" Version="3.11.0" />

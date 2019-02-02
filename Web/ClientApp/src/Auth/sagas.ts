@@ -30,6 +30,7 @@ function* handleLoginAsync(action: ReturnType<typeof onLogin.request>) {
 			authApi.login,
 			action.payload.loginInfo
 		);
+		// TODO: decode token to ensure it hasnt expired
 		addTokenToDefaultHeader(data.token);
 		addToLocalStorage(data, localStorageKeys.USER);
 
@@ -50,15 +51,24 @@ function* watchHandleLogin() {
 export function* handleAuthenticateWithGoogleAsync(
 	action: ReturnType<typeof authActions.onAuthenticateWithGoogle.request>
 ) {
+	const { payload } = action;
+	const formattedGoogleResponse = {
+		name: payload.getBasicProfile().getName(),
+		email: payload.getBasicProfile().getEmail(),
+		tokenId: payload.getAuthResponse().id_token
+	};
+
 	try {
 		const { data } = yield call(
 			axios.post,
 			authApi.authenticateWithGoogle,
-			action.payload
+			formattedGoogleResponse
 		);
+		addTokenToDefaultHeader(data.token);
+		addToLocalStorage(data, localStorageKeys.USER);
 		yield put(authActions.onAuthenticateWithGoogle.success(data));
 	} catch (error) {
-		yield put(authActions.onRegister.failure(error));
+		yield put(authActions.onAuthenticateWithGoogle.failure(error));
 	}
 }
 

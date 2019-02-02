@@ -4,6 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using Google.Apis.Auth;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -75,6 +78,46 @@ namespace WebApplication.Services
 
                 return user;
             }
+        }
+
+        public async Task<User> AuthenticateGoogle(GoogleJsonWebSignature.Payload payload)
+        {
+            var user = await this._context.Users
+                .FirstOrDefaultAsync(u => u.Email.Equals(payload.Email));
+            if (user == null)
+            {
+                var newUser = new User
+                {
+                    Email = payload.Email,
+                    Name = payload.Name
+                };
+
+                await this._context.AddAsync(newUser);
+                await this._context.SaveChangesAsync();
+                user = newUser;
+            }
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub,
+                    user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, user.UserId.ToString())
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("ME5Et32c3jxB0BfYQnRbs9OnGiJxLgfMyLyWFBY2"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(String.Empty, String.Empty, claims,
+                expires: DateTime.Now.AddSeconds(55 * 60), signingCredentials: creds);
+
+            return new User
+            {
+                UserId = user.UserId,
+                Name = user.Name,
+                Email = user.Email,
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
         }
 
         public User Register(User user)

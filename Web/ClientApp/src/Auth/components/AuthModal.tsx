@@ -7,6 +7,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { getPointsGroups } from '../../Data';
+import { GoogleLogin } from './GoogleLogin';
 
 const { onLogin, onRegister } = authActions;
 
@@ -30,6 +31,7 @@ export const AuthModalInternal: React.SFC<IProps> = ({
 			isOpen={isOpen}
 			isRegistering={isRegistering}
 			onRequestClose={handleToggleIsOpen}
+			renderAdditionalComponents={[() => <GoogleLogin />]}
 		/>
 	);
 };

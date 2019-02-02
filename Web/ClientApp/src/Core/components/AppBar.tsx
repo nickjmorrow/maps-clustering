@@ -73,8 +73,7 @@ export class AppBarInternal extends React.PureComponent<
 					links={[]}
 					appName={'Location Clusterer'}
 					isAuthenticated={isAuthenticated}
-					onLogInClick={this.handleToggleAuthModal}
-					onRegisterClick={this.handleToggleAuthModal}
+					onSignInClick={this.handleToggleAuthModal}
 					onLogOutClick={this.handleToggleLogOutModal}
 				/>
 				<AuthModal
