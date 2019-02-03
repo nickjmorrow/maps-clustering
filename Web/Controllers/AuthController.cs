@@ -24,39 +24,22 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult Login([FromBody] AuthInfo authInfo)
+        public async Task<IActionResult> Login([FromBody] AuthInfo authInfo)
         {        
-            var user = this._authService.Authenticate(authInfo);
-
-            if (user == null)
-            {
-                return BadRequest(new {message = "User could not be found with that email and password. "});
-            }
-
-            return Ok(user);
+            return Ok(await this._authService.Authenticate(authInfo));
         }
 
         [HttpPost("[action]")]
         public IActionResult Register([FromBody] User user)
         {
-            try
-            {
-                return Ok(this._authService.Register(user));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(new { message =
-                    $"User could not be registered: Exception: {e}"
-                });
-            };
+            return Ok(this._authService.Register(user));
         }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> AuthenticateWithGoogle([FromBody] User user)
         {
-            var payload = GoogleJsonWebSignature
-                .ValidateAsync(user.Token, new GoogleJsonWebSignature.ValidationSettings()).Result;
-            return Ok(await this._authService.AuthenticateGoogle(payload));
+            
+            return Ok(await this._authService.AuthenticateGoogle(user));
         }
     }
 }

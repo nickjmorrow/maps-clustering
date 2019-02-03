@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
@@ -15,13 +16,7 @@ using WebApplication.Models;
 
 namespace WebApplication.Services
 {
-    public interface IUserService
-    {
-        User Authenticate(AuthInfo authInfo);
-        User Register(User user);
-    }
-
-    public class AuthService : IUserService
+    public class AuthService
     {
         private DatabaseContext _context;
         private AppSettings _appSettings;
@@ -32,76 +27,32 @@ namespace WebApplication.Services
             this._appSettings = appSettings.Value;
         }
 
-        public User Authenticate(AuthInfo authInfo)
+        public async Task<User> Authenticate(AuthInfo authInfo)
         {
-            using (var context = this._context)
+            var user = await this._context.Users
+                .SingleOrDefaultAsync(u => u.Email == authInfo.Email);
+            if (user == null)
             {
-                var user = context.Users.SingleOrDefault(u => u.Email == authInfo.Email);
-                if (user == null)
-                {
-                    return new AuthResponse() {ErrorText = $"No user could be found with the email: {authInfo.Email}"};
-                }
-
-                try
-                {
-                    var doesPasswordMatch = this.DoesPasswordMatch(authInfo, user);
-                    // return null if user not found
-                    if (!doesPasswordMatch)
-                    {
-                        return new AuthResponse() {ErrorText = "User with that email and password cannot be found."};
-                    }
-                }
-                catch (System.FormatException)
-                {
-                    return new AuthResponse() {ErrorText = "Password formatted incorrectly."};
-                }
-                
-                // successful authentication, so generate jwt token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(this._appSettings.Secret);
-                var claims = new[]
-                {
-                    new Claim(ClaimTypes.Name, user.UserId.ToString())
-                };
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.UtcNow.AddDays(7),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                        SecurityAlgorithms.HmacSha256Signature)
-                };
-
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                user.Token = tokenHandler.WriteToken(token);
-
-                // remove password before returning
-                user.Password = null;
-
-                return user;
+                return new AuthResponse() {ErrorText = $"No user could be found with the email: {authInfo.Email}"};
             }
+
+            if (!this.DoesPasswordMatch(authInfo, user))
+            {
+                return new AuthResponse() {ErrorText = "User with that email and password cannot be found."};
+            }
+
+            user.Token = this.GetToken(user);
+
+            // remove password before returning
+            user.Password = null;
+
+            return user;
         }
 
-        private string GetToken(User user)
+        public async Task<User> AuthenticateGoogle(User googleUser)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(this._appSettings.Secret);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, user.UserId.ToString())
-            };
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
-        }
-
-        public async Task<User> AuthenticateGoogle(GoogleJsonWebSignature.Payload payload)
-        {
+            var payload = GoogleJsonWebSignature
+                .ValidateAsync(googleUser.Token, new GoogleJsonWebSignature.ValidationSettings()).Result;
             var user = await this._context.Users
                 .FirstOrDefaultAsync(u => u.Email.Equals(payload.Email));
             if (user == null)
@@ -117,29 +68,12 @@ namespace WebApplication.Services
                 user = newUser;
             }
 
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this._appSettings.Secret));
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, user.UserId.ToString())
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(key,
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
-
             return new User
             {
                 UserId = user.UserId,
                 Name = user.Name,
                 Email = user.Email,
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
+                Token = this.GetToken(user)
             };
         }
 
@@ -208,6 +142,25 @@ namespace WebApplication.Services
             }
 
             return doesMatch;
+        }
+        
+        private string GetToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(this._appSettings.Secret);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, user.UserId.ToString())
+            };
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
         }
     }
 }
