@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Calc.Helpers;
-using Calc.Models;
 
-namespace Calc
+namespace Calc.Models.AgglomerativeHierarchicalClustering
 {
     public class AgglomerativeHierarchicalClusterPoint : Point
     {

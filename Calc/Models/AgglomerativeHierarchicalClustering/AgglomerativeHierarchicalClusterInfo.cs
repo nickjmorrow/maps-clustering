@@ -1,4 +1,4 @@
-﻿namespace Calc
+﻿namespace Calc.Models.AgglomerativeHierarchicalClustering
 {
     public class AgglomerativeHierarchicalClusterInfo
     {

@@ -1,11 +1,14 @@
 using System.Collections.Generic;
-using WebApplication.Models.DTOs;
+using Calc.Models;
+using Point = WebApplication.Models.DTOs.Point;
 
 namespace Web.Models
 {
     public class AhcInfo
     {
         public IEnumerable<AhcPointDTO> AhcPoints { get; set; }
+        public IEnumerable<InterClusterDistance> InterClusterDistances { get; set; }
+        public IEnumerable<ClusterSummary> ClusterSummaries { get; set; }
     }
 
     public class AhcPointDTO : Point
@@ -18,4 +21,6 @@ namespace Web.Models
         public int ClusterCount { get; set; }
         public int ClusterId { get; set; }
     }
+
+
 }

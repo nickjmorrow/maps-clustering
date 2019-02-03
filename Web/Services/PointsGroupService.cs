@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Calc;
+using Calc.Models.AgglomerativeHierarchicalClustering;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -214,6 +215,16 @@ namespace Web.Services
                 AhcInfo = JsonConvert.DeserializeObject<AhcInfo>(pointsGroup.AhcInfoJson)
             };
         }
+
+        private IEnumerable<ClusterSummary> GetClusterSummaries(IEnumerable<AhcPointDTO> ahcPoints)
+        {
+            return new List<ClusterSummary> { };
+        }
+
+        private IEnumerable<InterClusterDistance> GetInterClusterDistances(IEnumerable<AhcPointDTO> ahcPoints)
+        {
+            return new List<InterClusterDistance> { };
+        }
         
         /// <summary>
         /// Used to get <see cref="PointsGroupDTO"/> from <see cref="PointsGroup"/>
@@ -221,6 +232,7 @@ namespace Web.Services
         /// </summary>
         private PointsGroupDTO GetPointsGroupDto(PointsGroup pointsGroup)
         {
+            var ahcPoints = this.GetAhcPoints(pointsGroup.Points);
             return new PointsGroupDTO
             {
                 Name = pointsGroup.Name,
@@ -230,7 +242,9 @@ namespace Web.Services
                 ItemPermissionType = ItemPermissionType.Public,
                 AhcInfo = new AhcInfo
                 {
-                    AhcPoints = this.GetAhcPoints(pointsGroup.Points)
+                    AhcPoints = ahcPoints,
+                    ClusterSummaries = this.GetClusterSummaries(ahcPoints),
+                    InterClusterDistances = this.GetInterClusterDistances(ahcPoints)
                 }
             };
         }

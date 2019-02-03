@@ -3,6 +3,7 @@ using System.Linq;
 using Calc;
 using Calc.Helpers;
 using Calc.Models;
+using Calc.Models.AgglomerativeHierarchicalClustering;
 using NUnit.Framework;
 
 namespace CalcTests
