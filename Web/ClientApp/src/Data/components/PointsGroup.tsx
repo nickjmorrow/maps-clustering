@@ -113,17 +113,23 @@ const initialState = {
 type IState = typeof initialState;
 
 // css
-const PointsGroupWrapper = styled<{ isActive: boolean }, 'div'>('div')`
-	padding: 6px;
+const PointsGroupWrapper = styled<{ isActive: boolean }, 'button'>('button')`
+	padding: 10px 6px;
 	border-radius: ${borderRadius.default};
 	display: flex;
 	justify-content: space-between;
 	cursor: pointer;
 	margin: 6px 0px;
+	border: none;
+	outline: none;
+	width: 100%;
+	height: 36px;
+	align-items: center;
 	background-color: ${props =>
 		props.isActive ? colors.primaryLight : colors.white};
 	color: ${props => (props.isActive ? colors.white : colors.primaryDarkest)};
-	&: hover {
+	&:hover,
+	&:focus {
 		background-color: ${props =>
 			props.isActive ? colors.primaryLight : colors.primaryLightest};
 		transition: ${transitions.fast};
