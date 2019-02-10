@@ -46,7 +46,7 @@ class PointsGroupInternal extends React.Component<IProps, IState> {
 				onMouseLeave={this.turnOffIsHovering}
 				isActive={isActive}
 				onClick={this.handleSetActivePointsGroupInternal}>
-				<Typography variant="h4" noMargin={true} color={'inherit'}>
+				<Typography variant="h3" noMargin={true} color={'inherit'}>
 					{pointsGroup.name}
 				</Typography>
 				{shouldShowDeleteButton(

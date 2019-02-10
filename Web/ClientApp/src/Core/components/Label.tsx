@@ -7,7 +7,7 @@ export const Label: React.SFC<IOwnProps> = ({
 	color = colors.primaryDark
 }) => (
 	<StyledLabel color={color}>
-		<Typography variant="h6" noMargin={true} color={'inherit'}>
+		<Typography variant="h4" noMargin={true} color={'inherit'}>
 			{children}
 		</Typography>
 	</StyledLabel>

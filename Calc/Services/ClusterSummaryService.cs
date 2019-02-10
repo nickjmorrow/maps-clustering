@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Calc.Models;
@@ -9,20 +10,21 @@ namespace Calc
     {
         public IEnumerable<ClusterSummary> GetClusterSummaries(IEnumerable<AgglomerativeHierarchicalClusterPoint> ahcPoints)
         {
-            foreach (var ahcPoint in ahcPoints)
-            {
-                var clusterSummary = new ClusterSummary()
-                {
-                    // TODO
-                };
-            }
-            var clusters = ahcPoints.Select(p =>
-            {
-                p.AgglomerativeHierarchicalClusterInfos.Select(ci =>
-                {
-                    ci.
-                })
-            });
+//            foreach (var ahcPoint in ahcPoints)
+//            {
+//                var clusterSummary = new ClusterSummary()
+//                {
+//                    // TODO
+//                };
+//            }
+//            var clusters = ahcPoints.Select(p =>
+//            {
+//                p.AgglomerativeHierarchicalClusterInfos.Select(ci =>
+//                {
+//                    ci.
+//                })
+//            });
+            throw new NotImplementedException();
         }
     }
 }

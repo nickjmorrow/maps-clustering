@@ -1,17 +1,19 @@
-import { authActions, authSelectors } from 'njm-react-component-library';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import styled from 'styled-components';
+import { authActions, authSelectors } from "njm-react-component-library";
+import * as React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import Media from "react-media";
+import styled from "styled-components";
 import {
 	getPointsGroups,
 	MapPage,
 	populatePointsGroupsStateFromLocalStorageIfAvailable,
 	savePointsGroupIfStoredLocally
-} from '../../Data';
-import { IReduxState } from '../../reducer';
-import { AppBar } from './AppBar';
-import { Footer } from './Footer';
+} from "../../Data";
+import { IReduxState } from "../../reducer";
+import { AppBar } from "./AppBar";
+import { Footer } from "./Footer";
+import { VerticalNavMenu } from "njm-react-component-library";
 
 const { getIsAuthenticated } = authSelectors;
 const { onPopulateUserStateFromLocalStorageIfAvailable } = authActions;
@@ -44,6 +46,11 @@ export class LandingInternal extends React.PureComponent<IProps> {
 			<Wrapper>
 				<AppBar />
 				<MapPage />
+				<Media query={`(max-width: 800px)`}>
+					{matches =>
+						matches ? <VerticalNavMenu links={[]} /> : null
+					}
+				</Media>
 				<Footer />
 			</Wrapper>
 		);

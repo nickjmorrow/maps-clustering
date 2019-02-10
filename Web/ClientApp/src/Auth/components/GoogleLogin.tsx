@@ -1,43 +1,41 @@
+import { Button, Typography } from 'njm-react-component-library';
 import * as React from 'react';
 import ReactGoogleLogin, { GoogleLoginResponse } from 'react-google-login';
-import { clientId } from '../../secrets';
-import { Dispatch, bindActionCreators } from 'redux';
-import { onAuthenticateWithGoogle } from 'njm-react-component-library/lib/Auth/actions';
-import { connect } from 'react-redux';
-import { getPointsGroups } from '../../Data';
 
-const GoogleLoginInternal: React.SFC<IDispatchProps> = ({
-	handleAuthenticateWithGoogle,
-	handleGetPointsGroups
+export const GoogleLogin: React.SFC<IOwnProps> = ({
+	handleSuccess,
+	handleFailure = () => {
+		return;
+	},
+	clientId
 }) => (
 	<ReactGoogleLogin
 		clientId={clientId}
 		buttonText={'Sign In With Google'}
-		onSuccess={(res: GoogleLoginResponse) =>
-			handleAuthenticateWithGoogle({
-				googleLoginResponse: res,
-				additionalActions: [handleGetPointsGroups]
-			})
-		}
-		onFailure={(res: string) => console.log(res)}
+		onSuccess={handleSuccess}
+		render={renderButton}
+		onFailure={handleFailure}
 	/>
 );
 
-interface IDispatchProps {
-	handleAuthenticateWithGoogle: typeof onAuthenticateWithGoogle.request;
-	handleGetPointsGroups: typeof getPointsGroups.request;
+const renderButton:
+	| ((props?: { onClick: () => void } | undefined) => JSX.Element)
+	| undefined = renderProps => (
+	<Button
+		style={{ width: '100%' }}
+		backgroundColorActive={'#AC1F24'}
+		backgroundColorHover={'#E15E63'}
+		backgroundColor={'#E62C33'}
+		onClick={renderProps!.onClick}>
+		<Typography variant="button" color="light">
+			Sign In With Google
+		</Typography>
+	</Button>
+);
+
+// types
+interface IOwnProps {
+	clientId: string;
+	handleSuccess: (res: GoogleLoginResponse) => void;
+	handleFailure?: (error: any) => void;
 }
-
-const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
-	bindActionCreators(
-		{
-			handleAuthenticateWithGoogle: onAuthenticateWithGoogle.request,
-			handleGetPointsGroups: getPointsGroups.request
-		},
-		dispatch
-	);
-
-export const GoogleLogin = connect(
-	null,
-	mapDispatchToProps
-)(GoogleLoginInternal);

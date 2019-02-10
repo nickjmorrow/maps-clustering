@@ -43,12 +43,6 @@ namespace WebApplication.Controllers
         }
         
         [HttpPost("[action]")]
-        public IActionResult GetDBSCANClusters([FromBody] DbscanConfig dbscanConfig)
-        {
-            return Ok(dbscanConfig);
-        }
-        
-        [HttpPost("[action]")]
         public IActionResult GetMeanShiftClusters(IEnumerable<Point> points)
         {
             return BadRequest();

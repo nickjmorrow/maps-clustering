@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Calc;
+using Calc.Models;
 using Calc.Models.AgglomerativeHierarchicalClustering;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +16,7 @@ using WebApplication.Models;
 using WebApplication.Models.DTOs;
 using WebApplication.Services;
 using ItemType = WebApplication.Enums.ItemType;
+using Point = WebApplication.Models.DTOs.Point;
 
 namespace Web.Services
 {

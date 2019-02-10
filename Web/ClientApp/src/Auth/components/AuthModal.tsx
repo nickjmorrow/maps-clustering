@@ -1,13 +1,13 @@
 import {
-	AuthModal as GenericAuthModal,
-	authActions
-} from 'njm-react-component-library';
-import { ILoginInfo } from 'njm-react-component-library/lib/Auth/types';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { getPointsGroups } from '../../Data';
-import { GoogleLogin } from './GoogleLogin';
+	authActions,
+	AuthModal as GenericAuthModal
+} from "njm-react-component-library";
+import { ILoginInfo } from "njm-react-component-library/lib/Auth/types";
+import * as React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import { getPointsGroups } from "../../Data";
+import { GoogleLoginExample } from "./GoogleLoginExample";
 
 const { onLogin, onRegister } = authActions;
 
@@ -31,7 +31,7 @@ export const AuthModalInternal: React.SFC<IProps> = ({
 			isOpen={isOpen}
 			isRegistering={isRegistering}
 			onRequestClose={handleToggleIsOpen}
-			renderAdditionalComponents={[() => <GoogleLogin />]}
+			renderAdditionalComponents={[() => <GoogleLoginExample key={1} />]}
 		/>
 	);
 };

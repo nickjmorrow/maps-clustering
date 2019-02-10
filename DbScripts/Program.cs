@@ -11,7 +11,7 @@ namespace DbScripts
         {
             var connectionString =
                 args.FirstOrDefault()
-                ?? "Server=localhost;Initial Catalog=MapClusterer;Persist Security Info=False;User ID=sa;Password=reallyStrongPwd123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;";
+                ?? "Server=localhost;Initial Catalog=MapClusterer;Persist Security Info=False;User ID=sa;Password=Bw$g4asmG3nL4p;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;";
 
             var upgrader =
                 DeployChanges.To

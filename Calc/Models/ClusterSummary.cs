@@ -13,4 +13,4 @@ namespace Calc.Models
         public int ClusterId { get; set; }
         public double Distance { get; set; }
     }
-}
+}    
