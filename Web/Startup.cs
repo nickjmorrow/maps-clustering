@@ -41,7 +41,7 @@ namespace WebApplication
             // CORS
             services.AddCors(options => { options.AddPolicy("AllowMyOrigin", 
                 policyBuilder => policyBuilder
-                    .WithOrigins("https://localhost:5002")
+                    .WithOrigins("*")
                     .WithMethods("*")
                     .WithHeaders("*")); });
             
