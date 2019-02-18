@@ -14,6 +14,7 @@ import { IReduxState } from "../../reducer";
 import { AppBar } from "./AppBar";
 import { Footer } from "./Footer";
 import { VerticalNavMenu } from "njm-react-component-library";
+import { FileUploadForm } from "./FileUploadForm";
 
 const { getIsAuthenticated } = authSelectors;
 const { onPopulateUserStateFromLocalStorageIfAvailable } = authActions;
@@ -51,6 +52,7 @@ export class LandingInternal extends React.PureComponent<IProps> {
 						matches ? <VerticalNavMenu links={[]} /> : null
 					}
 				</Media>
+				<FileUploadForm />
 				<Footer />
 			</Wrapper>
 		);

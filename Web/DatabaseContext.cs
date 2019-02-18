@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Web.Models;
 using WebApplication.Models;
 using WebApplication.Models.DTOs;
 
@@ -17,6 +18,7 @@ namespace WebApplication
         public DbSet<UserFavoriteItem> UserFavoriteItems { get; set; }
         public DbSet<Point> Points { get; set; }
         public DbSet<PointsGroup> PointsGroups { get; set; }
+        public DbSet<TestValue> TestValues { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

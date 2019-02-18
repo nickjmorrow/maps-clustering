@@ -1,14 +1,14 @@
-import { colors, IOption } from 'njm-react-component-library';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { Clusters, Map, Parameters } from '../';
-import { FileUploadForm } from '../../Core/components';
-import { IReduxState } from '../../reducer';
-import { getActivePointsGroup } from '../selectors';
-import { IPointsGroup } from '../types';
-import { PointsGroupList } from './PointsGroupList';
-import { Summary } from './Summary';
+import { colors, IOption } from "njm-react-component-library";
+import * as React from "react";
+import { connect } from "react-redux";
+import styled from "styled-components";
+import { Clusters, Map, Parameters } from "../";
+import { FileUploadForm } from "../../Core/components";
+import { IReduxState } from "../../reducer";
+import { getActivePointsGroup } from "../selectors";
+import { IPointsGroup } from "../types";
+import { PointsGroupList } from "./PointsGroupList";
+import { Summary } from "./Summary";
 
 export const MapPageInternal: React.SFC<IReduxProps> = ({
 	pointsGroups,
@@ -32,9 +32,6 @@ export const MapPageInternal: React.SFC<IReduxProps> = ({
 			<Divider />
 			<MapControls>
 				<PointsGroupAndParametersWrapper>
-					{/* <TitleWrapper> */}
-					{/* <Typography variant="h1">Parameters</Typography> */}
-					{/* </TitleWrapper> */}
 					<FlexColumn>
 						<PointsGroupList pointsGroups={pointsGroups} />
 						<Parameters
@@ -42,9 +39,6 @@ export const MapPageInternal: React.SFC<IReduxProps> = ({
 						/>
 					</FlexColumn>
 				</PointsGroupAndParametersWrapper>
-				{/* <TitleWrapper> */}
-				{/* <Typography variant="h1">Results</Typography> */}
-				{/* </TitleWrapper> */}
 				<Clusters activePointsGroup={activePointsGroup} />
 				<SummaryFormWrapper>
 					<Summary />
@@ -90,14 +84,14 @@ const FlexColumn = styled.div`
 
 const MapControls = styled.div`
 	display: grid;
-	grid-template-areas: 'pointsgroupandparameters' 'clusters' 'summaryform';
+	grid-template-areas: "pointsgroupandparameters" "clusters" "summaryform";
 	margin: 0 auto;
 	@media (min-width: 900px) {
-		grid-template-areas: 'pointsgroupandparameters clusters' 'summaryform clusters';
+		grid-template-areas: "pointsgroupandparameters clusters" "summaryform clusters";
 		grid-template-columns: repeat(2, 1fr);
 	}
 	@media (min-width: 1200px) {
-		grid-template-areas: 'pointsgroupandparameters clusters summaryform';
+		grid-template-areas: "pointsgroupandparameters clusters summaryform";
 		grid-template-columns: repeat(3, 1fr);
 	}
 `;
@@ -133,19 +127,21 @@ const SummaryFormWrapper = styled.div`
 // helpers
 const getMarkers = (activePointsGroup: IPointsGroup) => {
 	const { clusterCount, pointsColors, points } = activePointsGroup;
-	return activePointsGroup.ahcInfo.ahcPoints.map(mp => ({
-		position: {
-			lat: mp.verticalDisplacement,
-			lng: mp.horizontalDisplacement
-		},
-		label: {
-			text: mp.name
-		},
-		icon: {
-			fillColor:
-				pointsColors[
-					mp.clusterInfos[points.length - clusterCount].clusterId
-				]
-		}
-	}));
+	return activePointsGroup.ahcInfo.ahcPoints.map(mp => {
+		return {
+			position: {
+				lat: mp.verticalDisplacement,
+				lng: mp.horizontalDisplacement
+			},
+			label: {
+				text: mp.name
+			},
+			icon: {
+				fillColor:
+					pointsColors[
+						mp.clusterInfos[points.length - clusterCount].clusterId
+					]
+			}
+		};
+	});
 };

@@ -12,7 +12,7 @@ namespace WebApplication.Models
         [Key] 
         public int ItemId { get; set; }
         public int ItemTypeId { get; set; }
-        public ItemPermissionType ItemPermissionType { get; set; }
+        public ItemPermissionType ItemPermissionTypeId { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateDeleted { get; set; }
     }

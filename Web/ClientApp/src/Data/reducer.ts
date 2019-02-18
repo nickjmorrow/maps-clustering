@@ -1,11 +1,11 @@
-import produce from 'immer';
-import { IOption } from 'njm-react-component-library';
-import { ActionType } from 'typesafe-actions';
-import { getColors, ItemPermissionType } from '../Core';
-import * as actions from './actions';
-import { dataTypeKeys } from './actions';
-import { clusterTypes } from './constants';
-import { IPointsGroup } from './types';
+import produce from "immer";
+import { IOption } from "njm-react-component-library";
+import { ActionType } from "typesafe-actions";
+import { getColors, ItemPermissionType } from "../Core";
+import * as actions from "./actions";
+import { dataTypeKeys } from "./actions";
+import { clusterTypes } from "./constants";
+import { IPointsGroup } from "./types";
 
 export interface IDataState {
 	readonly error: string;
@@ -15,9 +15,9 @@ export interface IDataState {
 
 export const initialState: IDataState = {
 	pointsGroups: [],
-	error: '',
+	error: "",
 	currentClusterOption: {
-		label: 'Agglomerative Hierarchical Clustering',
+		label: "Agglomerative Hierarchical Clustering",
 		value: clusterTypes.ahcs
 	}
 };
@@ -45,17 +45,21 @@ export const dataReducer = (
 					.filter(toSavedPointsGroups)
 					.map(asInactive);
 				pointsGroups.unshift({ ...action.payload, isActive: true });
-				draftState.pointsGroups = pointsGroups;
+				draftState.pointsGroups = ensureActivePointsGroup(
+					pointsGroups.map(withColors)
+				);
 			});
 		case dataTypeKeys.CREATE_POINTS_GROUP_FAILED:
 			return { ...state, error: action.payload };
 		case dataTypeKeys.ADD_POINTS_GROUP_SUCCEEDED:
 			return {
 				...state,
-				pointsGroups: [
-					{ ...action.payload, isActive: true },
-					...state.pointsGroups.map(asInactive)
-				].map(withColors)
+				pointsGroups: ensureActivePointsGroup(
+					[
+						{ ...action.payload, isActive: true },
+						...state.pointsGroups.map(asInactive)
+					].map(withColors)
+				)
 			};
 		case dataTypeKeys.SAVE_POINTS_GROUP_IF_STORED_LOCALLY_SUCCEEDED:
 			return {

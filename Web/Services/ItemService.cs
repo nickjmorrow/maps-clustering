@@ -27,7 +27,7 @@ namespace Web.Services
                 ItemTypeId = itemTypeId,
                 DateCreated = DateTime.Now,
                 DateDeleted = null,
-                ItemPermissionType = itemPermissionType
+                ItemPermissionTypeId = itemPermissionType
             };
             await this._context.Items.AddAsync(item);
             await this._context.SaveChangesAsync();
@@ -39,7 +39,7 @@ namespace Web.Services
             return this._itemFilterer.GetValidItems<Item>(userId, this._context.Items).Select(i => new Item()
             {
                 ItemId = i.ItemId,
-                ItemPermissionType = i.ItemPermissionType,
+                ItemPermissionTypeId = i.ItemPermissionTypeId,
                 DateCreated = i.DateCreated
             });
         }

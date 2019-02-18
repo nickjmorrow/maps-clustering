@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import axios from "axios";
+import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import {
 	createPointsGroup,
 	dataTypeKeys,
@@ -8,10 +8,10 @@ import {
 	populatePointsGroupsStateFromLocalStorageIfAvailable,
 	savePointsGroupIfStoredLocally,
 	addPointsGroup
-} from './actions';
-import { formHeaders, localStorageKeys, pointsGroupApi } from './constants';
-import { IPointsGroup } from './types';
-import { getFromLocalStorage } from 'njm-react-component-library/lib/Core/services';
+} from "./actions";
+import { formHeaders, localStorageKeys, pointsGroupApi } from "./constants";
+import { IPointsGroup } from "./types";
+import { getFromLocalStorage } from "njm-react-component-library/lib/Core/services";
 
 function* handleGetPointsGroupsAsync() {
 	try {
@@ -85,7 +85,7 @@ function* handlePopulatePointsGroupsFromLocalStorageIfAvailable() {
 		if (pointsGroup !== null) {
 			yield put(
 				populatePointsGroupsStateFromLocalStorageIfAvailable.success(
-					JSON.parse(pointsGroup)
+					JSON.parse(pointsGroup)[0]
 				)
 			);
 		}

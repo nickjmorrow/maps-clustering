@@ -1,35 +1,36 @@
 {
-    "compilerOptions": {
-        "baseUrl": "src",
-        "outDir": "build/dist",
-        "module": "es2015",
-        "target": "es6",
-        "lib": ["es6", "dom"],
-        "sourceMap": true,
-        "allowJs": true,
-        "jsx": "react",
-        "moduleResolution": "node",
-        "rootDir": "src",
-        "forceConsistentCasingInFileNames": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noImplicitAny": true,
-        "importHelpers": true,
-        "strictNullChecks": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "noUnusedLocals": true,
-        "downlevelIteration": true,
-        "paths": {
-            "Data/*": ["../../Data/*"],
-            "Core/*": ["../../Core/*"]
-        }
-    },
-    "exclude": [
-        "node_modules",
-        "build",
-        "scripts",
-        "webpack",
-        "jest",
-        "../../setupTests.ts"
-    ]
+	"compilerOptions": {
+		"baseUrl": "src",
+		"outDir": "build/dist",
+		"module": "es2015",
+		"target": "es6",
+		"lib": ["es6", "dom"],
+		"sourceMap": true,
+		"allowJs": true,
+		"jsx": "react",
+		"moduleResolution": "node",
+		"rootDir": "src",
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitAny": true,
+		"importHelpers": true,
+		"strictNullChecks": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"noUnusedLocals": true,
+		"downlevelIteration": true,
+		"noUnusedParameters": false,
+		"paths": {
+			"Data/*": ["../../Data/*"],
+			"Core/*": ["../../Core/*"]
+		}
+	},
+	"exclude": [
+		"node_modules",
+		"build",
+		"scripts",
+		"webpack",
+		"jest",
+		"../../setupTests.ts"
+	]
 }

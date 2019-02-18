@@ -213,7 +213,7 @@ namespace Web.Services
                 Points = pointsGroup.Points,
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
-                ItemPermissionType = item.ItemPermissionType,
+                ItemPermissionType = item.ItemPermissionTypeId,
                 AhcInfo = JsonConvert.DeserializeObject<AhcInfo>(pointsGroup.AhcInfoJson)
             };
         }

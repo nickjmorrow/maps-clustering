@@ -80,9 +80,11 @@ namespace WebApplication
                     googleOptions.ClientId = appSettings.GoogleClientId;
                     googleOptions.ClientSecret = appSettings.GoogleClientSecret;
                 });
-            
-            
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(appSettings.ConnectionString));
+
+            var oldEndpoint = "aar0vxb3vuu0pk.cjbl7cfof767.us-east-2.rds.amazonaws.com";
+            var endpoint = "njm.cjbl7cfof767.us-east-2.rds.amazonaws.com";
+            var connectionString = $"Server = {endpoint},1433; Initial Catalog = myDatabase; Persist Security Info = False; User ID = nickjmorrow; Password = myPassword382; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = True; Connection Timeout = 30;";
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<FileHandlerService, FileHandlerService>();
             services
                 .AddScoped<AgglomerativeHierarchicalClusteringService, AgglomerativeHierarchicalClusteringService>();

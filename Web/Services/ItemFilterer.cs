@@ -30,7 +30,7 @@ namespace Web.Services
             where T : IItemBound
         {
             var publicItems = this._context.Items
-                .Where(i => i.ItemPermissionType == ItemPermissionType.Default);
+                .Where(i => i.ItemPermissionTypeId == ItemPermissionType.Default);
             
             var userItems = userId.HasValue
                 ? this._context.UserItems

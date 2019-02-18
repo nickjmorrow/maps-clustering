@@ -1,14 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 import {
 	GoogleMap,
 	withGoogleMap,
 	withScriptjs,
 	Marker,
 	MarkerProps
-} from 'react-google-maps';
-import { compose, withProps } from 'recompose';
-import { googleMapURL } from '../constants';
-import { scale } from '../../Core';
+} from "react-google-maps";
+import { compose, withProps } from "recompose";
+import { googleMapURL } from "../constants";
+import { scale } from "../../Core";
 
 interface Props {
 	markers?: MarkerProps[];
@@ -28,7 +28,7 @@ export const Map: React.ComponentClass<Props> = compose(
 		googleMapURL,
 		loadingElement: <div style={{ height: `100%` }} />,
 		containerElement: (
-			<div style={{ height: '580px', width: '100%', display: 'block' }} />
+			<div style={{ height: "580px", width: "100%", display: "block" }} />
 		),
 		mapElement: <div style={{ height: `100%` }} />
 	}),
@@ -62,6 +62,6 @@ const renderMarkers = (markers: MarkerProps[]) =>
 				lat: marker.position!.lat as number,
 				lng: marker.position!.lng as number
 			}}
-			label={{ text: marker.label!.text, fontSize: '0' }}
+			label={{ text: marker.label!.text, fontSize: "0" }}
 		/>
 	));
