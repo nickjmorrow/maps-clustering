@@ -1,16 +1,15 @@
 import {
 	PopulatedAppBar as GenericAppBar,
-	authSelectors,
+	AuthModal,
+	LogOutModal,
 	Modal
-} from 'njm-react-component-library';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { IReduxState } from '../../reducer';
-import { AuthModal, LogOutModal } from '../../Auth';
-import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
-import { clientId } from '../../secrets';
-
-const { getIsAuthenticated } = authSelectors;
+} from "njm-react-component-library";
+import { getIsAuthenticated } from "Auth/auth-helpers";
+import * as React from "react";
+import { connect } from "react-redux";
+import { IReduxState } from "../../reducer";
+import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
+import { clientId } from "../../secrets";
 
 export class AppBarInternal extends React.PureComponent<
 	IProps,
@@ -71,18 +70,29 @@ export class AppBarInternal extends React.PureComponent<
 			<div>
 				<GenericAppBar
 					links={[]}
-					appName={'Location Clusterer'}
+					appName={"Location Clusterer"}
 					isAuthenticated={isAuthenticated}
 					onSignInClick={this.handleToggleAuthModal}
 					onLogOutClick={this.handleToggleLogOutModal}
 				/>
 				<AuthModal
 					isOpen={isAuthModalOpen}
-					handleToggleIsOpen={this.handleToggleAuthModal}
+					onRegisterClick={() => {
+						return;
+					}}
+					onLoginClick={() => {
+						return;
+					}}
+					onRequestClose={() => {
+						return;
+					}}
 				/>
 				<LogOutModal
 					isOpen={isLogOutModalOpen}
 					onRequestClose={this.handleToggleLogOutModal}
+					onPrimaryClick={() => {
+						return;
+					}}
 				/>
 				{googleModal}
 			</div>

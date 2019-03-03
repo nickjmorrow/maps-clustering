@@ -1,19 +1,16 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Typography, colors } from 'njm-react-component-library';
+import * as React from "react";
+import styled from "styled-components";
+import { Typography } from "njm-react-component-library";
 
-export const Label: React.SFC<IOwnProps> = ({
-	children,
-	color = colors.primaryDark
-}) => (
-	<StyledLabel color={color}>
-		<Typography variant="h4" noMargin={true} color={'inherit'}>
-			{children}
-		</Typography>
-	</StyledLabel>
-);
+export const Label: React.SFC<IOwnProps> = ({ children, color }) => {
+	return (
+		<StyledLabel color={"red"}>
+			<Typography sizeVariant={5}>{children}</Typography>
+		</StyledLabel>
+	);
+};
 
-const StyledLabel = styled<{ color: string }, 'span'>('span')`
+const StyledLabel = styled("span")<{ color: string }>`
 	text-transform: uppercase;
 	color: ${props => props.color};
 	display: flex;

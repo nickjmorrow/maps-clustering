@@ -1,4 +1,7 @@
-import { authActions, authSelectors } from "njm-react-component-library";
+import {
+	populateUserStateFromLocalStorageIfAvailable,
+	getIsAuthenticated
+} from "Auth/auth-helpers";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
@@ -13,12 +16,9 @@ import {
 import { IReduxState } from "../../reducer";
 import { AppBar } from "./AppBar";
 import { Footer } from "./Footer";
-import { VerticalNavMenu } from "njm-react-component-library";
+// import { VerticalNavMenu } from "njm-react-component-library";
 import { FileUploadForm } from "./FileUploadForm";
 import Axios from "axios";
-
-const { getIsAuthenticated } = authSelectors;
-const { onPopulateUserStateFromLocalStorageIfAvailable } = authActions;
 
 export class LandingInternal extends React.PureComponent<IProps> {
 	componentDidMount = () => {
@@ -32,15 +32,21 @@ export class LandingInternal extends React.PureComponent<IProps> {
 		handlePopulatePointsGroupsStateFromLocalStorageIfAvailable();
 		handleGetPointsGroups();
 
-		Axios.get(
-			"https://bj9jj9rzj7.execute-api.us-east-2.amazonaws.com/beta/mapclusterer/api/test/getpersistedvalues",
+		Axios.get("api/test/getpersistedvalues")
+			.then(({ data }: { data: string[] }) => console.log(data))
+			.catch(err => console.error(err));
+
+		Axios.post(
+			"api/test/addtestvalue",
+			{ testValueId: "YEARS" },
 			{
 				headers: {
-					"Access-Control-Allow-Origin": "*", // Required for CORS support to work
-					"Access-Control-Allow-Credentials": true // Required for cookies, authorization headers with HTTPS
+					"Content-Type": "application/json"
 				}
 			}
-		).then(({ data }: { data: string[] }) => console.log(data));
+		)
+			.then(({ data }: { data: string[] }) => console.log(data))
+			.catch(err => console.error(err));
 	};
 
 	componentWillReceiveProps = (nextProps: IProps) => {
@@ -60,7 +66,13 @@ export class LandingInternal extends React.PureComponent<IProps> {
 				<MapPage />
 				<Media query={`(max-width: 800px)`}>
 					{matches =>
-						matches ? <VerticalNavMenu links={[]} /> : null
+						matches ? (
+							<div>
+								{
+									"<VerticalNavMenu buttonProps={() => { return; }}/>"
+								}
+							</div>
+						) : null
 					}
 				</Media>
 				<FileUploadForm />
@@ -80,7 +92,7 @@ const Wrapper = styled.div`
 interface IDispatchProps {
 	handleSavePointsGroupIfStoredLocally: typeof savePointsGroupIfStoredLocally.request;
 	handlePopulatePointsGroupsStateFromLocalStorageIfAvailable: typeof populatePointsGroupsStateFromLocalStorageIfAvailable.request;
-	handlePopulateUserStateFromLocalStorageIfAvailable: typeof onPopulateUserStateFromLocalStorageIfAvailable.request;
+	handlePopulateUserStateFromLocalStorageIfAvailable: typeof populateUserStateFromLocalStorageIfAvailable.request;
 	handleGetPointsGroups: typeof getPointsGroups.request;
 }
 
@@ -96,7 +108,7 @@ const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 			handlePopulatePointsGroupsStateFromLocalStorageIfAvailable:
 				populatePointsGroupsStateFromLocalStorageIfAvailable.request,
 			handlePopulateUserStateFromLocalStorageIfAvailable:
-				onPopulateUserStateFromLocalStorageIfAvailable.request,
+				populateUserStateFromLocalStorageIfAvailable.request,
 			handleGetPointsGroups: getPointsGroups.request,
 			handleSavePointsGroupIfStoredLocally:
 				savePointsGroupIfStoredLocally.request

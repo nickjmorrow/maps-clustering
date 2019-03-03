@@ -1,6 +1,6 @@
-import { all, fork } from 'redux-saga/effects';
-import { authSagas } from './Auth/sagas';
-import { dataSagas } from './Data';
+import { all, fork } from "redux-saga/effects";
+import { authSagas } from "./Auth/auth-helpers/sagas";
+import { dataSagas } from "./Data";
 // import { authSagas } from 'njm-react-component-library';
 
 const allSagas = [...authSagas, ...dataSagas];

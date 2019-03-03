@@ -1,4 +1,4 @@
-import { colors, IOption } from "njm-react-component-library";
+import { IOption } from "njm-react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -98,8 +98,10 @@ const MapControls = styled.div`
 
 const Divider = styled.div`
 	height: 20px;
-	background-color: ${colors.darkGray};
+	background-color: ${"darkGray"};
 `;
+
+// TODO: darkGray
 
 // const FlexWrapper = styled.div`
 // 	display: grid;

@@ -1,8 +1,8 @@
-import { Slider, Typography } from 'njm-react-component-library';
-import * as React from 'react';
-import { IPoint } from '../../types';
-import styled from 'styled-components';
-import { TitleWrapper } from '../../../Core/components';
+import { Slider, Typography } from "njm-react-component-library";
+import * as React from "react";
+import { IPoint } from "../../types";
+import styled from "styled-components";
+import { TitleWrapper } from "../../../Core/components";
 
 export const AhcParameters: React.SFC<IProps> = ({
 	min,
@@ -20,7 +20,7 @@ export const AhcParameters: React.SFC<IProps> = ({
 	return (
 		<Wrapper>
 			<TitleWrapper>
-				<Typography variant="h2">Number of Clusters</Typography>
+				<Typography sizeVariant={5}>Number of Clusters</Typography>
 			</TitleWrapper>
 			<Slider
 				min={min}

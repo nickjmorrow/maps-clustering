@@ -1,8 +1,8 @@
-import { Typography } from 'njm-react-component-library';
-import * as React from 'react';
-import styled from 'styled-components';
-import { ClusteredPoint, IPointsGroup } from '../types';
-import { TitleWrapper } from '../../Core/components';
+import { Typography } from "njm-react-component-library";
+import * as React from "react";
+import styled from "styled-components";
+import { ClusteredPoint, IPointsGroup } from "../types";
+import { TitleWrapper } from "../../Core/components";
 
 export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 	if (!activePointsGroup) {
@@ -28,7 +28,7 @@ export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 	return (
 		<Wrapper>
 			<TitleWrapper>
-				<Typography variant="h2">Clusters</Typography>
+				<Typography sizeVariant={5}>Clusters</Typography>
 			</TitleWrapper>
 			<ClustersWrapper>{renderedClusteredPoints}</ClustersWrapper>
 		</Wrapper>
@@ -41,7 +41,7 @@ interface IOwnProps {
 }
 
 // css
-const Cluster = styled<{ color: string }, 'div'>('div')`
+const Cluster = styled("div")<{ color: string }>`
 	width: max-content;
 	border-left: 5px solid ${props => props.color};
 	margin-bottom: 8px;

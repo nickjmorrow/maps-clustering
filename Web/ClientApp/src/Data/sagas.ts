@@ -11,7 +11,7 @@ import {
 } from "./actions";
 import { formHeaders, localStorageKeys, pointsGroupApi } from "./constants";
 import { IPointsGroup } from "./types";
-import { getFromLocalStorage } from "njm-react-component-library/lib/Core/services";
+import { getFromLocalStorage } from "Core";
 
 function* handleGetPointsGroupsAsync() {
 	try {

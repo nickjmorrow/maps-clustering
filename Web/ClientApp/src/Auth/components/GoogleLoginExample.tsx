@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { GoogleLogin } from './GoogleLogin';
-import { onAuthenticateWithGoogle } from 'njm-react-component-library/lib/Auth/actions';
-import { getPointsGroups } from '../../Data';
-import { bindActionCreators, Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { clientId } from '../../secrets';
-import { GoogleLoginResponse } from 'react-google-login';
+import * as React from "react";
+import { GoogleLogin } from "./GoogleLogin";
+import { authenticateWithGoogle } from "Auth/auth-helpers";
+import { getPointsGroups } from "../../Data";
+import { bindActionCreators, Dispatch } from "redux";
+import { connect } from "react-redux";
+import { clientId } from "../../secrets";
+import { GoogleLoginResponse } from "react-google-login";
 
 const GoogleLoginExampleInternal: React.SFC<IDispatchProps> = ({
 	handleAuthenticateWithGoogle,
@@ -32,8 +32,8 @@ const GoogleLoginExampleInternal: React.SFC<IDispatchProps> = ({
 
 // types
 interface IDispatchProps {
-	handleAuthenticateWithGoogle: typeof onAuthenticateWithGoogle.request;
-	handleAuthenticateWithGoogleFailure: typeof onAuthenticateWithGoogle.failure;
+	handleAuthenticateWithGoogle: typeof authenticateWithGoogle.request;
+	handleAuthenticateWithGoogleFailure: typeof authenticateWithGoogle.failure;
 	handleGetPointsGroups: typeof getPointsGroups.request;
 }
 
@@ -41,9 +41,8 @@ interface IDispatchProps {
 const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 	bindActionCreators(
 		{
-			handleAuthenticateWithGoogle: onAuthenticateWithGoogle.request,
-			handleAuthenticateWithGoogleFailure:
-				onAuthenticateWithGoogle.failure,
+			handleAuthenticateWithGoogle: authenticateWithGoogle.request,
+			handleAuthenticateWithGoogleFailure: authenticateWithGoogle.failure,
 			handleGetPointsGroups: getPointsGroups.request
 		},
 		dispatch

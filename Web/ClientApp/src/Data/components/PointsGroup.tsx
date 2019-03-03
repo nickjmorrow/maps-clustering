@@ -1,18 +1,12 @@
-import {
-	borderRadius,
-	colors,
-	DeleteButton,
-	transitions,
-	Typography
-} from 'njm-react-component-library';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { ItemPermissionType } from '../../Core';
-import styled from 'styled-components';
-import { deletePointsGroup, setActivePointsGroup } from '../actions';
-import { IPointsGroup } from '../types';
-import { Label } from '../../Core/components/Label';
+import { DeleteButton, Typography } from "njm-react-component-library";
+import * as React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import styled from "styled-components";
+import { ItemPermissionType } from "../../Core";
+import { Label } from "../../Core/components/Label";
+import { deletePointsGroup, setActivePointsGroup } from "../actions";
+import { IPointsGroup } from "../types";
 
 class PointsGroupInternal extends React.Component<IProps, IState> {
 	readonly state = initialState;
@@ -46,9 +40,7 @@ class PointsGroupInternal extends React.Component<IProps, IState> {
 				onMouseLeave={this.turnOffIsHovering}
 				isActive={isActive}
 				onClick={this.handleSetActivePointsGroupInternal}>
-				<Typography variant="h3" noMargin={true} color={'inherit'}>
-					{pointsGroup.name}
-				</Typography>
+				<Typography>{pointsGroup.name}</Typography>
 				{shouldShowDeleteButton(
 					pointsGroup,
 					isHovering,
@@ -56,18 +48,17 @@ class PointsGroupInternal extends React.Component<IProps, IState> {
 				) && (
 					<DeleteButton
 						onClick={this.handleDeletePointsGroupInternal}
-						onMouseEnter={this.turnOnIsHoveringOverDeleteButton}
-						onMouseLeave={this.turnOffIsHoveringOverDeleteButton}
 					/>
 				)}
 				{pointsGroup.itemPermissionType ===
 					ItemPermissionType.Default &&
 					(isActive || isHovering) && (
-						<Label color={colors.white}>{'Default'}</Label>
+						<Label color={"white"}>{"Default"}</Label>
 					)}
 			</PointsGroupWrapper>
 		);
 	}
+	// TODO: convert to context
 }
 
 const shouldShowDeleteButton = (
@@ -113,9 +104,9 @@ const initialState = {
 type IState = typeof initialState;
 
 // css
-const PointsGroupWrapper = styled<{ isActive: boolean }, 'button'>('button')`
+const PointsGroupWrapper = styled("button")<{ isActive: boolean }>`
 	padding: 10px 6px;
-	border-radius: ${borderRadius.default};
+	border-radius: 2px;
 	display: flex;
 	justify-content: space-between;
 	cursor: pointer;
@@ -125,13 +116,14 @@ const PointsGroupWrapper = styled<{ isActive: boolean }, 'button'>('button')`
 	width: 100%;
 	height: 36px;
 	align-items: center;
-	background-color: ${props =>
-		props.isActive ? colors.primaryLight : colors.white};
-	color: ${props => (props.isActive ? colors.white : colors.primaryDarkest)};
-	&:hover,
-	&:focus {
-		background-color: ${props =>
-			props.isActive ? colors.primaryLight : colors.primaryLightest};
-		transition: ${transitions.fast};
-	}
 `;
+
+// background-color: ${props =>
+//       props.isActive ? colors.primaryLight : colors.white};
+// color: ${props => (props.isActive ? colors.white : colors.primaryDarkest)};
+// &:hover,
+// &:focus {
+//       background-color: ${props =>
+//             props.isActive ? colors.primaryLight : colors.primaryLightest};
+//       transition: ${transitions.fast};
+// }

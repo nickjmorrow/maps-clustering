@@ -1,13 +1,9 @@
-import {
-	LogOutModal as GenericLogOutModal,
-	authActions
-} from 'njm-react-component-library';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch, Action } from 'redux';
-import { onRemoveUnsavedPointsGroups } from '../../Data';
-
-const { onLogOut } = authActions;
+import { LogOutModal as GenericLogOutModal } from "njm-react-component-library";
+import { logout } from "Auth/auth-helpers";
+import * as React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch, Action } from "redux";
+import { onRemoveUnsavedPointsGroups } from "../../Data";
 
 export const LogOutModalInternal: React.SFC<IProps> = ({
 	isOpen,
@@ -34,7 +30,7 @@ interface IOwnProps {
 }
 
 interface IDispatchProps {
-	handleLogOut: typeof onLogOut.request;
+	handleLogOut: typeof logout.request;
 	handleRemoveUnsavedPointsGroups: typeof onRemoveUnsavedPointsGroups;
 }
 
@@ -44,7 +40,7 @@ type IProps = IOwnProps & IDispatchProps;
 const mapDispatchToProps = (dispatch: Dispatch) =>
 	bindActionCreators(
 		{
-			handleLogOut: onLogOut.request,
+			handleLogOut: logout.request,
 			handleRemoveUnsavedPointsGroups: onRemoveUnsavedPointsGroups
 		},
 		dispatch

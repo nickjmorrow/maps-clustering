@@ -1,18 +1,16 @@
 import {
-	authSelectors,
 	FileInput,
 	IInitialInputInfo,
 	Typography
-} from 'njm-react-component-library';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { IReduxState } from '../../reducer';
-import { addPointsGroup, createPointsGroup } from '../../Data/actions';
-import styled from 'styled-components';
-import { TitleWrapper } from './TitleWrapper';
-
-const { getIsAuthenticated } = authSelectors;
+} from "njm-react-component-library";
+import * as React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import { IReduxState } from "../../reducer";
+import { addPointsGroup, createPointsGroup } from "../../Data/actions";
+import styled from "styled-components";
+import { TitleWrapper } from "./TitleWrapper";
+import { getIsAuthenticated } from "Auth/auth-helpers";
 
 export class FileUploadFormInternal extends React.PureComponent<
 	IProps,
@@ -23,7 +21,7 @@ export class FileUploadFormInternal extends React.PureComponent<
 	handleFileChange = (fileList: FileList | null) => {
 		if (fileList && fileList.length) {
 			const file = new FormData();
-			file.append('file', fileList[0]);
+			file.append("file", fileList[0]);
 			const {
 				isAuthenticated,
 				onCreatePointsGroup,
@@ -38,18 +36,14 @@ export class FileUploadFormInternal extends React.PureComponent<
 	};
 
 	render() {
-		const { inputInfo } = this.state;
 		return (
 			<Wrapper>
 				<TitleWrapper>
-					<Typography variant="h2">
-						{'Upload Points Group'}
+					<Typography sizeVariant={4}>
+						{"Upload Points Group"}
 					</Typography>
 				</TitleWrapper>
-				<FileInput
-					inputInfo={inputInfo}
-					onChange={this.handleFileChange}
-				/>
+				<FileInput onChange={this.handleFileChange} />
 			</Wrapper>
 		);
 	}
@@ -70,8 +64,8 @@ const Wrapper = styled.div`
 // types
 const initialState = {
 	inputInfo: {
-		name: 'file',
-		type: 'file'
+		name: "file",
+		type: "file"
 	} as IInitialInputInfo
 };
 
