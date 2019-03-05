@@ -1,14 +1,15 @@
+import { getIsAuthenticated, logout } from "Auth/auth-helpers";
+import { AuthModal, LogOutModal } from "Auth/components";
+import { onRemoveUnsavedPointsGroups } from "Data";
 import {
-	PopulatedAppBar as GenericAppBar,
-	AuthModal,
-	LogOutModal,
-	Modal
+	Modal,
+	PopulatedAppBar as GenericAppBar
 } from "njm-react-component-library";
-import { getIsAuthenticated } from "Auth/auth-helpers";
 import * as React from "react";
-import { connect } from "react-redux";
-import { IReduxState } from "../../reducer";
 import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import { IReduxState } from "../../reducer";
 import { clientId } from "../../secrets";
 
 export class AppBarInternal extends React.PureComponent<
@@ -43,9 +44,15 @@ export class AppBarInternal extends React.PureComponent<
 		console.log(response.getId());
 	};
 
+	handleLogout = () => {
+		this.props.handleLogout();
+		this.props.handleRemoveUnsavedPointsGroups();
+	};
+
 	handleFailure = (response: any) => {
 		console.log(response);
 	};
+
 	render() {
 		const {
 			isAuthModalOpen,
@@ -77,22 +84,12 @@ export class AppBarInternal extends React.PureComponent<
 				/>
 				<AuthModal
 					isOpen={isAuthModalOpen}
-					onRegisterClick={() => {
-						return;
-					}}
-					onLoginClick={() => {
-						return;
-					}}
-					onRequestClose={() => {
-						return;
-					}}
+					isRegistering={false}
+					handleToggleIsOpen={this.handleToggleAuthModal}
 				/>
 				<LogOutModal
 					isOpen={isLogOutModalOpen}
 					onRequestClose={this.handleToggleLogOutModal}
-					onPrimaryClick={() => {
-						return;
-					}}
 				/>
 				{googleModal}
 			</div>
@@ -105,20 +102,34 @@ interface IReduxProps {
 	isAuthenticated: boolean;
 }
 
+interface IDispatchProps {
+	handleLogout: typeof logout.request;
+	handleRemoveUnsavedPointsGroups: typeof onRemoveUnsavedPointsGroups;
+}
+
 const initialState = {
 	isAuthModalOpen: false,
 	isLogOutModalOpen: false,
 	isGoogleModalOpen: false
 };
 
-type IProps = IReduxProps;
+type IProps = IReduxProps & IDispatchProps;
 
 // redux
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
 	isAuthenticated: getIsAuthenticated(state)
 });
 
+const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
+	bindActionCreators(
+		{
+			handleLogout: logout.request,
+			handleRemoveUnsavedPointsGroups: onRemoveUnsavedPointsGroups
+		},
+		dispatch
+	);
+
 export const AppBar = connect(
 	mapStateToProps,
-	null
+	mapDispatchToProps
 )(AppBarInternal);

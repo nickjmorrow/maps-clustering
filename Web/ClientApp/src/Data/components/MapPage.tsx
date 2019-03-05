@@ -1,4 +1,8 @@
-import { IOption } from "njm-react-component-library";
+import {
+	IOption,
+	StyleConstant,
+	ThemeContext
+} from "njm-react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -26,10 +30,11 @@ export const MapPageInternal: React.SFC<IReduxProps> = ({
 		lng: activePointsGroup.averageHorizontalDisplacement
 	};
 
+	const { colors } = React.useContext(ThemeContext);
 	return (
 		<div>
 			<Map markers={markers} defaultPosition={defaultPosition} />
-			<Divider />
+			<Divider colors={colors} />
 			<MapControls>
 				<PointsGroupAndParametersWrapper>
 					<FlexColumn>
@@ -96,9 +101,9 @@ const MapControls = styled.div`
 	}
 `;
 
-const Divider = styled.div`
+const Divider = styled("div")<{ colors: StyleConstant<"colors"> }>`
 	height: 20px;
-	background-color: ${"darkGray"};
+	background-color: ${p => p.colors.neutral.dark};
 `;
 
 // TODO: darkGray
