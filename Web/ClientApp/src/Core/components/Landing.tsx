@@ -76,7 +76,9 @@ export class LandingInternal extends React.PureComponent<IProps> {
 					}
 				</Media>
 				<FileUploadForm />
-				<Footer />
+				<div style={{ marginTop: "30px" }}>
+					<Footer />
+				</div>
 			</Wrapper>
 		);
 	}
@@ -86,6 +88,9 @@ export class LandingInternal extends React.PureComponent<IProps> {
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
+	min-height: 100vh;
+	position: relative;
+	overflow: hidden;
 `;
 
 // types

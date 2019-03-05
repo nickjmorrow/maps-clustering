@@ -15,7 +15,6 @@ export const LogOutModalInternal: React.SFC<IProps> = ({
 		handleRemoveUnsavedPointsGroups
 	];
 
-	console.log("im mounted");
 	return (
 		<GenericLogOutModal
 			isOpen={isOpen}

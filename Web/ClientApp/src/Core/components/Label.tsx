@@ -5,7 +5,9 @@ import { Typography } from "njm-react-component-library";
 export const Label: React.SFC<IOwnProps> = ({ children, color }) => {
 	return (
 		<StyledLabel color={"red"}>
-			<Typography sizeVariant={5}>{children}</Typography>
+			<Typography sizeVariant={2} colorVariant={"primaryLight"}>
+				{children}
+			</Typography>
 		</StyledLabel>
 	);
 };

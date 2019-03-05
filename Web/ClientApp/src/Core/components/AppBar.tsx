@@ -1,6 +1,5 @@
-import { getIsAuthenticated, logout } from "Auth/auth-helpers";
+import { getIsAuthenticated } from "Auth/auth-helpers";
 import { AuthModal, LogOutModal } from "Auth/components";
-import { onRemoveUnsavedPointsGroups } from "Data";
 import {
 	Modal,
 	PopulatedAppBar as GenericAppBar
@@ -8,7 +7,6 @@ import {
 import * as React from "react";
 import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
 import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
 import { IReduxState } from "../../reducer";
 import { clientId } from "../../secrets";
 
@@ -44,11 +42,6 @@ export class AppBarInternal extends React.PureComponent<
 		console.log(response.getId());
 	};
 
-	handleLogout = () => {
-		this.props.handleLogout();
-		this.props.handleRemoveUnsavedPointsGroups();
-	};
-
 	handleFailure = (response: any) => {
 		console.log(response);
 	};
@@ -74,7 +67,7 @@ export class AppBarInternal extends React.PureComponent<
 			</Modal>
 		);
 		return (
-			<div>
+			<>
 				<GenericAppBar
 					links={[]}
 					appName={"Location Clusterer"}
@@ -92,7 +85,7 @@ export class AppBarInternal extends React.PureComponent<
 					onRequestClose={this.handleToggleLogOutModal}
 				/>
 				{googleModal}
-			</div>
+			</>
 		);
 	}
 }
@@ -102,34 +95,20 @@ interface IReduxProps {
 	isAuthenticated: boolean;
 }
 
-interface IDispatchProps {
-	handleLogout: typeof logout.request;
-	handleRemoveUnsavedPointsGroups: typeof onRemoveUnsavedPointsGroups;
-}
-
 const initialState = {
 	isAuthModalOpen: false,
 	isLogOutModalOpen: false,
 	isGoogleModalOpen: false
 };
 
-type IProps = IReduxProps & IDispatchProps;
+type IProps = IReduxProps;
 
 // redux
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
 	isAuthenticated: getIsAuthenticated(state)
 });
 
-const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
-	bindActionCreators(
-		{
-			handleLogout: logout.request,
-			handleRemoveUnsavedPointsGroups: onRemoveUnsavedPointsGroups
-		},
-		dispatch
-	);
-
 export const AppBar = connect(
 	mapStateToProps,
-	mapDispatchToProps
+	null
 )(AppBarInternal);

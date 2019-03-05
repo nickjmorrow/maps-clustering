@@ -1,4 +1,9 @@
-import { DeleteButton, Typography } from "njm-react-component-library";
+import {
+	DeleteButton,
+	Typography,
+	StyleConstant,
+	ThemeContext
+} from "njm-react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
@@ -8,58 +13,60 @@ import { Label } from "../../Core/components/Label";
 import { deletePointsGroup, setActivePointsGroup } from "../actions";
 import { IPointsGroup } from "../types";
 
-class PointsGroupInternal extends React.Component<IProps, IState> {
-	readonly state = initialState;
+const PointsGroupInternal: React.SFC<IProps> = ({
+	pointsGroup,
+	handleDeletePointsGroup,
+	handleSetActivePointsGroup
+}) => {
+	const turnOnIsHovering = () => setIsHovering(true);
+	const turnOffIsHovering = () => setIsHovering(false);
 
-	turnOnIsHovering = () => this.setState({ isHovering: true });
-	turnOffIsHovering = () => this.setState({ isHovering: false });
-	turnOnIsHoveringOverDeleteButton = () =>
-		this.setState({ isHoveringOverDeleteButton: true });
-	turnOffIsHoveringOverDeleteButton = () =>
-		this.setState({ isHoveringOverDeleteButton: false });
-	handleDeletePointsGroupInternal = () => {
-		const { handleDeletePointsGroup, pointsGroup } = this.props;
+	const handleDeletePointsGroupInternal = () => {
 		handleDeletePointsGroup(pointsGroup.pointsGroupId!);
 	};
-	handleSetActivePointsGroupInternal = () => {
-		const { handleSetActivePointsGroup, pointsGroup } = this.props;
-		if (!this.state.isHoveringOverDeleteButton) {
+	const handleSetActivePointsGroupInternal = () => {
+		if (!isHoveringOverDeleteButton) {
 			handleSetActivePointsGroup(pointsGroup.pointsGroupId!);
 		}
 	};
 
-	public render() {
-		const { pointsGroup } = this.props;
-		const { isHovering, isHoveringOverDeleteButton } = this.state;
-		const { isActive } = pointsGroup;
+	const [isHovering, setIsHovering] = React.useState(false);
+	const [isHoveringOverDeleteButton] = React.useState(false);
+	const {
+		colors,
+		transitions,
+		border: { borderRadius },
+		spacing
+	} = React.useContext(ThemeContext);
+	const { isActive } = pointsGroup;
 
-		return (
-			<PointsGroupWrapper
-				key={pointsGroup.pointsGroupId}
-				onMouseEnter={this.turnOnIsHovering}
-				onMouseLeave={this.turnOffIsHovering}
-				isActive={isActive}
-				onClick={this.handleSetActivePointsGroupInternal}>
-				<Typography>{pointsGroup.name}</Typography>
-				{shouldShowDeleteButton(
-					pointsGroup,
-					isHovering,
-					isHoveringOverDeleteButton
-				) && (
-					<DeleteButton
-						onClick={this.handleDeletePointsGroupInternal}
-					/>
+	return (
+		<PointsGroupWrapper
+			spacing={spacing}
+			colors={colors}
+			transitions={transitions}
+			borderRadius={borderRadius}
+			key={pointsGroup.pointsGroupId}
+			onMouseEnter={turnOnIsHovering}
+			onMouseLeave={turnOffIsHovering}
+			isActive={isActive}
+			onClick={handleSetActivePointsGroupInternal}>
+			<Typography
+				colorVariant={isActive ? "primaryLight" : "secondaryDark"}>
+				{pointsGroup.name}
+			</Typography>
+			{shouldShowDeleteButton(
+				pointsGroup,
+				isHovering,
+				isHoveringOverDeleteButton
+			) && <DeleteButton onClick={handleDeletePointsGroupInternal} />}
+			{pointsGroup.itemPermissionType === ItemPermissionType.Default &&
+				(isActive || isHovering) && (
+					<Label color={"white"}>{"Default"}</Label>
 				)}
-				{pointsGroup.itemPermissionType ===
-					ItemPermissionType.Default &&
-					(isActive || isHovering) && (
-						<Label color={"white"}>{"Default"}</Label>
-					)}
-			</PointsGroupWrapper>
-		);
-	}
-	// TODO: convert to context
-}
+		</PointsGroupWrapper>
+	);
+};
 
 const shouldShowDeleteButton = (
 	pg: IPointsGroup,
@@ -96,34 +103,32 @@ export const PointsGroup = connect(
 	mapDispatchToProps
 )(PointsGroupInternal);
 
-const initialState = {
-	isHovering: false,
-	isHoveringOverDeleteButton: false
-};
-
-type IState = typeof initialState;
-
 // css
-const PointsGroupWrapper = styled("button")<{ isActive: boolean }>`
-	padding: 10px 6px;
-	border-radius: 2px;
+const PointsGroupWrapper = styled("button")<{
+	isActive: boolean;
+	colors: StyleConstant<"colors">;
+	transitions: StyleConstant<"transitions">;
+	borderRadius: StyleConstant<"border">["borderRadius"];
+	spacing: StyleConstant<"spacing">;
+}>`
+	padding: ${p => p.spacing.ss3};
+	border-radius: ${p => p.borderRadius.br1};
 	display: flex;
 	justify-content: space-between;
 	cursor: pointer;
-	margin: 6px 0px;
+	margin: ${p => p.spacing.ss2} 0px;
 	border: none;
 	outline: none;
 	width: 100%;
-	height: 36px;
+	height: ${p => p.spacing.ss12};
 	align-items: center;
+	background-color: ${p =>
+		p.isActive ? p.colors.core.light : p.colors.background};
+	transition: background-color, ${p => p.transitions.fast};
+	&:hover,
+	&:focus {
+		background-color: ${p =>
+			p.isActive ? p.colors.core.light : p.colors.core.lightest};
+		transition: ${p => p.transitions.fast};
+	}
 `;
-
-// background-color: ${props =>
-//       props.isActive ? colors.primaryLight : colors.white};
-// color: ${props => (props.isActive ? colors.white : colors.primaryDarkest)};
-// &:hover,
-// &:focus {
-//       background-color: ${props =>
-//             props.isActive ? colors.primaryLight : colors.primaryLightest};
-//       transition: ${transitions.fast};
-// }
