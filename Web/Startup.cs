@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Text;
 using Calc;
@@ -21,13 +22,15 @@ namespace WebApplication
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
+
         }
 
         public IConfiguration Configuration { get; }
-        public static IContainer Container { get; set; }
+        public IHostingEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -56,8 +59,8 @@ namespace WebApplication
             // custom
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-
             var appSettings = appSettingsSection.Get<AppSettings>();
+            
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
                 {
@@ -81,9 +84,8 @@ namespace WebApplication
                     googleOptions.ClientSecret = appSettings.GoogleClientSecret;
                 });
 
-            var oldEndpoint = "aar0vxb3vuu0pk.cjbl7cfof767.us-east-2.rds.amazonaws.com";
-            var endpoint = "njm.cjbl7cfof767.us-east-2.rds.amazonaws.com";
-            var connectionString = $"Server = {endpoint},1433; Initial Catalog = myDatabase; Persist Security Info = False; User ID = nickjmorrow; Password = myPassword382; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = True; Connection Timeout = 30;";
+            var connectionString = Environment.IsDevelopment() ? appSettings.DevelopmentConnectionString : appSettings.ProductionConnectionString;
+            
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<FileHandlerService, FileHandlerService>();
             services

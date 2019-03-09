@@ -1,0 +1,11 @@
+import * as React from "react";
+import { Typography, ThemeContext } from "@nickjmorrow/react-component-library";
+
+export const Header: React.FC = ({ children }) => {
+	const { spacing } = React.useContext(ThemeContext);
+	return (
+		<Typography sizeVariant={5} style={{ marginBottom: spacing.ss4 }}>
+			{children}
+		</Typography>
+	);
+};

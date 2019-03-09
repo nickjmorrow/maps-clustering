@@ -2,17 +2,15 @@ import {
 	IOption,
 	StyleConstant,
 	ThemeContext
-} from "njm-react-component-library";
+} from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Clusters, Map, Parameters } from "../";
-import { FileUploadForm } from "../../Core/components";
+import { Map } from "../";
 import { IReduxState } from "../../reducer";
 import { getActivePointsGroup } from "../selectors";
 import { IPointsGroup } from "../types";
-import { PointsGroupList } from "./PointsGroupList";
-import { Summary } from "./Summary";
+import { MapControls } from "./MapControls";
 
 export const MapPageInternal: React.SFC<IReduxProps> = ({
 	pointsGroups,
@@ -32,25 +30,15 @@ export const MapPageInternal: React.SFC<IReduxProps> = ({
 
 	const { colors } = React.useContext(ThemeContext);
 	return (
-		<div>
+		<>
 			<Map markers={markers} defaultPosition={defaultPosition} />
 			<Divider colors={colors} />
-			<MapControls>
-				<PointsGroupAndParametersWrapper>
-					<FlexColumn>
-						<PointsGroupList pointsGroups={pointsGroups} />
-						<Parameters
-							currentClusterOption={currentClusterOption}
-						/>
-					</FlexColumn>
-				</PointsGroupAndParametersWrapper>
-				<Clusters activePointsGroup={activePointsGroup} />
-				<SummaryFormWrapper>
-					<Summary />
-					<FileUploadForm />
-				</SummaryFormWrapper>
-			</MapControls>
-		</div>
+			<MapControls
+				pointsGroups={pointsGroups}
+				activePointsGroup={activePointsGroup}
+				currentClusterOption={currentClusterOption}
+			/>
+		</>
 	);
 };
 
@@ -74,62 +62,10 @@ interface IReduxProps {
 }
 
 // css
-const PointsGroupAndParametersWrapper = styled.div`
-	width: 100%;
-	grid-area: pointsgroupandparameters;
-	display: flex;
-	justify-content: center;
-`;
-
-const FlexColumn = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 300px;
-`;
-
-const MapControls = styled.div`
-	display: grid;
-	grid-template-areas: "pointsgroupandparameters" "clusters" "summaryform";
-	margin: 0 auto;
-	@media (min-width: 900px) {
-		grid-template-areas: "pointsgroupandparameters clusters" "summaryform clusters";
-		grid-template-columns: repeat(2, 1fr);
-	}
-	@media (min-width: 1200px) {
-		grid-template-areas: "pointsgroupandparameters clusters summaryform";
-		grid-template-columns: repeat(3, 1fr);
-	}
-`;
-
 const Divider = styled("div")<{ colors: StyleConstant<"colors"> }>`
 	height: 20px;
 	background-color: ${p => p.colors.neutral.dark};
 `;
-
-// TODO: darkGray
-
-// const FlexWrapper = styled.div`
-// 	display: grid;
-// 	grid-template-areas: 'clusters' 'summary' 'fileuploadform';
-// 	@media (min-width: 1200px) {
-// 		grid-template-areas: 'clusters summary' 'clusters fileuploadform';
-// 	}
-// `;
-
-// const ResultsWrapper = styled.div``;
-
-const SummaryFormWrapper = styled.div`
-	grid-area: summaryform;
-	width: 100%;
-`;
-
-// const TitleWrapper = styled.div`
-// 	display: flex;
-// 	justify-content: center;
-// 	@media (min-width: 900px) {
-// 		justify-content: flex-start;
-// 	}
-// `;
 
 // helpers
 const getMarkers = (activePointsGroup: IPointsGroup) => {

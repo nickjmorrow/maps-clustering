@@ -3,9 +3,10 @@ import {
 	Typography,
 	ThemeContext,
 	StyleConstant
-} from "njm-react-component-library";
+} from "@nickjmorrow/react-component-library";
 import styled from "styled-components";
 import { TitleWrapper } from "../../Core/components/TitleWrapper";
+import { Header } from "./Header";
 
 export const Summary: React.SFC = () => {
 	const {
@@ -15,7 +16,7 @@ export const Summary: React.SFC = () => {
 	return (
 		<FlexCenter>
 			<TitleWrapper>
-				<Typography sizeVariant={4}>Summary</Typography>
+				<Header>Summary</Header>
 			</TitleWrapper>
 			<TextWrapper>
 				<Wrapper>
@@ -53,11 +54,11 @@ const Code = styled("span")<{
 `;
 
 const Wrapper = styled.div`
-	margin: 12px 0px;
+	margin: 0 0 12px 0;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: center;
+	align-items: flex-start;
 	grid-area: summary;
 	width: 100%;
 `;

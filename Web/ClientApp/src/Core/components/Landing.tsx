@@ -1,11 +1,10 @@
 import {
-	populateUserStateFromLocalStorageIfAvailable,
-	getIsAuthenticated
+	getIsAuthenticated,
+	populateUserStateFromLocalStorageIfAvailable
 } from "Auth/auth-helpers";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import Media from "react-media";
 import styled from "styled-components";
 import {
 	getPointsGroups,
@@ -16,9 +15,6 @@ import {
 import { IReduxState } from "../../reducer";
 import { AppBar } from "./AppBar";
 import { Footer } from "./Footer";
-// import { VerticalNavMenu } from "njm-react-component-library";
-import { FileUploadForm } from "./FileUploadForm";
-import Axios from "axios";
 
 export class LandingInternal extends React.PureComponent<IProps> {
 	componentDidMount = () => {
@@ -31,22 +27,6 @@ export class LandingInternal extends React.PureComponent<IProps> {
 		handlePopulateUserStateFromLocalStorageIfAvailable();
 		handlePopulatePointsGroupsStateFromLocalStorageIfAvailable();
 		handleGetPointsGroups();
-
-		Axios.get("api/test/getpersistedvalues")
-			.then(({ data }: { data: string[] }) => console.log(data))
-			.catch(err => console.error(err));
-
-		Axios.post(
-			"api/test/addtestvalue",
-			{ testValueId: "YEARS" },
-			{
-				headers: {
-					"Content-Type": "application/json"
-				}
-			}
-		)
-			.then(({ data }: { data: string[] }) => console.log(data))
-			.catch(err => console.error(err));
 	};
 
 	componentWillReceiveProps = (nextProps: IProps) => {
@@ -64,21 +44,7 @@ export class LandingInternal extends React.PureComponent<IProps> {
 			<Wrapper>
 				<AppBar />
 				<MapPage />
-				<Media query={`(max-width: 800px)`}>
-					{matches =>
-						matches ? (
-							<div>
-								{
-									"<VerticalNavMenu buttonProps={() => { return; }}/>"
-								}
-							</div>
-						) : null
-					}
-				</Media>
-				<FileUploadForm />
-				<div style={{ marginTop: "30px" }}>
-					<Footer />
-				</div>
+				<Footer />
 			</Wrapper>
 		);
 	}
@@ -86,8 +52,7 @@ export class LandingInternal extends React.PureComponent<IProps> {
 
 // css
 const Wrapper = styled.div`
-	display: flex;
-	flex-direction: column;
+	display: block;
 	min-height: 100vh;
 	position: relative;
 	overflow: hidden;

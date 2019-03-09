@@ -3,37 +3,24 @@ import { AuthModal, LogOutModal } from "Auth/components";
 import {
 	Modal,
 	PopulatedAppBar as GenericAppBar
-} from "njm-react-component-library";
+} from "@nickjmorrow/react-component-library";
 import * as React from "react";
+import { useState } from "react";
 import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
 import { connect } from "react-redux";
 import { IReduxState } from "../../reducer";
 import { clientId } from "../../secrets";
 
-export class AppBarInternal extends React.PureComponent<
-	IProps,
-	typeof initialState
-> {
-	readonly state = initialState;
+export const AppBarInternal: React.FC<IProps> = ({ isAuthenticated }) => {
+	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+	const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
+	const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
 
-	handleToggleAuthModal = () =>
-		this.setState(prevState => ({
-			isAuthModalOpen: !prevState.isAuthModalOpen
-		}));
+	const handleToggleAuthModal = () => setIsAuthModalOpen(prev => !prev);
 
-	handleToggleLogOutModal = () =>
-		this.setState(prevState => ({
-			isLogOutModalOpen: !prevState.isLogOutModalOpen
-		}));
+	const handleToggleGoogleModal = () => setIsGoogleModalOpen(prev => !prev);
 
-	responseGoogle = (response: any) => console.log(response);
-
-	handleToggleGoogleModal = () =>
-		this.setState(prevState => ({
-			isGoogleModalOpen: !prevState.isGoogleModalOpen
-		}));
-
-	handleSuccess = (response: GoogleLoginResponse) => {
+	const handleSuccess = (response: GoogleLoginResponse) => {
 		console.log(response.getAuthResponse().access_token);
 		console.log(response.getBasicProfile().getEmail());
 		console.log(response.getBasicProfile().getName());
@@ -42,64 +29,49 @@ export class AppBarInternal extends React.PureComponent<
 		console.log(response.getId());
 	};
 
-	handleFailure = (response: any) => {
+	const handleFailure = (response: any) => {
 		console.log(response);
 	};
 
-	render() {
-		const {
-			isAuthModalOpen,
-			isLogOutModalOpen,
-			isGoogleModalOpen
-		} = this.state;
-		const { isAuthenticated } = this.props;
-
-		const googleModal = (
-			<Modal
-				isOpen={isGoogleModalOpen}
-				onRequestClose={this.handleToggleGoogleModal}>
-				<GoogleLogin
-					clientId={clientId}
-					buttonText="Login!"
-					onSuccess={this.handleSuccess}
-					onFailure={this.handleFailure}
-				/>
-			</Modal>
-		);
-		return (
-			<>
-				<GenericAppBar
-					links={[]}
-					appName={"Location Clusterer"}
-					isAuthenticated={isAuthenticated}
-					onSignInClick={this.handleToggleAuthModal}
-					onLogOutClick={this.handleToggleLogOutModal}
-				/>
-				<AuthModal
-					isOpen={isAuthModalOpen}
-					isRegistering={false}
-					handleToggleIsOpen={this.handleToggleAuthModal}
-				/>
-				<LogOutModal
-					isOpen={isLogOutModalOpen}
-					onRequestClose={this.handleToggleLogOutModal}
-				/>
-				{googleModal}
-			</>
-		);
-	}
-}
+	const googleModal = (
+		<Modal
+			isOpen={isGoogleModalOpen}
+			onRequestClose={handleToggleGoogleModal}>
+			<GoogleLogin
+				clientId={clientId}
+				buttonText="Login!"
+				onSuccess={handleSuccess}
+				onFailure={handleFailure}
+			/>
+		</Modal>
+	);
+	return (
+		<>
+			<GenericAppBar
+				links={[]}
+				appName={"Location Clusterer"}
+				isAuthenticated={isAuthenticated}
+				onSignInClick={handleToggleAuthModal}
+				onLogOutClick={() => setIsLogOutModalOpen(true)}
+			/>
+			<AuthModal
+				isOpen={isAuthModalOpen}
+				isRegistering={false}
+				handleToggleIsOpen={handleToggleAuthModal}
+			/>
+			<LogOutModal
+				isOpen={isLogOutModalOpen}
+				onRequestClose={() => setIsLogOutModalOpen(false)}
+			/>
+			{googleModal}
+		</>
+	);
+};
 
 // types
 interface IReduxProps {
 	isAuthenticated: boolean;
 }
-
-const initialState = {
-	isAuthModalOpen: false,
-	isLogOutModalOpen: false,
-	isGoogleModalOpen: false
-};
 
 type IProps = IReduxProps;
 

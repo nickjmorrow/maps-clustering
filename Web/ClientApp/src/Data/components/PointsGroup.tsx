@@ -1,9 +1,9 @@
 import {
-	DeleteButton,
 	Typography,
 	StyleConstant,
-	ThemeContext
-} from "njm-react-component-library";
+	ThemeContext,
+	TrashIcon
+} from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
@@ -18,20 +18,25 @@ const PointsGroupInternal: React.SFC<IProps> = ({
 	handleDeletePointsGroup,
 	handleSetActivePointsGroup
 }) => {
+	const [isHovering, setIsHovering] = React.useState(false);
+	const [
+		isHoveringOverDeleteButton,
+		setIsHoveringOverDeleteButton
+	] = React.useState(false);
 	const turnOnIsHovering = () => setIsHovering(true);
 	const turnOffIsHovering = () => setIsHovering(false);
 
 	const handleDeletePointsGroupInternal = () => {
 		handleDeletePointsGroup(pointsGroup.pointsGroupId!);
 	};
-	const handleSetActivePointsGroupInternal = () => {
+	const handleClick = () => {
 		if (!isHoveringOverDeleteButton) {
 			handleSetActivePointsGroup(pointsGroup.pointsGroupId!);
+		} else {
+			handleDeletePointsGroupInternal();
 		}
 	};
 
-	const [isHovering, setIsHovering] = React.useState(false);
-	const [isHoveringOverDeleteButton] = React.useState(false);
 	const {
 		colors,
 		transitions,
@@ -50,16 +55,23 @@ const PointsGroupInternal: React.SFC<IProps> = ({
 			onMouseEnter={turnOnIsHovering}
 			onMouseLeave={turnOffIsHovering}
 			isActive={isActive}
-			onClick={handleSetActivePointsGroupInternal}>
+			onClick={handleClick}>
 			<Typography
-				colorVariant={isActive ? "primaryLight" : "secondaryDark"}>
+				colorVariant={isActive ? "primaryLight" : "primaryDark"}>
 				{pointsGroup.name}
 			</Typography>
 			{shouldShowDeleteButton(
 				pointsGroup,
 				isHovering,
 				isHoveringOverDeleteButton
-			) && <DeleteButton onClick={handleDeletePointsGroupInternal} />}
+			) && (
+				<TrashIcon
+					onClick={handleDeletePointsGroupInternal}
+					colorVariant={"secondaryLight"}
+					onMouseEnter={() => setIsHoveringOverDeleteButton(true)}
+					onMouseLeave={() => setIsHoveringOverDeleteButton(false)}
+				/>
+			)}
 			{pointsGroup.itemPermissionType === ItemPermissionType.Default &&
 				(isActive || isHovering) && (
 					<Label color={"white"}>{"Default"}</Label>
@@ -116,7 +128,7 @@ const PointsGroupWrapper = styled("button")<{
 	display: flex;
 	justify-content: space-between;
 	cursor: pointer;
-	margin: ${p => p.spacing.ss2} 0px;
+	margin: 0 0 ${p => p.spacing.ss2} 0;
 	border: none;
 	outline: none;
 	width: 100%;

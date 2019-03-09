@@ -1,19 +1,19 @@
-import { Typography } from "njm-react-component-library";
 import * as React from "react";
 import { IPointsGroup } from "../types";
 import { PointsGroup } from "./PointsGroup";
 import { TitleWrapper } from "../../Core/components";
+import { Header } from "./Header";
 
 export const PointsGroupList: React.SFC<IOwnProps> = ({ pointsGroups }) => {
 	return (
-		<div>
+		<>
 			<TitleWrapper>
-				<Typography sizeVariant={5}>Point Groups</Typography>
+				<Header>Points Groups</Header>
 			</TitleWrapper>
 			{pointsGroups.map(pg => (
 				<PointsGroup key={pg.pointsGroupId} pointsGroup={pg} />
 			))}
-		</div>
+		</>
 	);
 };
 // types

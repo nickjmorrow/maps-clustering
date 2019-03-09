@@ -1,8 +1,14 @@
-import { Slider, Typography } from "njm-react-component-library";
+import {
+	Slider,
+	Typography,
+	StyleConstant,
+	ThemeContext
+} from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { IPoint } from "../../types";
 import styled from "styled-components";
 import { TitleWrapper } from "../../../Core/components";
+import "rc-slider/assets/index.css";
 
 export const AhcParameters: React.SFC<IProps> = ({
 	min,
@@ -12,13 +18,10 @@ export const AhcParameters: React.SFC<IProps> = ({
 	onClusterCountChange: handleClusterCountChange
 }) => {
 	const handleClusterCountChangeInternal = (newIterations: number) =>
-		handleClusterCountChange(
-			newIterations
-			// convertIterationsToClusterCount(newIterations, points)
-		);
-	// const iterations = convertClusterCountToIterations(clusterCount, points);
+		handleClusterCountChange(newIterations);
+	const { spacing } = React.useContext(ThemeContext);
 	return (
-		<Wrapper>
+		<Wrapper spacing={spacing}>
 			<TitleWrapper>
 				<Typography sizeVariant={5}>Number of Clusters</Typography>
 			</TitleWrapper>
@@ -32,16 +35,6 @@ export const AhcParameters: React.SFC<IProps> = ({
 	);
 };
 
-// helpers
-// const convertIterationsToClusterCount = (
-// 	iterations: number,
-// 	points: IPoint[]
-// ) => points.length - iterations + 1;
-// const convertClusterCountToIterations = (
-// 	clusterCount: number,
-// 	points: IPoint[]
-// ) => 1 + points.length - clusterCount;
-
 // types
 interface IProps {
 	readonly min: number;
@@ -52,6 +45,7 @@ interface IProps {
 }
 
 // css
-const Wrapper = styled.div`
+const Wrapper = styled("div")<{ spacing: StyleConstant<"spacing"> }>`
 	max-width: 400px;
+	margin-top: ${p => p.spacing.ss4};
 `;

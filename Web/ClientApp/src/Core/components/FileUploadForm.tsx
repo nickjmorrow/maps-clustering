@@ -2,7 +2,7 @@ import {
 	FileInput,
 	IInitialInputInfo,
 	Typography
-} from "njm-react-component-library";
+} from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
@@ -43,7 +43,7 @@ export class FileUploadFormInternal extends React.PureComponent<
 						{"Upload Points Group"}
 					</Typography>
 				</TitleWrapper>
-				<FileInput onChange={this.handleFileChange} />
+				<FileInput onChange={this.handleFileChange} useMargin={false} />
 			</Wrapper>
 		);
 	}

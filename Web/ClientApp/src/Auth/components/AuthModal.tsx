@@ -1,5 +1,5 @@
 import { login, register, LoginInfo } from "Auth/auth-helpers";
-import { AuthModal as GenericAuthModal } from "njm-react-component-library";
+import { AuthModal as GenericAuthModal } from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";

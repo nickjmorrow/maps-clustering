@@ -1,8 +1,9 @@
-import { Typography } from "njm-react-component-library";
+import { Typography } from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import styled from "styled-components";
 import { ClusteredPoint, IPointsGroup } from "../types";
 import { TitleWrapper } from "../../Core/components";
+import { Header } from "./Header";
 
 export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 	if (!activePointsGroup) {
@@ -12,7 +13,9 @@ export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 	const clusteredPoints = getClusters(clusterCount, activePointsGroup);
 	const clusterIds = [...new Set(clusteredPoints.map(cp => cp.clusterId))];
 	const asRenderedPoints = (p: ClusteredPoint) => (
-		<Typography key={p.pointId}>{p.name}</Typography>
+		<div>
+			<Typography key={p.pointId}>{p.name}</Typography>
+		</div>
 	);
 	const renderedClusteredPoints = clusterIds
 		.sort((a: number, b: number) => a - b)
@@ -28,7 +31,7 @@ export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 	return (
 		<Wrapper>
 			<TitleWrapper>
-				<Typography sizeVariant={5}>Clusters</Typography>
+				<Header>Clusters</Header>
 			</TitleWrapper>
 			<ClustersWrapper>{renderedClusteredPoints}</ClustersWrapper>
 		</Wrapper>
@@ -51,6 +54,7 @@ const Cluster = styled("div")<{ color: string }>`
 const ClustersWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
+	align-items: flex-start;
 	flex-wrap: wrap;
 	grid-area: clusters;
 `;
@@ -58,7 +62,7 @@ const ClustersWrapper = styled.div`
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-start;
 `;
 
 // helpers

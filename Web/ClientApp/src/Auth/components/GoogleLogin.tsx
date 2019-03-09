@@ -1,4 +1,4 @@
-import { Button, Typography } from "njm-react-component-library";
+import { Button, Typography } from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import ReactGoogleLogin, { GoogleLoginResponse } from "react-google-login";
 

@@ -1,5 +1,5 @@
 import produce from "immer";
-import { IOption } from "njm-react-component-library";
+import { IOption } from "@nickjmorrow/react-component-library";
 import { ActionType } from "typesafe-actions";
 import { getColors, ItemPermissionType } from "../Core";
 import * as actions from "./actions";

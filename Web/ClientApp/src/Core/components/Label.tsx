@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Typography } from "njm-react-component-library";
+import { Typography } from "@nickjmorrow/react-component-library";
 
 export const Label: React.SFC<IOwnProps> = ({ children, color }) => {
 	return (

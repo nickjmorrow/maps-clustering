@@ -1,10 +1,7 @@
 import * as React from "react";
 import { Landing } from ".";
 import axios from "axios";
+import { getBaseUrl } from 'services';
 
-const production =
-	"https://bj9jj9rzj7.execute-api.us-east-2.amazonaws.com/beta/mapclusterer/";
-// const testing = "http://localhost:5002/";
-
-axios.defaults.baseURL = production;
+axios.defaults.baseURL = getBaseUrl();
 export const App: React.SFC = () => <Landing />;

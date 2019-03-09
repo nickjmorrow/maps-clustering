@@ -1,4 +1,4 @@
-import { IOption } from 'njm-react-component-library';
+import { IOption } from '@nickjmorrow/react-component-library';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';

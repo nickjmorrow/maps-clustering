@@ -1,4 +1,4 @@
-import { IOption } from 'njm-react-component-library';
+import { IOption } from '@nickjmorrow/react-component-library';
 import { apiKey } from '../secrets';
 
 // export enum fileApi {
