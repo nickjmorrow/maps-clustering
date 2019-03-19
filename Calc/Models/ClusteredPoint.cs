@@ -2,7 +2,7 @@ namespace Calc.Models
 {
     public class ClusteredPoint: Point
     {
-        public int? ClusterId { get; set; }
+        public int ClusterId { get; set; }
         public bool IsVisited { get; set; } = false;
         
         public override bool Equals(object obj)

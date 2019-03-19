@@ -9,11 +9,11 @@ namespace Calc
 {
     public class AgglomerativeHierarchicalClusteringService
     {
-        private ClusteringUtilities _clusteringUtilities;
+        private DistanceService _distanceService;
 
-        public AgglomerativeHierarchicalClusteringService(ClusteringUtilities clusteringUtilities)
+        public AgglomerativeHierarchicalClusteringService(DistanceService distanceService)
         {
-            this._clusteringUtilities = clusteringUtilities;
+            this._distanceService = distanceService;
         }
 
         public IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModel(IEnumerable<Point> points, 
@@ -118,7 +118,7 @@ namespace Calc
                 {
                     StartingCluster = c.c1,
                     EndingCluster = c.c2,
-                    Distance = this._clusteringUtilities.GetDistance(c.c1.GetCenter(), c.c2.GetCenter())
+                    Distance = this._distanceService.GetDistance(c.c1.GetCenter(), c.c2.GetCenter())
                 })
                 .GroupBy(c => c.Distance)
                 .Select(c => c.First());

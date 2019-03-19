@@ -8,15 +8,12 @@ namespace Calc
 {
     public class ClusteringSummaryService
     {
-        // intercluster distance
-        // intracluster distance for each cluster
-        // average intracluster distance
-        // average distance between all points (maybe)
-        private ClusteringUtilities _clusteringUtilities;
+        // TODO: consider average intracluster distance
+        private DistanceService _distanceService;
 
-        public ClusteringSummaryService(ClusteringUtilities clusteringUtilities)
+        public ClusteringSummaryService(DistanceService distanceService)
         {
-            this._clusteringUtilities = clusteringUtilities;
+            this._distanceService = distanceService;
         }
 
         public IEnumerable<ClusteringSummary> GetClusteringSummaries(IEnumerable<AgglomerativeHierarchicalClusterPoint> ahcPoints)
@@ -40,33 +37,33 @@ namespace Calc
                     };
                 });
                 var interclusterDistance = this.GetInterclusterDistance(clusteredPoints);
-                var intraclusterDistanceInfos = this.GetIntraclusterDistance(clusteredPoints);
+                var intraclusterDistances = this.GetIntraclusterDistances(clusteredPoints);
+                var avgDistanceBetweenAllPoints = this.GetAverageDistanceToCenter(ahcPoints);
                 clusterCountToSummaries.Add(new ClusteringSummary()
                 {
                     InterclusterDistance = interclusterDistance,
-                    IntraclusterDistances = intraclusterDistanceInfos
+                    IntraclusterDistances = intraclusterDistances,
+                    AverageDistanceBetweenAllPoints = avgDistanceBetweenAllPoints
                 });
             }
 
             return clusterCountToSummaries;
         }
 
-        public double GetInterclusterDistance(
+        internal double GetInterclusterDistance(
             IEnumerable<ClusteredPoint> clusteredPoints)
         {
             var clusters = clusteredPoints.GroupBy(cp => cp.ClusterId);
             var clusterCenters = clusters.Select(c => new Cluster<Point>()
             {
-                // TODO: wish I didn't have to null coalesce here, it should never be null
-                // clusterId shouldn't be nullable
-                ClusterId = c.Key ?? 0,
+                ClusterId = c.Key,
                 Points = c
             }).Select(c => c.GetCenter());
 
             return this.GetAverageDistanceToCenter(clusterCenters);
         }
 
-        public double GetAverageDistanceToCenter(IEnumerable<Point> points)
+        internal double GetAverageDistanceToCenter(IEnumerable<Point> points)
         {
             var center = new Cluster<Point>()
             {
@@ -74,29 +71,20 @@ namespace Calc
             }.GetCenter();
 
             var totalDistanceFromPointsToCenter =
-                points.Select(p => this._clusteringUtilities.GetDistance(p, center)).Sum(); 
+                points.Select(p => this._distanceService.GetDistance(p, center)).Sum(); 
             return totalDistanceFromPointsToCenter / points.Count();
         }
 
-        public IEnumerable<IntraclusterDistance> GetIntraclusterDistance(
+        internal IEnumerable<IntraclusterDistance> GetIntraclusterDistances(
             IEnumerable<ClusteredPoint> clusteredPoints)
         {
-            // break up the points into separate clusters
-            
-            // for each cluster, find average distance bebtween each point
-            throw new NotImplementedException();
+            return clusteredPoints
+                .GroupBy(cp => cp.ClusterId)
+                .Select(c => new IntraclusterDistance()
+                {
+                    ClusterId = c.Key,
+                    Distance = GetAverageDistanceToCenter(c)
+                });
         }
-    }
-
-    public class InterclusterDistanceInfo
-    {
-        public int ClusterCount { get; set; }
-        public double InterclusterDistance { get; set; }
-    }
-
-    public class IntraclusterDistanceInfo
-    {
-        public int ClusterCount { get; set; }
-        public double IntraclusterDistance { get; set; }
     }
 }

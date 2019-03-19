@@ -3,7 +3,7 @@ using GeoCoordinatePortable;
 
 namespace Calc
 {
-    public class ClusteringUtilities
+    public class DistanceService
     {
         public double GetDistance(Point startingPoint, Point endingPoint)
         {
