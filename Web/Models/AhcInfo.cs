@@ -7,8 +7,8 @@ namespace Web.Models
     public class AhcInfo
     {
         public IEnumerable<AhcPointDTO> AhcPoints { get; set; }
-        public IEnumerable<InterClusterDistance> InterClusterDistances { get; set; }
-        public IEnumerable<ClusterSummary> ClusterSummaries { get; set; }
+        public IEnumerable<InterclusterDistance> InterClusterDistances { get; set; }
+        public IEnumerable<ClusteringSummary> ClusterSummaries { get; set; }
     }
 
     public class AhcPointDTO : Point

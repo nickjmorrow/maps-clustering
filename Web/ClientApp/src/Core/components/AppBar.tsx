@@ -48,11 +48,8 @@ export const AppBarInternal: React.FC<IProps> = ({ isAuthenticated }) => {
 	return (
 		<>
 			<GenericAppBar
-				links={[]}
 				appName={"Location Clusterer"}
-				isAuthenticated={isAuthenticated}
-				onSignInClick={handleToggleAuthModal}
-				onLogOutClick={() => setIsLogOutModalOpen(true)}
+				styleVariant={"primary"}
 			/>
 			<AuthModal
 				isOpen={isAuthModalOpen}

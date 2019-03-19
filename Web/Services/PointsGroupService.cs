@@ -27,19 +27,19 @@ namespace Web.Services
         private ItemService _itemService;
         private ItemFilterer _itemFilterer;
         private FileHandlerService _fileHandlerService;
-        private AgglomerativeHierarchicalClusteringService _ahcService;
+        private ClusteringService _clusteringService;
 
         public PointsGroupService(DatabaseContext context, 
             ItemService itemService, 
             ItemFilterer itemFilterer, 
             FileHandlerService fileHandlerService,
-            AgglomerativeHierarchicalClusteringService ahcService)
+            ClusteringService clusteringService)
         {
             this._context = context;
             this._itemService = itemService;
             this._itemFilterer = itemFilterer;
             this._fileHandlerService = fileHandlerService;
-            this._ahcService = ahcService;
+            this._clusteringService = clusteringService;
         }
 
         // TODO: should think in terms of 'points groups', and users can be permissioned to whole groups
@@ -149,7 +149,9 @@ namespace Web.Services
         private IEnumerable<AhcPointDTO> GetAhcPoints(IEnumerable<Point> points)
         {
             var calcPoints = this.GetCalcPoints(points);
-            var ahcPoints = this._ahcService.GetModel(calcPoints);
+            // TODO: include clustering summary here
+            var ahcPoints = this._clusteringService.GetClusteringOutput(calcPoints)
+                .AgglomerativeHierarchicalClusterPoints;
             return ahcPoints.Select(ahcp => new AhcPointDTO
             {
                 PointId = ahcp.PointId,
@@ -218,14 +220,14 @@ namespace Web.Services
             };
         }
 
-        private IEnumerable<ClusterSummary> GetClusterSummaries(IEnumerable<AhcPointDTO> ahcPoints)
+        private IEnumerable<ClusteringSummary> GetClusterSummaries(IEnumerable<AhcPointDTO> ahcPoints)
         {
-            return new List<ClusterSummary> { };
+            return new List<ClusteringSummary> { };
         }
 
-        private IEnumerable<InterClusterDistance> GetInterClusterDistances(IEnumerable<AhcPointDTO> ahcPoints)
+        private IEnumerable<InterclusterDistance> GetInterClusterDistances(IEnumerable<AhcPointDTO> ahcPoints)
         {
-            return new List<InterClusterDistance> { };
+            return new List<InterclusterDistance> { };
         }
         
         /// <summary>
