@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Calc.Models;
 using Calc.Models.AgglomerativeHierarchicalClustering;
+using GeoCoordinatePortable;
 
 namespace Calc
 {
     public class AgglomerativeHierarchicalClusteringService
     {
+        private ClusteringUtilities _clusteringUtilities;
+
+        public AgglomerativeHierarchicalClusteringService(ClusteringUtilities clusteringUtilities)
+        {
+            this._clusteringUtilities = clusteringUtilities;
+        }
+
         public IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModel(IEnumerable<Point> points, 
             int minimumClusters = 1)
         {
@@ -77,7 +85,6 @@ namespace Calc
                         )
                 })
             });
-
         }
 
         internal IEnumerable<T> MergeClusters<T, U>(
@@ -111,7 +118,7 @@ namespace Calc
                 {
                     StartingCluster = c.c1,
                     EndingCluster = c.c2,
-                    Distance = GetDistance(c.c1.GetCenter(), c.c2.GetCenter())
+                    Distance = this._clusteringUtilities.GetDistance(c.c1.GetCenter(), c.c2.GetCenter())
                 })
                 .GroupBy(c => c.Distance)
                 .Select(c => c.First());
@@ -143,15 +150,6 @@ namespace Calc
                     }
                 }
             }).ToList();
-        }
-
-        internal double GetDistance(Point startingPoint, Point endingPoint)
-        {
-            var horizontalDistance =
-                Math.Abs(startingPoint.HorizontalDisplacement - endingPoint.HorizontalDisplacement);
-            var verticalDistance = Math.Abs(startingPoint.VerticalDisplacement - endingPoint.VerticalDisplacement);
-
-            return Math.Sqrt(Math.Pow(horizontalDistance, 2) + Math.Pow(verticalDistance, 2));
         }
     }
 }
