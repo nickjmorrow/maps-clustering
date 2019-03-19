@@ -6,9 +6,9 @@ namespace Calc.Models.AgglomerativeHierarchicalClustering
     {
         public IEnumerable<AgglomerativeHierarchicalClusterInfo> AgglomerativeHierarchicalClusterInfos { get; set; }
 
-        public AgglomerativeHierarchicalClusterPoint() : base()
+        public AgglomerativeHierarchicalClusterPoint()
         {
-            AgglomerativeHierarchicalClusterInfos = new List<AgglomerativeHierarchicalClusterInfo>() { };
+            this.AgglomerativeHierarchicalClusterInfos = new List<AgglomerativeHierarchicalClusterInfo>();
         }
 
         public override bool Equals(object obj)
@@ -18,7 +18,7 @@ namespace Calc.Models.AgglomerativeHierarchicalClustering
             {
                 return false;
             }
-            return this.PointId == point.PointId;
+            return PointId == point.PointId;
         }
 
         public override int GetHashCode()
