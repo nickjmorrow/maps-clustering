@@ -18,6 +18,7 @@ namespace WebApplication.Models
         public double AverageVerticalDisplacement { get; set; }
         public int ItemId { get; set; }
         public string AhcInfoJson { get; set; }
+        public string ClusteringSummariesJson { get; set; }
         
         public ICollection<Point> Points { get; set; }
     }

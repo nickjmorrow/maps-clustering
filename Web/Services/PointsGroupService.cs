@@ -45,9 +45,6 @@ namespace Web.Services
         // TODO: should think in terms of 'points groups', and users can be permissioned to whole groups
         // it does'nt make sense to keep track of permissioning on a points-level
         
-        // TODO: create has-many relationship between pointsGroup and points
-        // be able to upload file and save it as a pointsGroup
-        
         // TODO: let me upload a file to replace a pointsGroup
         
         // TODO: let me rename a pointsGroup
@@ -89,10 +86,13 @@ namespace Web.Services
             await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
             await this._context.SaveChangesAsync();
 
+            var clusteringOutput = this.GetClusteringOutput(pointsGroup.Points); 
             pointsGroup.AhcInfoJson = JsonConvert.SerializeObject(new AhcInfo()
             {
-                AhcPoints = this.GetAhcPoints(pointsGroup.Points)
+                AhcPoints = clusteringOutput.AhcPointDtos
             });
+
+            pointsGroup.ClusteringSummariesJson = JsonConvert.SerializeObject(clusteringOutput.ClusteringSummaries);
             
             this._context.Update(pointsGroup);
             await this._context.SaveChangesAsync();
@@ -146,13 +146,12 @@ namespace Web.Services
             return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
         }
 
-        private IEnumerable<AhcPointDTO> GetAhcPoints(IEnumerable<Point> points)
+        private ClusteringOutputDto GetClusteringOutput(IEnumerable<Point> points)
         {
             var calcPoints = this.GetCalcPoints(points);
             // TODO: include clustering summary here
-            var ahcPoints = this._clusteringService.GetClusteringOutput(calcPoints)
-                .AgglomerativeHierarchicalClusterPoints;
-            return ahcPoints.Select(ahcp => new AhcPointDTO
+            var clusteringOutput = this._clusteringService.GetClusteringOutput(calcPoints);
+            var ahcPointDtos = clusteringOutput.AgglomerativeHierarchicalClusterPoints.Select(ahcp => new AhcPointDTO
             {
                 PointId = ahcp.PointId,
                 Name = ahcp.Name,
@@ -160,6 +159,17 @@ namespace Web.Services
                 VerticalDisplacement = ahcp.VerticalDisplacement,
                 ClusterInfos = this.GetClusterInfos(ahcp.AgglomerativeHierarchicalClusterInfos)
             });
+            return new ClusteringOutputDto
+            {
+                AhcPointDtos = ahcPointDtos,
+                ClusteringSummaries = clusteringOutput.ClusteringSummaries
+            };
+        }
+
+        public class ClusteringOutputDto
+        {
+            public IEnumerable<AhcPointDTO> AhcPointDtos { get; set; }
+            public IEnumerable<ClusteringSummary> ClusteringSummaries { get; set; } 
         }
 
         private IEnumerable<Calc.Models.Point> GetCalcPoints(IEnumerable<Point> points)
@@ -216,18 +226,9 @@ namespace Web.Services
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
                 ItemPermissionType = item.ItemPermissionTypeId,
-                AhcInfo = JsonConvert.DeserializeObject<AhcInfo>(pointsGroup.AhcInfoJson)
+                AhcInfo = JsonConvert.DeserializeObject<AhcInfo>(pointsGroup.AhcInfoJson),
+                ClusteringSummary = JsonConvert.DeserializeObject<ClusteringSummary>(pointsGroup.ClusteringSummariesJson)
             };
-        }
-
-        private IEnumerable<ClusteringSummary> GetClusterSummaries(IEnumerable<AhcPointDTO> ahcPoints)
-        {
-            return new List<ClusteringSummary> { };
-        }
-
-        private IEnumerable<InterclusterDistance> GetInterClusterDistances(IEnumerable<AhcPointDTO> ahcPoints)
-        {
-            return new List<InterclusterDistance> { };
         }
         
         /// <summary>
@@ -236,7 +237,9 @@ namespace Web.Services
         /// </summary>
         private PointsGroupDTO GetPointsGroupDto(PointsGroup pointsGroup)
         {
-            var ahcPoints = this.GetAhcPoints(pointsGroup.Points);
+            var clusteringOutput = this.GetClusteringOutput(pointsGroup.Points);
+            var ahcPoints = clusteringOutput.AhcPointDtos;
+            var clusteringSummaries = clusteringOutput.ClusteringSummaries;
             return new PointsGroupDTO
             {
                 Name = pointsGroup.Name,
@@ -247,8 +250,7 @@ namespace Web.Services
                 AhcInfo = new AhcInfo
                 {
                     AhcPoints = ahcPoints,
-                    ClusterSummaries = this.GetClusterSummaries(ahcPoints),
-                    InterClusterDistances = this.GetInterClusterDistances(ahcPoints)
+                    ClusterSummaries = clusteringSummaries,
                 }
             };
         }

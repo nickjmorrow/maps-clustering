@@ -4,6 +4,7 @@ CREATE TABLE dbo.pointsGroups (
     averageHorizontalDisplacement FLOAT NOT NULL,
     averageVerticalDisplacement FLOAT NOT NULL,
     ahcInfoJson VARCHAR(MAX) NULL,
+    clusteringSummariesJson VARCHAR(MAX) NULL,
     itemId INT NULL
 )
 
