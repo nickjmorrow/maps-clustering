@@ -2,13 +2,13 @@
 
 namespace Calc.Models.AgglomerativeHierarchicalClustering
 {
-    public class AgglomerativeHierarchicalClusterPoint : Point
+    public class ClusteredPoint : Point
     {
-        public IEnumerable<AgglomerativeHierarchicalClusterInfo> AgglomerativeHierarchicalClusterInfos { get; set; }
+        public IEnumerable<ClusterSnapshot> ClusterSnapshots { get; set; }
 
-        public AgglomerativeHierarchicalClusterPoint()
+        public ClusteredPoint()
         {
-            this.AgglomerativeHierarchicalClusterInfos = new List<AgglomerativeHierarchicalClusterInfo>();
+            this.ClusterSnapshots = new List<ClusterSnapshot>();
         }
 
         public override bool Equals(object obj)

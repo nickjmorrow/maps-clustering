@@ -2,22 +2,19 @@
 {
     public class Point
     {
-        public int PointId { get; set; }
+        public virtual int PointId { get; set; }
         public string Name { get; set; }
         public double HorizontalDisplacement { get; set; }
         public double VerticalDisplacement { get; set; }
 
-        public Point()
-        {
-            PointId = 0;
-            Name = "";
-            HorizontalDisplacement = 0;
-            VerticalDisplacement = 0;
-        }
-
         public override bool Equals(object obj)
         {
-            var point = (Point) obj;
+            var point = obj as Point;
+            if (point == null)
+            {
+                return false;
+            }
+
             return point.PointId == this.PointId && point.HorizontalDisplacement == this.HorizontalDisplacement &&
                 point.VerticalDisplacement == this.VerticalDisplacement;
         }

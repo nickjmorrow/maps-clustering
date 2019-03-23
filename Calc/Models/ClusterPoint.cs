@@ -1,12 +1,12 @@
 namespace Calc.Models
 {
-    public class ClusteredPoint: Point
+    public class ClusterPoint: Point
     {
         public int ClusterId { get; set; }
         
         public override bool Equals(object obj)
         {
-            var clusteredPoint = obj as ClusteredPoint;
+            var clusteredPoint = obj as ClusterPoint;
             if (clusteredPoint == null)
             {
                 return false;
