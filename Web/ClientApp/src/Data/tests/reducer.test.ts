@@ -2,9 +2,9 @@ import {
 	dataReducer,
 	initialState as initialReduxState,
 	IDataState
-} from '../reducer';
-import { ItemPermissionType } from '../../Core';
-import { IAhcInfo, IPointsGroup, IPoint } from '../types';
+} from "../reducer";
+import { ItemPermissionType } from "../../Core";
+import { IPointsGroup, IPoint, ClusteringOutput } from "../types";
 import {
 	deletePointsGroup,
 	getPointsGroups,
@@ -12,8 +12,8 @@ import {
 	createPointsGroup,
 	populatePointsGroupsStateFromLocalStorageIfAvailable,
 	savePointsGroupIfStoredLocally
-} from '../actions';
-import produce from 'immer';
+} from "../actions";
+import produce from "immer";
 
 const getFakePointsGroup = (id: number): IPointsGroup => ({
 	pointsGroupId: id,
@@ -21,19 +21,19 @@ const getFakePointsGroup = (id: number): IPointsGroup => ({
 	averageHorizontalDisplacement: id,
 	averageVerticalDisplacement: id,
 	points: (null as unknown) as IPoint[],
-	pointsColors: [''],
+	pointsColors: [""],
 	isActive: false,
-	ahcInfo: (null as unknown) as IAhcInfo,
+	clusteringOutput: (null as unknown) as ClusteringOutput,
 	itemPermissionType: ItemPermissionType.Private,
 	clusterCount: id
 });
 
-describe('data reducer', () => {
+describe("data reducer", () => {
 	const genericInitialTestState: IDataState = {
 		...initialReduxState,
 		pointsGroups: [1, 2, 3].map(getFakePointsGroup)
 	};
-	test('delete points group', () => {
+	test("delete points group", () => {
 		const expectedState = produce(genericInitialTestState, draftState => {
 			const pointsGroups = [2, 3].map(getFakePointsGroup);
 			pointsGroups[0].isActive = true;
@@ -44,7 +44,7 @@ describe('data reducer', () => {
 		).toEqual(expectedState);
 	});
 
-	test('delete active points group', () => {
+	test("delete active points group", () => {
 		const initialState = produce(genericInitialTestState, draftState => {
 			const pointsGroups = [1, 2, 3].map(getFakePointsGroup);
 			pointsGroups[1].isActive = true;
@@ -60,7 +60,7 @@ describe('data reducer', () => {
 		);
 	});
 
-	test('get points group removes duplicates', () => {
+	test("get points group removes duplicates", () => {
 		const initialState = produce(genericInitialTestState, draftState => {
 			const pointsGroups = [1, 2].map(getFakePointsGroup);
 			pointsGroups[1].isActive = true;
@@ -77,7 +77,7 @@ describe('data reducer', () => {
 		).toEqual(expectedState);
 	});
 
-	test('add points group sets payload as isActive and rest of pointsGroups as inactive', () => {
+	test("add points group sets payload as isActive and rest of pointsGroups as inactive", () => {
 		const initialState = produce(genericInitialTestState, draftState => {
 			const pointsGroups = [1, 2].map(getFakePointsGroup);
 			pointsGroups[1].isActive = true;
@@ -93,7 +93,7 @@ describe('data reducer', () => {
 		).toEqual(expectedState);
 	});
 
-	test('create points group and populate points groups from local storage removes unsaved pointsGroups and adds to beginning of array of pointsGroups', () => {
+	test("create points group and populate points groups from local storage removes unsaved pointsGroups and adds to beginning of array of pointsGroups", () => {
 		const initialState = produce(genericInitialTestState, draftState => {
 			const pointsGroups = [1, 2, 3].map(getFakePointsGroup);
 			pointsGroups[0].pointsGroupId = undefined;
@@ -118,7 +118,7 @@ describe('data reducer', () => {
 		).toEqual(expectedState);
 	});
 
-	test('replace unsaved points group', () => {
+	test("replace unsaved points group", () => {
 		const initialState = produce(genericInitialTestState, draftState => {
 			const pointsGroups = [1, 2].map(getFakePointsGroup);
 			pointsGroups[0].pointsGroupId = undefined;

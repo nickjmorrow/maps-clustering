@@ -8,15 +8,15 @@ export interface IPoint {
 	verticalDisplacement: number;
 }
 
-export interface ClusteredPoint extends IPoint {
+export interface ClusterPoint extends IPoint {
 	clusterId: number;
 }
 
-export interface AgglomerativeHierarchicalClusterPoint extends IPoint {
-	clusterInfos: ClusterInfo[];
+export interface ClusteredPoint extends IPoint {
+	clusterSnapshots: ClusterSnapshot[];
 }
 
-export interface ClusterInfo {
+export interface ClusterSnapshot {
 	clusterCount: number;
 	clusterId: number;
 }
@@ -25,31 +25,31 @@ export interface IClusterOption extends IOption {
 	parameters: React.ReactNode;
 }
 
-export type AgglomerativeHierarchicalClusterConfig = IPoint[];
-
 export interface IPointsGroup {
 	pointsGroupId?: number;
 	name: string;
 	averageHorizontalDisplacement: number;
 	averageVerticalDisplacement: number;
-	itemId?: number;
 	points: IPoint[];
-	isActive: boolean;
-	ahcInfo: IAhcInfo;
 	itemPermissionType: ItemPermissionType;
+	clusteringOutput: ClusteringOutput;
+	isActive: boolean;
 	pointsColors: string[];
 	clusterCount: number;
 }
 
-export interface IAhcInfo {
-	ahcPoints: AgglomerativeHierarchicalClusterPoint[];
-	clusterSummaryInfo: Array<{
-		clusterAverageDistances: Array<{
-			clusterId: number;
-			averageDistance: number;
-		}>;
-		clusterCount: number;
+export interface ClusteringOutput {
+	clusteredPoints: ClusteredPoint[];
+	clusteringSummaries: ClusteringSummary[];
+}
+interface ClusteringSummary {
+	clusterCount: number;
+	interclusterDistance: string;
+	intraclusterDistances: Array<{
+		clusterId: number;
+		distance: string;
 	}>;
+	averageClusterSize: string;
 }
 
 export type PointsGroupId = number;
