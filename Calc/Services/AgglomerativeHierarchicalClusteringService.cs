@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Calc.Models;
 using Calc.Models.AgglomerativeHierarchicalClustering;
-using GeoCoordinatePortable;
 
 namespace Calc
 {
@@ -16,7 +15,7 @@ namespace Calc
             this._distanceService = distanceService;
         }
 
-        public IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModel(IEnumerable<Point> points, 
+        public IEnumerable<ClusteredPoint> GetModel(IEnumerable<Point> points, 
             int minimumClusters = 1)
         {
             if (minimumClusters < 1)
@@ -30,12 +29,12 @@ namespace Calc
             return GetModelInternal(initialClusters, minimumClusters);
         }
 
-        internal IEnumerable<AgglomerativeHierarchicalClusterPoint> GetModelInternal(
-            IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> initialClusters, int minimumClusters)
+        internal IEnumerable<ClusteredPoint> GetModelInternal(
+            IEnumerable<Cluster<ClusteredPoint>> initialClusters, int minimumClusters)
         {
             // calculate distance between each pair of clusters by their centers
             var clusterDistances =
-                GetClusterDistances<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>(
+                GetClusterDistances<Cluster<ClusteredPoint>, ClusteredPoint>(
                     initialClusters);
             
             // determine closest clusters
@@ -44,7 +43,7 @@ namespace Calc
             var closestClusterPair = clusterDistances.FirstOrDefault(cd => cd.Distance == minimumDistance);
             
             // merge the pair
-            var mergedClusters = MergeClusters<Cluster<AgglomerativeHierarchicalClusterPoint>, AgglomerativeHierarchicalClusterPoint>(
+            var mergedClusters = MergeClusters<Cluster<ClusteredPoint>, ClusteredPoint>(
                 initialClusters, closestClusterPair.StartingCluster,
                 closestClusterPair.EndingCluster);
 
@@ -60,23 +59,23 @@ namespace Calc
             return GetModelInternal(recordedClusters, minimumClusters);
         }
 
-        internal IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> RecordClusters(
-            IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> clusters)
+        internal IEnumerable<Cluster<ClusteredPoint>> RecordClusters(
+            IEnumerable<Cluster<ClusteredPoint>> clusters)
         {
             var clusterCount = clusters.Count();
-            return clusters.Select(c => new Cluster<AgglomerativeHierarchicalClusterPoint>()
+            return clusters.Select(c => new Cluster<ClusteredPoint>()
             {
                 ClusterId = c.ClusterId,
-                Points = c.Points.Select(p => new AgglomerativeHierarchicalClusterPoint()
+                Points = c.Points.Select(p => new ClusteredPoint()
                     {
                         PointId = p.PointId,
                         Name = p.Name,
                         HorizontalDisplacement = p.HorizontalDisplacement,
                         VerticalDisplacement = p.VerticalDisplacement,
-                        AgglomerativeHierarchicalClusterInfos = p.AgglomerativeHierarchicalClusterInfos.Concat(
-                            new List<AgglomerativeHierarchicalClusterInfo>()
+                        ClusterSnapshots = p.ClusterSnapshots.Concat(
+                            new List<ClusterSnapshot>()
                             {
-                                new AgglomerativeHierarchicalClusterInfo()
+                                new ClusterSnapshot()
                                 {
                                     ClusterCount = clusterCount,
                                     ClusterId = c.ClusterId
@@ -124,24 +123,24 @@ namespace Calc
                 .Select(c => c.First());
         }
         
-        internal IEnumerable<Cluster<AgglomerativeHierarchicalClusterPoint>> ConvertPointsToClusters(
+        internal IEnumerable<Cluster<ClusteredPoint>> ConvertPointsToClusters(
             IEnumerable<Point> points)
         {
             var clusterCount = points.Count();
-            return points.Select((p, index) => new Cluster<AgglomerativeHierarchicalClusterPoint>()
+            return points.Select((p, index) => new Cluster<ClusteredPoint>()
             {
                 ClusterId = index + 1,
-                Points = new List<AgglomerativeHierarchicalClusterPoint>()
+                Points = new List<ClusteredPoint>()
                 {
-                    new AgglomerativeHierarchicalClusterPoint()
+                    new ClusteredPoint()
                     {
                         HorizontalDisplacement = p.HorizontalDisplacement,
                         VerticalDisplacement = p.VerticalDisplacement,
                         PointId = p.PointId,
                         Name = p.Name,
-                        AgglomerativeHierarchicalClusterInfos = new List<AgglomerativeHierarchicalClusterInfo>()
+                        ClusterSnapshots = new List<ClusterSnapshot>()
                         {
-                            new AgglomerativeHierarchicalClusterInfo()
+                            new ClusterSnapshot()
                             {
                                 ClusterId = index + 1,
                                 ClusterCount = clusterCount

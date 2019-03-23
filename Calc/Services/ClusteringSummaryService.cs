@@ -16,44 +16,54 @@ namespace Calc
             this._distanceService = distanceService;
         }
 
-        public IEnumerable<ClusteringSummary> GetClusteringSummaries(IEnumerable<AgglomerativeHierarchicalClusterPoint> ahcPoints)
+        public IEnumerable<ClusteringSummary> GetClusteringSummaries(IEnumerable<ClusteredPoint> clusteredPoints)
         {
-            var totalClusterCount = ahcPoints.First().AgglomerativeHierarchicalClusterInfos.Count();
-            var clusterCountToSummaries = new List<ClusteringSummary>();
-            for (var currentClusterCount = 1; currentClusterCount <= totalClusterCount; currentClusterCount++)
+            var totalClusterCount = clusteredPoints.First().ClusterSnapshots.Count();
+            
+            var clusterCountToSummaries = Enumerable.Range(1, totalClusterCount).Select(currentClusterCount =>
             {
-                var clusteredPoints = ahcPoints.Select(ahc =>
+                var clusterPoints = clusteredPoints.Select(ahc =>
                 {
-                    var clusterId =
-                        ahc.AgglomerativeHierarchicalClusterInfos.Single(ahci =>
-                            ahci.ClusterCount == currentClusterCount).ClusterId;
-                    return new ClusteredPoint()
+                    var clusterSnapshot =
+                        ahc.ClusterSnapshots.SingleOrDefault(ahci =>
+                            ahci.ClusterCount == currentClusterCount);
+
+                    if (clusterSnapshot == null)
                     {
-                        ClusterId = clusterId,
+                        throw new Exception($"No clusterId found in ahcInfos for clusterCount {currentClusterCount}");
+                    } 
+                    return new ClusterPoint()
+                    {
+                        ClusterId = clusterSnapshot.ClusterId,
                         HorizontalDisplacement = ahc.HorizontalDisplacement,
                         VerticalDisplacement = ahc.VerticalDisplacement,
-                        Name = ahc.Name,
                         PointId = ahc.PointId
                     };
                 });
-                var interclusterDistance = this.GetInterclusterDistance(clusteredPoints);
-                var intraclusterDistances = this.GetIntraclusterDistances(clusteredPoints);
-                var avgDistanceBetweenAllPoints = this.GetAverageDistanceToCenter(ahcPoints);
-                clusterCountToSummaries.Add(new ClusteringSummary()
+                var interclusterDistance = this.GetInterclusterDistance(clusterPoints);
+                var intraclusterDistances = this.GetIntraclusterDistances(clusterPoints);
+                var avgClusterSize = this.GetAverageClusterSize(clusterPoints);
+                return new ClusteringSummary()
                 {
+                    ClusterCount = currentClusterCount,
                     InterclusterDistance = interclusterDistance,
                     IntraclusterDistances = intraclusterDistances,
-                    AverageDistanceBetweenAllPoints = avgDistanceBetweenAllPoints
-                });
-            }
-
+                    AverageClusterSize = avgClusterSize
+                }; 
+            });
             return clusterCountToSummaries;
         }
 
-        internal double GetInterclusterDistance(
-            IEnumerable<ClusteredPoint> clusteredPoints)
+        internal double GetAverageClusterSize(IEnumerable<ClusterPoint> clusterPoints)
         {
-            var clusters = clusteredPoints.GroupBy(cp => cp.ClusterId);
+            var groupedClusters = clusterPoints.GroupBy(cp => cp.ClusterId); 
+            return Convert.ToDouble(groupedClusters.Sum(gc => gc.Count())) / groupedClusters.Count();
+        }
+
+        internal double GetInterclusterDistance(
+            IEnumerable<ClusterPoint> clusterPoints)
+        {
+            var clusters = clusterPoints.GroupBy(cp => cp.ClusterId);
             var clusterCenters = clusters.Select(c => new Cluster<Point>()
             {
                 ClusterId = c.Key,
@@ -76,7 +86,7 @@ namespace Calc
         }
 
         internal IEnumerable<IntraclusterDistance> GetIntraclusterDistances(
-            IEnumerable<ClusteredPoint> clusteredPoints)
+            IEnumerable<ClusterPoint> clusteredPoints)
         {
             return clusteredPoints
                 .GroupBy(cp => cp.ClusterId)
