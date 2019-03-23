@@ -1,15 +1,14 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { IReduxState } from "reducer";
-import { getCurrentClusterOption, getPointsGroups } from "../selectors";
 import { Paper } from "./Paper";
 import { Parameters } from "./Parameters";
 import { PointsGroupList } from "./PointsGroupList";
+import { pointsGroupsSelector } from "../selectors";
 
-export const PointsGroupControlsInternal: React.FC<Props> = ({
-	pointsGroups,
-	currentClusterOption
-}) => {
+export const PointsGroupControlsInternal: React.FC<
+	ReturnType<typeof mapStateToProps>
+> = ({ pointsGroups }) => {
 	return (
 		<div
 			style={{
@@ -25,17 +24,14 @@ export const PointsGroupControlsInternal: React.FC<Props> = ({
 					width: "min-content"
 				}}>
 				<PointsGroupList pointsGroups={pointsGroups} />
-				<Parameters currentClusterOption={currentClusterOption} />
+				<Parameters />
 			</Paper>
 		</div>
 	);
 };
 
-type Props = ReturnType<typeof mapStateToProps>;
-
 const mapStateToProps = (state: IReduxState) => ({
-	pointsGroups: getPointsGroups(state),
-	currentClusterOption: getCurrentClusterOption(state)
+	pointsGroups: pointsGroupsSelector(state)
 });
 
 export const PointsGroupControls = connect(

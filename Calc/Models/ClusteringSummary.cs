@@ -7,6 +7,7 @@ namespace Calc.Models
         public int ClusterCount { get; set; }
         public double InterclusterDistance { get; set; }
         public IEnumerable<IntraclusterDistance> IntraclusterDistances { get; set; }
+        public double AverageIntraclusterDistance { get; set; }
         public double AverageClusterSize { get; set; }  
     }
 }    

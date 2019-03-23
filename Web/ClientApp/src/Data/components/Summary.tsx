@@ -16,6 +16,15 @@ export const SummaryInternal: React.SFC<ReturnType<typeof mapStateToProps>> = ({
 	if (!activePointsGroup) {
 		return null;
 	}
+	const clusteringSummary =
+		activePointsGroup.clusteringOutput.clusteringSummaries[
+			activePointsGroup.clusterCount - 1
+		];
+	const {
+		averageClusterSize,
+		averageIntraclusterDistance,
+		interclusterDistance
+	} = clusteringSummary;
 	return (
 		<div>
 			<TitleWrapper>
@@ -23,26 +32,22 @@ export const SummaryInternal: React.SFC<ReturnType<typeof mapStateToProps>> = ({
 			</TitleWrapper>
 			<TextWrapper>
 				<Wrapper>
-					<Typography>Average distance between clusters:</Typography>
-					<Code>
-						{
-							activePointsGroup.clusteringOutput
-								.clusteringSummaries[
-								activePointsGroup.clusterCount - 1
-							].interclusterDistance
-						}
-					</Code>
+					<Typography colorVariant={"secondaryDark"}>
+						Average distance between clusters:
+					</Typography>
+					<Code>{interclusterDistance}</Code>
 				</Wrapper>
 				<Wrapper>
-					<Typography>Average points per cluster:</Typography>
-					<Code>
-						{
-							activePointsGroup.clusteringOutput
-								.clusteringSummaries[
-								activePointsGroup.clusterCount - 1
-							].averageClusterSize
-						}
-					</Code>
+					<Typography colorVariant={"secondaryDark"}>
+						Average distance within clusters:
+					</Typography>
+					<Code>{averageIntraclusterDistance}</Code>
+				</Wrapper>
+				<Wrapper>
+					<Typography colorVariant={"secondaryDark"}>
+						Average points per cluster:
+					</Typography>
+					<Code>{averageClusterSize}</Code>
 				</Wrapper>
 			</TextWrapper>
 		</div>

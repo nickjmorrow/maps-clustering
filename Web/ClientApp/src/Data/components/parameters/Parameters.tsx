@@ -1,4 +1,3 @@
-import { IOption } from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
@@ -8,6 +7,7 @@ import { getActivePointsGroup } from "../../selectors";
 import { IPointsGroup } from "../../types";
 import { AhcParameters } from "./AhcParameters";
 
+// TODO: use hooks to make functional component
 class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;
 
@@ -44,10 +44,6 @@ class ParametersInternal extends React.PureComponent<IProps, IState> {
 }
 
 // types
-interface IOwnProps {
-	readonly currentClusterOption: IOption;
-}
-
 interface IDispatchProps {
 	readonly onSetClusterCount: typeof setClusterCount;
 }
@@ -56,7 +52,7 @@ interface IReduxProps {
 	readonly activePointsGroup: IPointsGroup;
 }
 
-type IProps = IOwnProps & IDispatchProps & IReduxProps;
+type IProps = IDispatchProps & IReduxProps;
 
 type IState = typeof initialState;
 

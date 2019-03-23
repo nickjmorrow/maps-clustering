@@ -7,6 +7,7 @@ namespace Web.Services
             public int ClusterCount { get; set; }
             public string InterclusterDistance { get; set; }
             public IEnumerable<IntraclusterDistanceDto> IntraclusterDistances { get; set; }
+            public string AverageIntraclusterDistance { get; set; }
             public string AverageClusterSize { get; set; }
         }
 }

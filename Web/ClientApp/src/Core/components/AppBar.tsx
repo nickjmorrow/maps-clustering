@@ -45,6 +45,8 @@ export const AppBarInternal: React.FC<IProps> = ({ isAuthenticated }) => {
 			/>
 		</Modal>
 	);
+	// TODO: add sign-in link
+	// RCL: add ability to add components to app bar on right or left
 	return (
 		<>
 			<GenericAppBar

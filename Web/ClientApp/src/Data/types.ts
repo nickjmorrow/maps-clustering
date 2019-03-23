@@ -50,6 +50,7 @@ interface ClusteringSummary {
 		distance: string;
 	}>;
 	averageClusterSize: string;
+	averageIntraclusterDistance: string;
 }
 
 export type PointsGroupId = number;

@@ -226,6 +226,7 @@ namespace Web.Services
                         ClusterId = icd.ClusterId,
                         Distance = icd.Distance.ToMask()
                     }),
+                AverageIntraclusterDistance = clusteringSummary.AverageIntraclusterDistance.ToMask(),
                 AverageClusterSize = clusteringSummary.AverageClusterSize.ToMask("0.0", " points")
             };
         }

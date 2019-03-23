@@ -43,12 +43,14 @@ namespace Calc
                 var interclusterDistance = this.GetInterclusterDistance(clusterPoints);
                 var intraclusterDistances = this.GetIntraclusterDistances(clusterPoints);
                 var avgClusterSize = this.GetAverageClusterSize(clusterPoints);
+                var avgIntraclusterDistance = intraclusterDistances.Average(icd => icd.Distance);
                 return new ClusteringSummary()
                 {
                     ClusterCount = currentClusterCount,
                     InterclusterDistance = interclusterDistance,
+                    AverageIntraclusterDistance = avgIntraclusterDistance,
+                    AverageClusterSize = avgClusterSize,
                     IntraclusterDistances = intraclusterDistances,
-                    AverageClusterSize = avgClusterSize
                 }; 
             });
             return clusterCountToSummaries;
