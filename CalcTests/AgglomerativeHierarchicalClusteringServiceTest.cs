@@ -17,24 +17,24 @@ namespace CalcTests
             var secondPoint = new Point {PointId = 2, HorizontalDisplacement = 0, VerticalDisplacement = 2};
             var thirdPoint = new Point {PointId = 3, HorizontalDisplacement = 3, VerticalDisplacement = 3};
 
-            var firstModeledPoint = new AgglomerativeHierarchicalClusterPoint()
+            var firstModeledPoint = new ClusteredPoint()
             {
                 PointId  = firstPoint.PointId,
                 HorizontalDisplacement = firstPoint.HorizontalDisplacement,
                 VerticalDisplacement = firstPoint.VerticalDisplacement,
-                AgglomerativeHierarchicalClusterInfos = new List<AgglomerativeHierarchicalClusterInfo>()
+                ClusterSnapshots = new List<ClusterSnapshot>()
                 {
-                    new AgglomerativeHierarchicalClusterInfo()
+                    new ClusterSnapshot()
                        {
                         ClusterId = 1,
                         ClusterCount = 3
                     },
-                    new AgglomerativeHierarchicalClusterInfo()
+                    new ClusterSnapshot()
                     {
                         ClusterId = 1,
                         ClusterCount = 2
                     },
-                    new AgglomerativeHierarchicalClusterInfo()
+                    new ClusterSnapshot()
                     {
                         ClusterId = 1,
                         ClusterCount = 1

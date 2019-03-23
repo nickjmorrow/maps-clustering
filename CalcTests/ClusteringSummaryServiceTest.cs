@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Calc;
 using Calc.Helpers;
 using Calc.Models;
-using Moq;
 using NUnit.Framework;
 
 namespace CalcTests
@@ -19,33 +18,33 @@ namespace CalcTests
         public void GetInterclusterDistanceTest()
         {
             var clusteringSummaryService = new ClusteringSummaryService(new FakeDistanceService());
-            var clusteredPoints = new List<ClusteredPoint>()
+            var clusteredPoints = new List<ClusterPoint>()
             {
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 1,
                     HorizontalDisplacement = 0,
                     VerticalDisplacement = 2
                 },
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 2,
                     HorizontalDisplacement = 0,
                     VerticalDisplacement = -2
                 },
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 3,
                     HorizontalDisplacement = 2,
                     VerticalDisplacement = 0
                 },
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 4,
                     HorizontalDisplacement = -3,
                     VerticalDisplacement = 0
                 },
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 4,
                     HorizontalDisplacement = -1,
@@ -62,33 +61,33 @@ namespace CalcTests
         public void GetIntraclusterDistancesTest()
         {
             var clusteringSummaryService = new ClusteringSummaryService(new FakeDistanceService());
-            var clusteredPoints = new List<ClusteredPoint>()
+            var clusteredPoints = new List<ClusterPoint>()
             {
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 1,
                     HorizontalDisplacement = 1,
                     VerticalDisplacement = 0
                 },
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 1,
                     HorizontalDisplacement = 3,
                     VerticalDisplacement = 0
                 },
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 2,
                     HorizontalDisplacement = 1,
                     VerticalDisplacement = 2
                 },
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 2,
                     HorizontalDisplacement = 1,
                     VerticalDisplacement = 4
                 },
-                new ClusteredPoint()
+                new ClusterPoint()
                 {
                     ClusterId = 2,
                     HorizontalDisplacement = 1,
