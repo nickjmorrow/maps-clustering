@@ -17,21 +17,10 @@ export const MapPageInternal: React.SFC<IReduxProps> = ({
 	activePointsGroup,
 	currentClusterOption
 }) => {
-	if (!activePointsGroup) {
-		return null;
-	}
-
-	const markers = getMarkers(activePointsGroup);
-
-	const defaultPosition = activePointsGroup && {
-		lat: activePointsGroup.averageVerticalDisplacement,
-		lng: activePointsGroup.averageHorizontalDisplacement
-	};
-
 	const { colors } = React.useContext(ThemeContext);
 	return (
 		<>
-			<Map markers={markers} defaultPosition={defaultPosition} />
+			<Map activePointsGroup={activePointsGroup} />
 			<Divider colors={colors} />
 			<MapControls
 				pointsGroups={pointsGroups}
@@ -66,25 +55,3 @@ const Divider = styled("div")<{ colors: StyleConstant<"colors"> }>`
 	height: 20px;
 	background-color: ${p => p.colors.neutral.dark};
 `;
-
-// helpers
-const getMarkers = (activePointsGroup: IPointsGroup) => {
-	const { clusterCount, pointsColors, points } = activePointsGroup;
-	return activePointsGroup.ahcInfo.ahcPoints.map(mp => {
-		return {
-			position: {
-				lat: mp.verticalDisplacement,
-				lng: mp.horizontalDisplacement
-			},
-			label: {
-				text: mp.name
-			},
-			icon: {
-				fillColor:
-					pointsColors[
-						mp.clusterInfos[points.length - clusterCount].clusterId
-					]
-			}
-		};
-	});
-};

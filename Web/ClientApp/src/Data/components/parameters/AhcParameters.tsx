@@ -1,20 +1,19 @@
 import {
 	Slider,
-	Typography,
 	StyleConstant,
-	ThemeContext
+	ThemeContext,
+	Typography
 } from "@nickjmorrow/react-component-library";
+import "rc-slider/assets/index.css";
 import * as React from "react";
-import { IPoint } from "../../types";
 import styled from "styled-components";
 import { TitleWrapper } from "../../../Core/components";
-import "rc-slider/assets/index.css";
+import { IPoint } from "../../types";
 
 export const AhcParameters: React.SFC<IProps> = ({
 	min,
 	max,
 	clusterCount,
-	points,
 	onClusterCountChange: handleClusterCountChange
 }) => {
 	const handleClusterCountChangeInternal = (newIterations: number) =>
@@ -25,12 +24,18 @@ export const AhcParameters: React.SFC<IProps> = ({
 			<TitleWrapper>
 				<Typography sizeVariant={5}>Number of Clusters</Typography>
 			</TitleWrapper>
-			<Slider
-				min={min}
-				max={max}
-				value={clusterCount}
-				onChange={handleClusterCountChangeInternal}
-			/>
+			<div
+				style={{
+					width: "100%",
+					display: "flex"
+				}}>
+				<Slider
+					min={min}
+					max={max}
+					value={clusterCount}
+					onChange={handleClusterCountChangeInternal}
+				/>
+			</div>
 		</Wrapper>
 	);
 };
@@ -46,6 +51,9 @@ interface IProps {
 
 // css
 const Wrapper = styled("div")<{ spacing: StyleConstant<"spacing"> }>`
-	max-width: 400px;
 	margin-top: ${p => p.spacing.ss4};
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
 `;

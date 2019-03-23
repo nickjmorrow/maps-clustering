@@ -131,7 +131,7 @@ const PointsGroupWrapper = styled("button")<{
 	margin: 0 0 ${p => p.spacing.ss2} 0;
 	border: none;
 	outline: none;
-	width: 100%;
+	width: ${p => p.spacing.ss64};
 	height: ${p => p.spacing.ss12};
 	align-items: center;
 	background-color: ${p =>

@@ -1,13 +1,12 @@
-import { IOption } from '@nickjmorrow/react-component-library';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { clusterTypes } from '../../constants';
-import { IPointsGroup } from '../../types';
-import { IReduxState } from '../../../reducer';
-import { AhcParameters } from './AhcParameters';
-import { setClusterCount } from '../../actions';
-import { getActivePointsGroup } from '../../selectors';
+import { IOption } from "@nickjmorrow/react-component-library";
+import * as React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import { IReduxState } from "../../../reducer";
+import { setClusterCount } from "../../actions";
+import { getActivePointsGroup } from "../../selectors";
+import { IPointsGroup } from "../../types";
+import { AhcParameters } from "./AhcParameters";
 
 class ParametersInternal extends React.PureComponent<IProps, IState> {
 	readonly state = initialState;
@@ -21,7 +20,7 @@ class ParametersInternal extends React.PureComponent<IProps, IState> {
 	};
 
 	render() {
-		const { activePointsGroup, currentClusterOption } = this.props;
+		const { activePointsGroup } = this.props;
 		if (!activePointsGroup) {
 			return null;
 		}
@@ -32,24 +31,15 @@ class ParametersInternal extends React.PureComponent<IProps, IState> {
 		const minClusters = 1;
 		const maxClusters = points.length;
 
-		switch (currentClusterOption.value) {
-			case clusterTypes.ahcs:
-				return (
-					<AhcParameters
-						min={minClusters}
-						max={maxClusters}
-						clusterCount={clusterCount}
-						points={points}
-						onClusterCountChange={
-							this.handleClusterCountChangeInternal
-						}
-					/>
-				);
-			default:
-				throw new Error(
-					`Unexpected clusterOption: ${currentClusterOption}`
-				);
-		}
+		return (
+			<AhcParameters
+				min={minClusters}
+				max={maxClusters}
+				clusterCount={clusterCount}
+				points={points}
+				onClusterCountChange={this.handleClusterCountChangeInternal}
+			/>
+		);
 	}
 }
 

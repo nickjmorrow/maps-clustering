@@ -9,21 +9,29 @@ import {
 import { compose, withProps } from "recompose";
 import { googleMapURL } from "../constants";
 import { scale } from "../../Core";
+import { IPointsGroup } from "Data";
 
 interface Props {
-	markers?: MarkerProps[];
-	defaultPosition?: {
-		lat: number;
-		lng: number;
-	};
 	center?: {
 		lat: number;
 		lng: number;
 	};
 	children?: React.ReactNode;
+	activePointsGroup: IPointsGroup;
 }
 
-export const Map: React.ComponentClass<Props> = compose(
+interface OtherProps {
+	activePointsGroup: IPointsGroup;
+}
+
+export const Map: React.SFC<OtherProps> = ({ activePointsGroup }) => (
+	<MapInternal activePointsGroup={activePointsGroup} />
+);
+
+export const MapInternal: React.ComponentClass<Props & OtherProps> = compose<
+	Props,
+	Props & OtherProps
+>(
 	withProps({
 		googleMapURL,
 		loadingElement: <div style={{ height: `100%` }} />,
@@ -34,13 +42,22 @@ export const Map: React.ComponentClass<Props> = compose(
 	}),
 	withScriptjs,
 	withGoogleMap
-)((props: Props) => {
-	const { markers, defaultPosition, center = defaultPosition } = props;
+)((props: Props & OtherProps) => {
+	const { activePointsGroup } = props;
+
+	if (!activePointsGroup) {
+		console.log(props);
+		return <div>'No active points group'</div>;
+	}
+
+	const defaultPosition = activePointsGroup && {
+		lat: activePointsGroup.averageVerticalDisplacement,
+		lng: activePointsGroup.averageHorizontalDisplacement
+	};
+
+	const markers = getMarkers(activePointsGroup);
 	return (
-		<GoogleMap
-			defaultZoom={13}
-			defaultCenter={defaultPosition}
-			center={center}>
+		<GoogleMap defaultZoom={13} defaultCenter={defaultPosition}>
 			{markers && renderMarkers(markers)}
 		</GoogleMap>
 	);
@@ -65,3 +82,25 @@ const renderMarkers = (markers: MarkerProps[]) =>
 			label={{ text: marker.label!.text, fontSize: "0" }}
 		/>
 	));
+
+const getMarkers = (activePointsGroup: IPointsGroup) => {
+	const { clusterCount, pointsColors, points } = activePointsGroup;
+	return activePointsGroup.clusteringOutput.clusteredPoints.map(mp => {
+		return {
+			position: {
+				lat: mp.verticalDisplacement,
+				lng: mp.horizontalDisplacement
+			},
+			label: {
+				text: mp.name
+			},
+			icon: {
+				fillColor:
+					pointsColors[
+						mp.clusterSnapshots[points.length - clusterCount]
+							.clusterId
+					]
+			}
+		};
+	});
+};

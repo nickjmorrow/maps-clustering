@@ -1,57 +1,62 @@
+import { Typography } from "@nickjmorrow/react-component-library";
 import * as React from "react";
-import {
-	Typography,
-	ThemeContext,
-	StyleConstant
-} from "@nickjmorrow/react-component-library";
+import { connect } from "react-redux";
+import { IReduxState } from "reducer";
 import styled from "styled-components";
 import { TitleWrapper } from "../../Core/components/TitleWrapper";
+import { getActivePointsGroup } from "../../Data/selectors";
+import { Code } from "./Code";
 import { Header } from "./Header";
 
-export const Summary: React.SFC = () => {
-	const {
-		colors,
-		border: { borderRadius }
-	} = React.useContext(ThemeContext);
+// TODO: relative imports
+
+export const SummaryInternal: React.SFC<ReturnType<typeof mapStateToProps>> = ({
+	activePointsGroup
+}) => {
+	if (!activePointsGroup) {
+		return null;
+	}
 	return (
-		<FlexCenter>
+		<div>
 			<TitleWrapper>
 				<Header>Summary</Header>
 			</TitleWrapper>
 			<TextWrapper>
 				<Wrapper>
-					<Typography>
-						The average distance between clusters is:
-					</Typography>
-					<Code colors={colors} borderRadius={borderRadius}>
-						1.3 km
+					<Typography>Average distance between clusters:</Typography>
+					<Code>
+						{
+							activePointsGroup.clusteringOutput
+								.clusteringSummaries[
+								activePointsGroup.clusterCount - 1
+							].interclusterDistance
+						}
 					</Code>
 				</Wrapper>
 				<Wrapper>
-					<Typography>
-						The average size of each cluster is:
-					</Typography>
-					<Code colors={colors} borderRadius={borderRadius}>
-						9.2 points
+					<Typography>Average points per cluster:</Typography>
+					<Code>
+						{
+							activePointsGroup.clusteringOutput
+								.clusteringSummaries[
+								activePointsGroup.clusterCount - 1
+							].averageClusterSize
+						}
 					</Code>
 				</Wrapper>
 			</TextWrapper>
-		</FlexCenter>
+		</div>
 	);
 };
 
-const Code = styled("span")<{
-	colors: StyleConstant<"colors">;
-	borderRadius: StyleConstant<"border">["borderRadius"];
-}>`
-	font-family: "Courier New", Courier, monospace;
-	background-color: ${p => p.colors.core.lightest};
-	color: ${p => p.colors.core.dark};
-	padding: 4px;
-	border-radius: ${p => p.borderRadius.br1};
-	font-weight: 600;
-	white-space: nowrap;
-`;
+const mapStateToProps = (state: IReduxState) => ({
+	activePointsGroup: getActivePointsGroup(state)
+});
+
+export const Summary = connect(
+	mapStateToProps,
+	null
+)(SummaryInternal);
 
 const Wrapper = styled.div`
 	margin: 0 0 12px 0;
@@ -60,21 +65,20 @@ const Wrapper = styled.div`
 	justify-content: space-between;
 	align-items: flex-start;
 	grid-area: summary;
-	width: 100%;
 `;
 
-const FlexCenter = styled.div`
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	@media (min-width: 800px) {
-		align-items: flex-start;
-	}
-`;
+// const FlexCenter = styled.div`
+// 	display: flex;
+// 	align-items: center;
+// 	flex-direction: column;
+// 	@media (min-width: 800px) {
+// 		align-items: flex-start;
+// 	}
+// `;
 
 const TextWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	width: 400px;
+	align-items: space-between;
+	min-width: 400px;
 `;

@@ -4,14 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace WebApplication.Models.DTOs
 {
     [Table("points", Schema="dbo")]
-    public class Point
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int PointId { get; set; }
-        public string Name { get; set; }
-        public double HorizontalDisplacement { get; set; }
-        public double VerticalDisplacement { get; set; }
-        
+    public class Point : Calc.Models.Point
+    {   
         [ForeignKey("PointsGroup")]
         public int PointsGroupId { get; set; }
         public PointsGroup PointsGroup { get; set; }
