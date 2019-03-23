@@ -3,14 +3,13 @@ import {
 	IInitialInputInfo,
 	Typography
 } from "@nickjmorrow/react-component-library";
+import { getIsAuthenticated } from "Auth/auth-helpers";
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import { IReduxState } from "../../reducer";
 import { addPointsGroup, createPointsGroup } from "../../Data/actions";
-import styled from "styled-components";
+import { IReduxState } from "../../reducer";
 import { TitleWrapper } from "./TitleWrapper";
-import { getIsAuthenticated } from "Auth/auth-helpers";
 
 export class FileUploadFormInternal extends React.PureComponent<
 	IProps,
@@ -37,29 +36,19 @@ export class FileUploadFormInternal extends React.PureComponent<
 
 	render() {
 		return (
-			<Wrapper>
+			<>
 				<TitleWrapper>
 					<Typography sizeVariant={4}>
 						{"Upload Points Group"}
 					</Typography>
 				</TitleWrapper>
 				<FileInput onChange={this.handleFileChange} useMargin={false} />
-			</Wrapper>
+			</>
 		);
 	}
 }
 
 // css
-const Wrapper = styled.div`
-	grid-area: fileuploadform;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin: 0 auto;
-	@media (min-width: 800px) {
-		align-items: flex-start;
-	}
-`;
 
 // types
 const initialState = {
