@@ -29,7 +29,7 @@ namespace WebApplication.Services
             return this.BuildPointsGroup(points, this.FormatFileName(file.FileName));
         }
         
-        private PointsGroup BuildPointsGroup(IEnumerable<Point> points, string fileName)
+        private PointsGroup BuildPointsGroup(IEnumerable<PointDto> points, string fileName)
         {
             var averageHorizontalDisplacement = points
                 .Select(p => p.HorizontalDisplacement)
@@ -48,13 +48,13 @@ namespace WebApplication.Services
             };
         }
 
-        private IEnumerable<Point> ParseJsonToPoints(JObject json)
+        private IEnumerable<PointDto> ParseJsonToPoints(JObject json)
         {
             return json["kml"]["Document"]["Folder"]["Placemark"].Select((p, i) =>
             {
                 var name = p["name"].ToString();
                 var coordinates = p["Point"]["coordinates"].ToString().Trim().Split(",");
-                return new Point()
+                return new PointDto()
                 {
                     Name = name,
                     HorizontalDisplacement = Convert.ToDouble(coordinates[0]),

@@ -9,19 +9,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Web.Models;
 using WebApplication;
 using WebApplication.Enums;
 using WebApplication.Models;
 using WebApplication.Models.DTOs;
 using WebApplication.Services;
 using ItemType = WebApplication.Enums.ItemType;
-using Point = WebApplication.Models.DTOs.Point;
 
 namespace Web.Services
 {
     [Authorize]
-    public class PointsGroupService
+    public partial class PointsGroupService
     {
         private DatabaseContext _context;
         private ItemService _itemService;
@@ -51,7 +49,7 @@ namespace Web.Services
         
         // TODO: add tests here
 
-        public IEnumerable<PointsGroupDTO> GetPointsGroups(int? userId)
+        public IEnumerable<PointsGroupDto> GetPointsGroups(int? userId)
         {
             var allPointsGroups = this._context.PointsGroups
                 .Include(pg => pg.Points);
@@ -66,7 +64,7 @@ namespace Web.Services
                 .ToList();
         }
 
-        public async Task<PointsGroupDTO> AddPointsGroupAsync(int userId, IFormFile file)
+        public async Task<PointsGroupDto> AddPointsGroupAsync(int userId, IFormFile file)
         {
             var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
             return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
@@ -76,7 +74,7 @@ namespace Web.Services
         /// Create a <see cref="PointsGroup"/> and persist it to the database.
         /// </summary>
         /// <returns></returns>
-        public async Task<PointsGroupDTO> AddPointsGroupAsyncInternal(int userId, PointsGroup pointsGroup)
+        public async Task<PointsGroupDto> AddPointsGroupAsyncInternal(int userId, PointsGroup pointsGroup)
         {
             // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
@@ -86,13 +84,7 @@ namespace Web.Services
             await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
             await this._context.SaveChangesAsync();
 
-            var clusteringOutput = this.GetClusteringOutput(pointsGroup.Points); 
-            pointsGroup.AhcInfoJson = JsonConvert.SerializeObject(new AhcInfo()
-            {
-                AhcPoints = clusteringOutput.AhcPointDtos
-            });
-
-            pointsGroup.ClusteringSummariesJson = JsonConvert.SerializeObject(clusteringOutput.ClusteringSummaries);
+            pointsGroup.ClusteringOutputJson = JsonConvert.SerializeObject(this.GetClusteringOutputDto(pointsGroup.Points));
             
             this._context.Update(pointsGroup);
             await this._context.SaveChangesAsync();
@@ -110,9 +102,9 @@ namespace Web.Services
         }
 
         /// <summary>
-        /// Create a <see cref="PointsGroupDTO"/> from a file.
+        /// Create a <see cref="PointsGroupDto"/> from a file.
         /// </summary>
-        public PointsGroupDTO CreatePointsGroupAsync(IFormFile file)
+        public PointsGroupDto CreatePointsGroupAsync(IFormFile file)
         {
             var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
             pointsGroup.Points = pointsGroup.Points.Select((p, i) =>
@@ -121,20 +113,21 @@ namespace Web.Services
                 return p;
             }).ToList();
 
-            return this.GetPointsGroupDto(pointsGroup);
+            var pointsGroupDto = this.GetPointsGroupDto(pointsGroup); 
+            return pointsGroupDto;
         }
 
         /// <summary>
         /// Persist a <see cref="PointsGroup"/> to the database. 
         /// </summary>
-        public async Task<PointsGroupDTO> SavePointsGroupAsync(int userId, PointsGroupDTO pointsGroupDto)
+        public async Task<PointsGroupDto> SavePointsGroupAsync(int userId, PointsGroupDto pointsGroupDto)
         {
             var pointsGroup = new PointsGroup
             {
                 Name = pointsGroupDto.Name,
                 AverageHorizontalDisplacement = pointsGroupDto.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroupDto.AverageVerticalDisplacement,
-                Points = pointsGroupDto.Points.Select(p => new Point
+                Points = pointsGroupDto.Points.Select(p => new PointDto
                     {
                         HorizontalDisplacement = p.HorizontalDisplacement,
                         VerticalDisplacement = p.VerticalDisplacement,
@@ -146,35 +139,9 @@ namespace Web.Services
             return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
         }
 
-        private ClusteringOutputDto GetClusteringOutput(IEnumerable<Point> points)
+        private IEnumerable<PointDto> GetCalcPoints(IEnumerable<PointDto> points)
         {
-            var calcPoints = this.GetCalcPoints(points);
-            // TODO: include clustering summary here
-            var clusteringOutput = this._clusteringService.GetClusteringOutput(calcPoints);
-            var ahcPointDtos = clusteringOutput.AgglomerativeHierarchicalClusterPoints.Select(ahcp => new AhcPointDTO
-            {
-                PointId = ahcp.PointId,
-                Name = ahcp.Name,
-                HorizontalDisplacement = ahcp.HorizontalDisplacement,
-                VerticalDisplacement = ahcp.VerticalDisplacement,
-                ClusterInfos = this.GetClusterInfos(ahcp.AgglomerativeHierarchicalClusterInfos)
-            });
-            return new ClusteringOutputDto
-            {
-                AhcPointDtos = ahcPointDtos,
-                ClusteringSummaries = clusteringOutput.ClusteringSummaries
-            };
-        }
-
-        public class ClusteringOutputDto
-        {
-            public IEnumerable<AhcPointDTO> AhcPointDtos { get; set; }
-            public IEnumerable<ClusteringSummary> ClusteringSummaries { get; set; } 
-        }
-
-        private IEnumerable<Calc.Models.Point> GetCalcPoints(IEnumerable<Point> points)
-        {
-            return points.Select(p => new Calc.Models.Point
+            return points.Select(p => new PointDto
             {
                 PointId = p.PointId,
                 Name = p.Name,
@@ -183,42 +150,22 @@ namespace Web.Services
             });
         }
 
-        private IEnumerable<ClusterInfo> GetClusterInfos(
-            IEnumerable<AgglomerativeHierarchicalClusterInfo> ahcClusterInfos)
+        private IEnumerable<ClusterSnapshot> GetClusterInfos(
+            IEnumerable<ClusterSnapshot> ahcClusterInfos)
         {
-            return ahcClusterInfos.Select(ahcci => new ClusterInfo
+            return ahcClusterInfos.Select(ahcci => new ClusterSnapshot
             {
                 ClusterId = ahcci.ClusterId,
                 ClusterCount = ahcci.ClusterCount
             });
         } 
         
-        private IEnumerable<Point> FormatPoints(PointsGroup pointsGroup)
-        {
-            if (pointsGroup.PointsGroupId == null)
-            {
-                throw new ArgumentException(
-                    $"Expected pointsGroup with name ${pointsGroup.Name} to have a pointsGroupId but was null.");
-            }
-            
-            return pointsGroup.Points.Select((p, i) =>
-            {
-                return new Point()
-                {
-                    PointsGroupId = pointsGroup.PointsGroupId,
-                    HorizontalDisplacement = p.HorizontalDisplacement,
-                    VerticalDisplacement = p.VerticalDisplacement,
-                    Name = p.Name
-                };
-            });
-        }
-        
         /// <summary>
-        /// Used to get <see cref="PointsGroupDTO"/> from a persisted <see cref="PointsGroup"/>.
+        /// Used to get <see cref="PointsGroupDto"/> from a persisted <see cref="PointsGroup"/>.
         /// </summary>
-        private PointsGroupDTO GetPointsGroupDto(PointsGroup pointsGroup, Item item)
+        private PointsGroupDto GetPointsGroupDto(PointsGroup pointsGroup, Item item)
         {
-            return new PointsGroupDTO()
+            return new PointsGroupDto()
             {
                 PointsGroupId = pointsGroup.PointsGroupId,
                 Name = pointsGroup.Name,
@@ -226,32 +173,60 @@ namespace Web.Services
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
                 ItemPermissionType = item.ItemPermissionTypeId,
-                AhcInfo = JsonConvert.DeserializeObject<AhcInfo>(pointsGroup.AhcInfoJson),
-                ClusteringSummary = JsonConvert.DeserializeObject<ClusteringSummary>(pointsGroup.ClusteringSummariesJson)
+                ClusteringOutput = JsonConvert.DeserializeObject<ClusteringOutputDto>(pointsGroup.ClusteringOutputJson)
             };
         }
         
         /// <summary>
-        /// Used to get <see cref="PointsGroupDTO"/> from <see cref="PointsGroup"/>
+        /// Used to get <see cref="PointsGroupDto"/> from <see cref="PointsGroup"/>
         /// that is not associated with a user and has not yet been persisted.
         /// </summary>
-        private PointsGroupDTO GetPointsGroupDto(PointsGroup pointsGroup)
+        private PointsGroupDto GetPointsGroupDto(PointsGroup pointsGroup)
         {
-            var clusteringOutput = this.GetClusteringOutput(pointsGroup.Points);
-            var ahcPoints = clusteringOutput.AhcPointDtos;
-            var clusteringSummaries = clusteringOutput.ClusteringSummaries;
-            return new PointsGroupDTO
+            return new PointsGroupDto
             {
                 Name = pointsGroup.Name,
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
                 Points = pointsGroup.Points,
                 ItemPermissionType = ItemPermissionType.Public,
-                AhcInfo = new AhcInfo
-                {
-                    AhcPoints = ahcPoints,
-                    ClusterSummaries = clusteringSummaries,
-                }
+                ClusteringOutput = this.GetClusteringOutputDto(pointsGroup.Points)
+            };
+        }
+
+        private ClusteringOutputDto GetClusteringOutputDto(IEnumerable<PointDto> points)
+        {
+            var calcPoints = this.GetCalcPoints(points);
+            var clusteringOutput = this._clusteringService.GetClusteringOutput(calcPoints);
+            var ahcPointDtos = clusteringOutput.AgglomerativeHierarchicalClusterPoints.Select(ahcp => new ClusteredPoint
+            {
+                PointId = ahcp.PointId,
+                Name = ahcp.Name,
+                HorizontalDisplacement = ahcp.HorizontalDisplacement,
+                VerticalDisplacement = ahcp.VerticalDisplacement,
+                ClusterSnapshots = this.GetClusterInfos(ahcp.ClusterSnapshots)
+            });
+            return new ClusteringOutputDto
+            {
+                ClusteredPoints = ahcPointDtos,
+                ClusteringSummaries = clusteringOutput.ClusteringSummaries.Select(GetClusteringSummaryDto)
+            };
+
+        }
+        
+        private ClusteringSummaryDto GetClusteringSummaryDto(ClusteringSummary clusteringSummary)
+        {
+            return new ClusteringSummaryDto()
+            {
+                ClusterCount = clusteringSummary.ClusterCount,
+                InterclusterDistance = clusteringSummary.InterclusterDistance.ToMask(),
+                IntraclusterDistances = clusteringSummary.IntraclusterDistances.Select(icd =>
+                    new IntraclusterDistanceDto()
+                    {
+                        ClusterId = icd.ClusterId,
+                        Distance = icd.Distance.ToMask()
+                    }),
+                AverageClusterSize = clusteringSummary.AverageClusterSize.ToMask("0.0", " points")
             };
         }
     }

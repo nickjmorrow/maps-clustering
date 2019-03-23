@@ -45,12 +45,13 @@ namespace WebApplication.Controllers
             {
                 return BadRequest("The file did not exist.");
             }
-            
-            return Ok(this._pointsGroupService.CreatePointsGroupAsync(file));
+
+            var createdPointsGroup = this._pointsGroupService.CreatePointsGroupAsync(file); 
+            return Ok(createdPointsGroup);
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> SavePointsGroup([FromBody] PointsGroupDTO pointsGroupDto)
+        public async Task<IActionResult> SavePointsGroup([FromBody] PointsGroupDto pointsGroupDto)
         {
             return Ok(await this._pointsGroupService.SavePointsGroupAsync(this._userId, pointsGroupDto));
         }
