@@ -26,6 +26,9 @@ function* handleLoginAsync(action: ReturnType<typeof login.request>) {
 			action.payload.loginInfo
 		);
 		// TODO: decode token to ensure it hasnt expired
+		if (!data.userId) {
+			throw new Error("UserId not found in payload.");
+		}
 		addTokenToDefaultHeader(data.token);
 		addToLocalStorage(data, localStorageKeys.user);
 

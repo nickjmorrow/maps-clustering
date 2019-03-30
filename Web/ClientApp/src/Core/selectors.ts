@@ -13,6 +13,7 @@ export const getDatabaseSettingValue = (
 	state: IExpectedReduxState,
 	settingId: string
 ) => {
+      
 	const databaseSetting = state.core.databaseSettings.find(
 		ds => ds.settingId === settingId
 	);

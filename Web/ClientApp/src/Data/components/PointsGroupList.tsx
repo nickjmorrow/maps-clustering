@@ -23,7 +23,7 @@ export const PointsGroupList: React.SFC<IOwnProps> = ({ pointsGroups }) => {
 					width: "100%"
 				}}>
 				{pointsGroups.map(pg => (
-					<PointsGroup key={pg.pointsGroupId} pointsGroup={pg} />
+					<PointsGroup key={pg.pointsGroupId || 0} pointsGroup={pg} />
 				))}
 			</div>
 		</div>

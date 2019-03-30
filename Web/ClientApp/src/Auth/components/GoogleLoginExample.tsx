@@ -1,11 +1,11 @@
 import * as React from "react";
-import { GoogleLogin } from "./GoogleLogin";
 import { authenticateWithGoogle } from "Auth/auth-helpers";
 import { getPointsGroups } from "../../Data";
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { clientId } from "../../secrets";
 import { GoogleLoginResponse } from "react-google-login";
+import { GoogleLoginButton } from "@nickjmorrow/react-component-library";
 
 const GoogleLoginExampleInternal: React.SFC<IDispatchProps> = ({
 	handleAuthenticateWithGoogle,
@@ -20,7 +20,7 @@ const GoogleLoginExampleInternal: React.SFC<IDispatchProps> = ({
 	};
 
 	return (
-		<GoogleLogin
+		<GoogleLoginButton
 			clientId={clientId}
 			handleSuccess={handleSuccess}
 			handleFailure={(err: string) =>

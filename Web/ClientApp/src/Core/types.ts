@@ -2,7 +2,7 @@ export type IError = string;
 
 export enum ItemPermissionType {
 	Private = 1,
-	Default = 2
+	Public = 2
 }
 
 export interface DatabaseSetting {

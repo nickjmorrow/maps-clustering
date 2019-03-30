@@ -67,12 +67,13 @@ const PointsGroupInternal: React.SFC<IProps> = ({
 			) && (
 				<TrashIcon
 					onClick={handleDeletePointsGroupInternal}
-					colorVariant={"secondaryLight"}
+					colorVariant={"primaryLight"}
+					sizeVariant={2}
 					onMouseEnter={() => setIsHoveringOverDeleteButton(true)}
 					onMouseLeave={() => setIsHoveringOverDeleteButton(false)}
 				/>
 			)}
-			{pointsGroup.itemPermissionType === ItemPermissionType.Default &&
+			{pointsGroup.itemPermissionType === ItemPermissionType.Public &&
 				(isActive || isHovering) && (
 					<Label color={"white"}>{"Default"}</Label>
 				)}
@@ -86,7 +87,7 @@ const shouldShowDeleteButton = (
 	isHoveringOverDeleteButton: boolean
 ) =>
 	pg.pointsGroupId &&
-	pg.itemPermissionType !== ItemPermissionType.Default &&
+	pg.itemPermissionType !== ItemPermissionType.Public &&
 	(isHovering || pg.isActive || isHoveringOverDeleteButton);
 
 // types
@@ -135,12 +136,12 @@ const PointsGroupWrapper = styled("button")<{
 	height: ${p => p.spacing.ss12};
 	align-items: center;
 	background-color: ${p =>
-		p.isActive ? p.colors.core.light : p.colors.background};
+		p.isActive ? p.colors.core.cs4 : p.colors.background};
 	transition: background-color, ${p => p.transitions.fast};
 	&:hover,
 	&:focus {
 		background-color: ${p =>
-			p.isActive ? p.colors.core.light : p.colors.core.lightest};
+			p.isActive ? p.colors.core.cs4 : p.colors.core.cs2};
 		transition: ${p => p.transitions.fast};
 	}
 `;

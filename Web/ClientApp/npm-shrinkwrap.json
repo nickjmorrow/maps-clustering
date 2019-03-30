@@ -157,9 +157,9 @@
 			}
 		},
 		"@emotion/core": {
-			"version": "10.0.9",
-			"resolved": "https://registry.npmjs.org/@emotion/core/-/core-10.0.9.tgz",
-			"integrity": "sha512-v5a77dV+uWGoy9w6R3MXZG01lqHcXgoy/jGmJqPDGhPjmpWg26LWXAphYZxpZffFUwDUlDdYDiX5HtaKphvJnQ==",
+			"version": "10.0.10",
+			"resolved": "https://registry.npmjs.org/@emotion/core/-/core-10.0.10.tgz",
+			"integrity": "sha512-U1aE2cOWUscjc8ZJ3Cx32udOzLeRoJwGxBH93xQD850oQFpwPKZARzdUtdc9SByUOwzSFYxhDhrpXnV34FJmWg==",
 			"requires": {
 				"@emotion/cache": "^10.0.9",
 				"@emotion/css": "^10.0.9",
@@ -369,18 +369,21 @@
 			}
 		},
 		"@nickjmorrow/react-component-library": {
-			"version": "0.0.7",
-			"resolved": "https://registry.npmjs.org/@nickjmorrow/react-component-library/-/react-component-library-0.0.7.tgz",
-			"integrity": "sha512-y+6r8o1jrb044uuuhkyaAU/SjOVSUfKgv5Xd8KOLNTa0CA/+EMgE6gA7xR5rj1jqpiOunb8SMb0fPS9CnpcBUg==",
+			"version": "0.0.9",
+			"resolved": "https://registry.npmjs.org/@nickjmorrow/react-component-library/-/react-component-library-0.0.9.tgz",
+			"integrity": "sha512-hYEoS5gT9XBD6m3LbRXVPx327i4Ze16ck2ZuCeK/uJaazNwQUZOHDAxtg9WaEoZKcyIKoi9pYw4HUDbw5gHsxA==",
 			"requires": {
 				"deepmerge": "^3.2.0",
 				"emitter": "0.0.5",
+				"fast-deep-equal": "^2.0.1",
 				"radium": "^0.25.1",
 				"rc-slider": "^8.6.5",
 				"react-animations": "^1.0.0",
+				"react-collapse": "^4.0.3",
 				"react-google-login": "^5.0.0",
 				"react-media": "^1.9.2",
 				"react-modal": "^3.8.1",
+				"react-motion": "^0.5.2",
 				"react-router": "^4.3.1",
 				"react-router-dom": "^4.3.1",
 				"react-spinners": "^0.5.1",
@@ -394,6 +397,11 @@
 					"version": "3.2.0",
 					"resolved": "https://registry.npmjs.org/deepmerge/-/deepmerge-3.2.0.tgz",
 					"integrity": "sha512-6+LuZGU7QCNUnAJyX8cIrlzoEgggTM6B7mm+znKOX4t5ltluT9KLjN6g61ECMS0LTsLW7yDpNoxhix5FZcrIow=="
+				},
+				"fast-deep-equal": {
+					"version": "2.0.1",
+					"resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz",
+					"integrity": "sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk="
 				},
 				"rc-slider": {
 					"version": "8.6.7",
@@ -431,9 +439,9 @@
 					}
 				},
 				"react-transition-group": {
-					"version": "2.6.1",
-					"resolved": "https://registry.npmjs.org/react-transition-group/-/react-transition-group-2.6.1.tgz",
-					"integrity": "sha512-9DHwCy0aOYEe35frlEN68N9ut/THDQBLnVoQuKTvzF4/s3tk7lqkefCqxK2Nv96fOh6JXk6tQtliygk6tl3bQA==",
+					"version": "2.7.1",
+					"resolved": "https://registry.npmjs.org/react-transition-group/-/react-transition-group-2.7.1.tgz",
+					"integrity": "sha512-b0VJTzNRnXxRpCuxng6QJbAzmmrhBn1BZJfPPnHbH2PIo8msdkajqwtfdyGm/OypPXZNfAHKEqeN15wjMXrRJQ==",
 					"requires": {
 						"dom-helpers": "^3.3.1",
 						"loose-envify": "^1.4.0",
@@ -14032,6 +14040,14 @@
 			"resolved": "https://registry.npmjs.org/react-animations/-/react-animations-1.0.0.tgz",
 			"integrity": "sha512-ePPpVgdKnNEXm+LP1ww5s3n0JzebBw9QdRfxRqogzeg1PDIn6kf0pmvgeTeVZQXXpGmHImkIeTiaQR1O6xjntA=="
 		},
+		"react-collapse": {
+			"version": "4.0.3",
+			"resolved": "https://registry.npmjs.org/react-collapse/-/react-collapse-4.0.3.tgz",
+			"integrity": "sha512-OO4NhtEqFtz+1ma31J1B7+ezdRnzHCZiTGSSd/Pxoks9hxrZYhzFEddeYt05A/1477xTtdrwo7xEa2FLJyWGCQ==",
+			"requires": {
+				"prop-types": "^15.5.8"
+			}
+		},
 		"react-dev-utils": {
 			"version": "5.0.3",
 			"resolved": "https://registry.npmjs.org/react-dev-utils/-/react-dev-utils-5.0.3.tgz",
@@ -14206,6 +14222,23 @@
 					"requires": {
 						"loose-envify": "^1.0.0"
 					}
+				}
+			}
+		},
+		"react-motion": {
+			"version": "0.5.2",
+			"resolved": "https://registry.npmjs.org/react-motion/-/react-motion-0.5.2.tgz",
+			"integrity": "sha512-9q3YAvHoUiWlP3cK0v+w1N5Z23HXMj4IF4YuvjvWegWqNPfLXsOBE/V7UvQGpXxHFKRQQcNcVQE31g9SB/6qgQ==",
+			"requires": {
+				"performance-now": "^0.2.0",
+				"prop-types": "^15.5.8",
+				"raf": "^3.1.0"
+			},
+			"dependencies": {
+				"performance-now": {
+					"version": "0.2.0",
+					"resolved": "https://registry.npmjs.org/performance-now/-/performance-now-0.2.0.tgz",
+					"integrity": "sha1-M+8wxcd9TqIcWlOGnZG1bY8lVeU="
 				}
 			}
 		},

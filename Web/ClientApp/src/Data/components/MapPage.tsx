@@ -53,5 +53,5 @@ interface IReduxProps {
 // css
 const Divider = styled("div")<{ colors: StyleConstant<"colors"> }>`
 	height: 20px;
-	background-color: ${p => p.colors.neutral.dark};
+	background-color: ${p => p.colors.neutral.cs6};
 `;

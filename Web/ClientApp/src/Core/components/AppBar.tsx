@@ -2,7 +2,8 @@ import { getIsAuthenticated } from "Auth/auth-helpers";
 import { AuthModal, LogOutModal } from "Auth/components";
 import {
 	Modal,
-	PopulatedAppBar as GenericAppBar
+	PopulatedAppBar as GenericAppBar,
+	Button
 } from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { useState } from "react";
@@ -24,6 +25,8 @@ export const AppBarInternal: React.FC<IProps> = ({
 	const handleToggleAuthModal = () => setIsAuthModalOpen(prev => !prev);
 
 	const handleToggleGoogleModal = () => setIsGoogleModalOpen(prev => !prev);
+
+	const handleToggleLogoutModal = () => setIsLogOutModalOpen(prev => !prev);
 
 	const handleSuccess = (response: GoogleLoginResponse) => {
 		console.log(response.getAuthResponse().access_token);
@@ -50,11 +53,25 @@ export const AppBarInternal: React.FC<IProps> = ({
 			/>
 		</Modal>
 	);
-	// TODO: add sign-in link
-	// RCL: add ability to add components to app bar on right or left
+
+	const rightComponents = isAuthenticated ? (
+		<>
+			<AppBarButton onClick={handleToggleLogoutModal}>
+				Log Out
+			</AppBarButton>
+		</>
+	) : (
+		<>
+			<AppBarButton onClick={handleToggleAuthModal}>Sign In</AppBarButton>
+		</>
+	);
 	return (
 		<>
-			<GenericAppBar appName={appName} styleVariant={"primary"} />
+			<GenericAppBar
+				appName={appName}
+				styleVariant={"primary"}
+				rightComponents={rightComponents}
+			/>
 			<AuthModal
 				isOpen={isAuthModalOpen}
 				isRegistering={false}
@@ -84,3 +101,12 @@ export const AppBar = connect(
 	mapStateToProps,
 	null
 )(AppBarInternal);
+
+const AppBarButton: React.FC<{
+	onClick: () => void;
+	children: React.ReactNode;
+}> = ({ onClick: handleClick, children }) => (
+	<Button showBoxShadow={false} useMargin={false} onClick={handleClick}>
+		{children}
+	</Button>
+);

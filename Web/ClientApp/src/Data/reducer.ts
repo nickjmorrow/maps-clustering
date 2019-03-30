@@ -93,7 +93,7 @@ export const dataReducer = (
 					.filter(
 						pg =>
 							!pg.pointsGroupId ||
-							pg.itemPermissionType === ItemPermissionType.Default
+							pg.itemPermissionType === ItemPermissionType.Public
 					)
 					.map(withFirstPointsGroupActive)
 			};
@@ -142,7 +142,7 @@ const ensureActivePointsGroup = (pointsGroups: IPointsGroup[]) => {
 };
 
 const defaultsAreLastAndDefaultsAreFirst = (pg: IPointsGroup) =>
-	pg.itemPermissionType === ItemPermissionType.Default
+	pg.itemPermissionType === ItemPermissionType.Public
 		? -1
 		: pg.pointsGroupId === undefined
 		? 1

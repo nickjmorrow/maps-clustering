@@ -21,7 +21,7 @@ export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 	const clusteredPoints = getClusters(clusterCount, activePointsGroup);
 	const clusterIds = [...new Set(clusteredPoints.map(cp => cp.clusterId))];
 	const asRenderedPoints = (p: ClusterPoint) => (
-		<div>
+		<div key={`point-id-${p.pointId}`}>
 			<Typography key={p.pointId}>{p.name}</Typography>
 		</div>
 	);

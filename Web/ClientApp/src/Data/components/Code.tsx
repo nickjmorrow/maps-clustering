@@ -9,8 +9,8 @@ const StyledCode = styled("span")<{
 	borderRadius: StyleConstant<"border">["borderRadius"];
 }>`
 	font-family: "Courier New", Courier, monospace;
-	background-color: ${p => p.colors.core.lightest};
-	color: ${p => p.colors.core.dark};
+	background-color: ${p => p.colors.core.cs2};
+	color: ${p => p.colors.core.cs6};
 	padding: 4px;
 	border-radius: ${p => p.borderRadius.br1};
 	font-weight: 600;
