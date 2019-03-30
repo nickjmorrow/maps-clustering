@@ -13,5 +13,5 @@ CREATE TABLE mapClustering.points (
     name VARCHAR(255) NOT NULL,
     horizontalDisplacement FLOAT NOT NULL,
     verticalDisplacement FLOAT NOT NULL,
-    pointsGroupId INT NOT NULL FOREIGN KEY REFERENCES dbo.pointsGroups(pointsGroupId)
+    pointsGroupId INT NOT NULL FOREIGN KEY REFERENCES mapClustering.pointsGroups(pointsGroupId)
 )

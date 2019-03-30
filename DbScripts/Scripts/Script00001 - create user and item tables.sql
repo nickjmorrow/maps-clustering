@@ -14,27 +14,34 @@ CREATE TABLE mapClustering.itemTypes (
     name VARCHAR(255) NOT NULL
 )
 
+INSERT INTO mapClustering.ItemTypes (name)
+SELECT 'Points Group'
+
 CREATE TABLE mapClustering.itemPermissionTypes (
     itemPermissionTypeId INT NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     description VARCHAR(100) NOT NULL
 )
 
+INSERT INTO mapClustering.itemPermissionTypes
+SELECT 'Private' AS description UNION
+SELECT 'Public' AS description
+
 CREATE TABLE mapClustering.items (
     itemId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-    itemTypeId INT NOT NULL FOREIGN KEY REFERENCES dbo.itemTypes(itemTypeId),
-    itemPermissionTypeId INT NOT NULL FOREIGN KEY REFERENCES dbo.itemPermissionTypes(itemPermissionTypeId),
+    itemTypeId INT NOT NULL FOREIGN KEY REFERENCES mapClustering.itemTypes(itemTypeId),
+    itemPermissionTypeId INT NOT NULL FOREIGN KEY REFERENCES mapClustering.itemPermissionTypes(itemPermissionTypeId),
     dateCreated DATETIME NOT NULL DEFAULT GETDATE(),
     dateDeleted DATETIME NULL
 )
 
 CREATE TABLE mapClustering.userItems (
-    userId INT NOT NULL FOREIGN KEY REFERENCES dbo.users(userId),
-    itemId iNT NOT NULL FOREIGN KEY REFERENCES dbo.items(itemId)
+    userId INT NOT NULL FOREIGN KEY REFERENCES mapClustering.users(userId),
+    itemId iNT NOT NULL FOREIGN KEY REFERENCES mapClustering.items(itemId)
 )
 
 CREATE TABLE mapClustering.userFavorites (
-    userId iNT NOT NULL FOREIGN KEY REFERENCES dbo.users(userId),
-    itemId INT NOT NULL FOREIGN KEY REFERENCES dbo.items(itemId)
+    userId iNT NOT NULL FOREIGN KEY REFERENCES mapClustering.users(userId),
+    itemId INT NOT NULL FOREIGN KEY REFERENCES mapClustering.items(itemId)
 )
 
 

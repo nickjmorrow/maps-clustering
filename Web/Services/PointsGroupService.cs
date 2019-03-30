@@ -19,7 +19,7 @@ using ItemType = WebApplication.Enums.ItemType;
 namespace Web.Services
 {
     [Authorize]
-    public partial class PointsGroupService
+    public  class PointsGroupService
     {
         private DatabaseContext _context;
         private ItemService _itemService;
@@ -53,6 +53,7 @@ namespace Web.Services
         {
             var allPointsGroups = this._context.PointsGroups
                 .Include(pg => pg.Points);
+            
             return this._itemFilterer
                 .GetValidItems(userId, allPointsGroups)
                 .Select(pg => 
@@ -81,6 +82,8 @@ namespace Web.Services
             pointsGroup.ItemId = itemId;
             
             await this._context.PointsGroups.AddAsync(pointsGroup);
+            await this._context.SaveChangesAsync();
+            
             await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
             await this._context.SaveChangesAsync();
 

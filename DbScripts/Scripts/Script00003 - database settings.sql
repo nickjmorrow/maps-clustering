@@ -3,3 +3,5 @@ CREATE TABLE mapClustering.databaseSettings (
     , settingValue VARCHAR(255) NOT NULL
 )
 
+INSERT INTO mapClustering.databaseSettings (settingId, settingValue)
+SELECT 'appName', 'Map Clustering'

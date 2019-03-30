@@ -30,7 +30,7 @@ namespace Web.Services
             where T : IItemBound
         {
             var publicItems = this._context.Items
-                .Where(i => i.ItemPermissionTypeId == ItemPermissionType.Default);
+                .Where(i => i.ItemPermissionTypeId == ItemPermissionType.Public);
             
             var userItems = userId.HasValue
                 ? this._context.UserItems
@@ -38,6 +38,7 @@ namespace Web.Services
                     .ToList()
                 : new List<UserItem>() { };
             
+            // TODO: rewrite for clarity
             return items
                 .Where(i => userItems.Any(ui => ui.ItemId == i.ItemId) 
                             || publicItems.Any(pi => pi.ItemId == i.ItemId));
