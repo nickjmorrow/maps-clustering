@@ -100,6 +100,7 @@ namespace WebApplication
             services.AddScoped<ClusteringService, ClusteringService>();
             services.AddScoped<ClusteringSummaryService, ClusteringSummaryService>();
             services.AddScoped<DistanceService, DistanceService>();
+            services.AddScoped<DatabaseSettingService, DatabaseSettingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

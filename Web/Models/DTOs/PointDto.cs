@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models.DTOs
 {
-    [Table("points", Schema="dbo")]
+    [Table("points", Schema="mapClustering")]
     public class PointDto : Calc.Models.Point
     {
         [Key]

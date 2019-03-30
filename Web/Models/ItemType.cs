@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models
 {
-    [Table("itemTypes", Schema="dbo")]
+    [Table("itemTypes", Schema="mapClustering")]
     public class ItemType
     {
         [Key]

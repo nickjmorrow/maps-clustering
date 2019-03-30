@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models
 {
-    [Table("userItems", Schema="dbo")]
+    [Table("userItems", Schema="mapClustering")]
     public class UserItem
     {
         public int UserId { get; set; }

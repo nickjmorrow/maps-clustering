@@ -57,7 +57,10 @@ export const MapInternal: React.ComponentClass<Props & OtherProps> = compose<
 
 	const markers = getMarkers(activePointsGroup);
 	return (
-		<GoogleMap defaultZoom={13} defaultCenter={defaultPosition}>
+		<GoogleMap
+			defaultZoom={13}
+			defaultCenter={defaultPosition}
+			center={defaultPosition}>
 			{markers && renderMarkers(markers)}
 		</GoogleMap>
 	);

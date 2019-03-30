@@ -10,8 +10,13 @@ import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
 import { connect } from "react-redux";
 import { IReduxState } from "../../reducer";
 import { clientId } from "../../secrets";
+import { getDatabaseSettingValue } from "../selectors";
+import { settingIds } from "../constants";
 
-export const AppBarInternal: React.FC<IProps> = ({ isAuthenticated }) => {
+export const AppBarInternal: React.FC<IProps> = ({
+	isAuthenticated,
+	appName
+}) => {
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 	const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
 	const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
@@ -49,10 +54,7 @@ export const AppBarInternal: React.FC<IProps> = ({ isAuthenticated }) => {
 	// RCL: add ability to add components to app bar on right or left
 	return (
 		<>
-			<GenericAppBar
-				appName={"Location Clusterer"}
-				styleVariant={"primary"}
-			/>
+			<GenericAppBar appName={appName} styleVariant={"primary"} />
 			<AuthModal
 				isOpen={isAuthModalOpen}
 				isRegistering={false}
@@ -68,15 +70,14 @@ export const AppBarInternal: React.FC<IProps> = ({ isAuthenticated }) => {
 };
 
 // types
-interface IReduxProps {
-	isAuthenticated: boolean;
-}
+type ReduxProps = ReturnType<typeof mapStateToProps>;
 
-type IProps = IReduxProps;
+type IProps = ReduxProps;
 
 // redux
-const mapStateToProps = (state: IReduxState): IReduxProps => ({
-	isAuthenticated: getIsAuthenticated(state)
+const mapStateToProps = (state: IReduxState) => ({
+	isAuthenticated: getIsAuthenticated(state),
+	appName: getDatabaseSettingValue(state, settingIds.appName)
 });
 
 export const AppBar = connect(

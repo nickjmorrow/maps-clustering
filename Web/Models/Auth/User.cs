@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models
 {
-    [Table("Users", Schema = "dbo")]
+    [Table("Users", Schema = "mapClustering")]
     public class User
     {
         public int? UserId { get; set; }

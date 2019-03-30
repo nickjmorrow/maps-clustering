@@ -6,7 +6,7 @@ using WebApplication.Enums;
 
 namespace WebApplication.Models
 {
-    [Table("items", Schema="dbo")]
+    [Table("items", Schema="mapClustering")]
     public class Item : IItemBound
     {
         [Key] 

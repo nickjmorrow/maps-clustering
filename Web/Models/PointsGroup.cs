@@ -8,7 +8,7 @@ using WebApplication.Models.DTOs;
 
 namespace WebApplication.Models
 {
-    [Table("pointsGroups", Schema="dbo")]
+    [Table("pointsGroups", Schema="mapClustering")]
     public class PointsGroup : IItemBound
     {
         [Key]

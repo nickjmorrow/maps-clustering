@@ -1,4 +1,7 @@
-CREATE TABLE dbo.Users (
+CREATE SCHEMA mapClustering;
+GO
+
+CREATE TABLE mapClustering.Users (
     userId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -6,17 +9,17 @@ CREATE TABLE dbo.Users (
     token VARCHAR(MAX) NULL
 )
 
-CREATE TABLE dbo.itemTypes (
+CREATE TABLE mapClustering.itemTypes (
     itemTypeId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 )
 
-CREATE TABLE dbo.itemPermissionTypes (
+CREATE TABLE mapClustering.itemPermissionTypes (
     itemPermissionTypeId INT NOT NULL IDENTITY(1, 1) PRIMARY KEY,
     description VARCHAR(100) NOT NULL
 )
 
-CREATE TABLE dbo.items (
+CREATE TABLE mapClustering.items (
     itemId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
     itemTypeId INT NOT NULL FOREIGN KEY REFERENCES dbo.itemTypes(itemTypeId),
     itemPermissionTypeId INT NOT NULL FOREIGN KEY REFERENCES dbo.itemPermissionTypes(itemPermissionTypeId),
@@ -24,12 +27,12 @@ CREATE TABLE dbo.items (
     dateDeleted DATETIME NULL
 )
 
-CREATE TABLE dbo.userItems (
+CREATE TABLE mapClustering.userItems (
     userId INT NOT NULL FOREIGN KEY REFERENCES dbo.users(userId),
     itemId iNT NOT NULL FOREIGN KEY REFERENCES dbo.items(itemId)
 )
 
-CREATE TABLE dbo.userFavorites (
+CREATE TABLE mapClustering.userFavorites (
     userId iNT NOT NULL FOREIGN KEY REFERENCES dbo.users(userId),
     itemId INT NOT NULL FOREIGN KEY REFERENCES dbo.items(itemId)
 )

@@ -18,7 +18,8 @@ namespace WebApplication
         public DbSet<UserFavoriteItem> UserFavoriteItems { get; set; }
         public DbSet<PointDto> Points { get; set; }
         public DbSet<PointsGroup> PointsGroups { get; set; }
-        
+        public DbSet<DatabaseSetting> DatabaseSettings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserFavoriteItem>()

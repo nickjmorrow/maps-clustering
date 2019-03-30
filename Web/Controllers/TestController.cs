@@ -11,7 +11,7 @@ using WebApplication.Models;
 namespace WebApplication.Controllers
 {
     [Route("api/[controller]")]
-    public partial class TestController : Controller
+    public class TestController : Controller
     {
         private DatabaseContext _context;
 
@@ -23,7 +23,7 @@ namespace WebApplication.Controllers
         [HttpGet("[action]")]
         public int GetVersion()
         {
-            return 4;
+            return 5;
         }
     }
 }

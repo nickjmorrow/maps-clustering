@@ -15,10 +15,13 @@
     </ItemGroup>
     
     <ItemGroup>
+      <PackageReference Include="dbup-core" Version="4.2.0" />
+      <PackageReference Include="dbup-sqlserver" Version="4.2.0" />
       <PackageReference Include="System.Data.SqlClient" Version="4.7.0-preview.18571.3" />
     </ItemGroup>
     
     <ItemGroup>
+      <EmbeddedResource Include="Scripts\Script00003 - database settings.sql" />
       <None Remove="Scripts\Script00001 - create user and item tables.sql" />
       <EmbeddedResource Include="Scripts\Script00001 - create user and item tables.sql" />
       <None Remove="Scripts\Script00002 - create points tables.sql" />

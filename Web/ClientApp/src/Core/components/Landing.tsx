@@ -15,18 +15,21 @@ import {
 import { IReduxState } from "../../reducer";
 import { AppBar } from "./AppBar";
 import { Footer } from "./Footer";
+import { getDatabaseSettings } from "../actions";
 
 export class LandingInternal extends React.PureComponent<IProps> {
 	componentDidMount = () => {
 		const {
 			handlePopulateUserStateFromLocalStorageIfAvailable,
 			handlePopulatePointsGroupsStateFromLocalStorageIfAvailable,
-			handleGetPointsGroups
+			handleGetPointsGroups,
+			handleGetDatabaseSettings
 		} = this.props;
 
 		handlePopulateUserStateFromLocalStorageIfAvailable();
 		handlePopulatePointsGroupsStateFromLocalStorageIfAvailable();
 		handleGetPointsGroups();
+		handleGetDatabaseSettings();
 	};
 
 	componentWillReceiveProps = (nextProps: IProps) => {
@@ -64,6 +67,7 @@ interface IDispatchProps {
 	handlePopulatePointsGroupsStateFromLocalStorageIfAvailable: typeof populatePointsGroupsStateFromLocalStorageIfAvailable.request;
 	handlePopulateUserStateFromLocalStorageIfAvailable: typeof populateUserStateFromLocalStorageIfAvailable.request;
 	handleGetPointsGroups: typeof getPointsGroups.request;
+	handleGetDatabaseSettings: typeof getDatabaseSettings.request;
 }
 
 interface IReduxProps {
@@ -81,7 +85,8 @@ const mapDispatchToProps = (dispatch: Dispatch): IDispatchProps =>
 				populateUserStateFromLocalStorageIfAvailable.request,
 			handleGetPointsGroups: getPointsGroups.request,
 			handleSavePointsGroupIfStoredLocally:
-				savePointsGroupIfStoredLocally.request
+				savePointsGroupIfStoredLocally.request,
+			handleGetDatabaseSettings: getDatabaseSettings.request
 		},
 		dispatch
 	);
