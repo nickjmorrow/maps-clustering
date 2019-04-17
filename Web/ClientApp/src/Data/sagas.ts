@@ -13,6 +13,8 @@ import { formHeaders, localStorageKeys, pointsGroupApi } from "./constants";
 import { IPointsGroup } from "./types";
 import { getFromLocalStorage } from "Core";
 
+// TODO: saga tests
+
 function* getPointsGroupsAsync() {
 	try {
 		const { data } = yield call(axios.get, pointsGroupApi.getPointsGroups);
