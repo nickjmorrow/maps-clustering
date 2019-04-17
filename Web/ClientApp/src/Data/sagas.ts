@@ -13,7 +13,7 @@ import { formHeaders, localStorageKeys, pointsGroupApi } from "./constants";
 import { IPointsGroup } from "./types";
 import { getFromLocalStorage } from "Core";
 
-function* handleGetPointsGroupsAsync() {
+function* getPointsGroupsAsync() {
 	try {
 		const { data } = yield call(axios.get, pointsGroupApi.getPointsGroups);
 		yield put(getPointsGroups.success(data));
@@ -23,7 +23,7 @@ function* handleGetPointsGroupsAsync() {
 }
 
 function* watchGetPointsGroups() {
-	yield takeEvery(dataTypeKeys.GET_POINTS_GROUPS, handleGetPointsGroupsAsync);
+	yield takeEvery(dataTypeKeys.GET_POINTS_GROUPS, getPointsGroupsAsync);
 }
 
 function* createPointsGroupAsync(
@@ -101,7 +101,7 @@ function* watchPopulatePointsGroupsFromLocalStorageIfAvailable() {
 	);
 }
 
-function* handleSavePointsGroupAsync(
+function* savePointsGroupAsync(
 	action: ReturnType<typeof savePointsGroupIfStoredLocally.request>
 ) {
 	try {
@@ -125,11 +125,11 @@ function* handleSavePointsGroupAsync(
 function* watchSavePointsGroup() {
 	yield takeLatest(
 		dataTypeKeys.SAVE_POINTS_GROUP_IF_STORED_LOCALLY,
-		handleSavePointsGroupAsync
+		savePointsGroupAsync
 	);
 }
 
-function* handleDeletePointsGroupAsync(
+function* deletePointsGroupAsync(
 	action: ReturnType<typeof deletePointsGroup.request>
 ) {
 	try {
@@ -144,10 +144,7 @@ function* handleDeletePointsGroupAsync(
 }
 
 function* watchDeletePointsGroup() {
-	yield takeLatest(
-		dataTypeKeys.DELETE_POINTS_GROUP,
-		handleDeletePointsGroupAsync
-	);
+	yield takeLatest(dataTypeKeys.DELETE_POINTS_GROUP, deletePointsGroupAsync);
 }
 
 export const dataSagas = [
