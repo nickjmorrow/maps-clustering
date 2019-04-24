@@ -8,7 +8,6 @@ namespace Calc
 {
     public class ClusteringSummaryService
     {
-        // TODO: consider average intracluster distance
         private DistanceService _distanceService;
 
         public ClusteringSummaryService(DistanceService distanceService)

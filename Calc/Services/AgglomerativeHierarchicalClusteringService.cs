@@ -23,7 +23,7 @@ namespace Calc
                 throw new ArgumentException($"Minimum clusters cannot be below 1 but was {minimumClusters}");
             }
             
-            // assign each point to a cluster (there are N clusters to begin with, and there are N points)
+            // assign each point to a cluster (there are N clusters to begin with, where N = number of points)
             var initialClusters = ConvertPointsToClusters(points);
 
             return GetModelInternal(initialClusters, minimumClusters);
@@ -38,7 +38,6 @@ namespace Calc
                     initialClusters);
             
             // determine closest clusters
-//            var minimumDistance = clusterDistances.Min(cd => cd.Distance);
             var minimumDistance = clusterDistances.Min(cd => cd.Distance);
             var closestClusterPair = clusterDistances.FirstOrDefault(cd => cd.Distance == minimumDistance);
             
