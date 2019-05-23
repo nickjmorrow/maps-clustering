@@ -1,8 +1,8 @@
 export const api = {
 	register: "/api/auth/register",
 	login: "/api/auth/login",
-	logout: "TODO",
-	authenticateWithGoogle: "TODO",
+	logout: "/api/auth/logout",
+	authenticateWithGoogle: "/api/auth/authenticatewithgoogle",
 	toggleFavoriteItem: (itemId: number) =>
 		`api/userItem/toggleFavoriteItem?itemId=${itemId}`,
 	getUserFavoriteItems: "api/userItem/getUserFavoriteItems"
