@@ -34,20 +34,20 @@ export const MapInternal: React.ComponentClass<Props & OtherProps> = compose<
 >(
       withProps({
             googleMapURL,
-            loadingElement: <div style={{ height: `100%` }} />,
+            loadingElement: <div style={{ height: '100%', backgroundColor: 'red' }} />,
             containerElement: (
                   <div style={{ height: "580px", width: "100%", display: "block" }} />
             ),
-            mapElement: <div style={{ height: `100%` }} />
+            mapElement: <div style={{ height: '100%' }} />
       }),
       withScriptjs,
       withGoogleMap
 )((props: Props & OtherProps) => {
-      const { activePointsGroup } = props;
+    const { activePointsGroup } = props;
 
+    // return <div style={{width: '100%', height: '100%', backgroundColor: 'white'}}>Hello</div>;
       if (!activePointsGroup) {
-            console.log(props);
-            return <div>No active points group.</div>;
+            return <div>Loading...</div>;
       }
 
       const defaultPosition = activePointsGroup && {
