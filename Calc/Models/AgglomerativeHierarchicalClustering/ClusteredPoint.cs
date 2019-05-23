@@ -11,6 +11,11 @@ namespace Calc.Models.AgglomerativeHierarchicalClustering
             this.ClusterSnapshots = new List<ClusterSnapshot>();
         }
 
+        public ClusteredPoint GetShallowCopy()
+        {
+            return (ClusteredPoint) this.MemberwiseClone();
+        }
+
         public override bool Equals(object obj)
         {
             var point = obj as Point;

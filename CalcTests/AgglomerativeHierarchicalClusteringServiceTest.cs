@@ -171,6 +171,27 @@ namespace CalcTests
             };
 
             var actualRecordedClusters = new AgglomerativeHierarchicalClusteringService(this._distanceService).RecordClusters(clusters);
+            var recordedFirstPoint = firstPoint.GetShallowCopy();
+            var recordedSecondPoint = secondPoint.GetShallowCopy();
+            var recordedThirdPoint = thirdPoint.GetShallowCopy();
+
+            recordedFirstPoint.ClusterSnapshots.Append(new ClusterSnapshot()
+            {
+                ClusterId = 1,
+                ClusterCount = 3
+            });
+
+            recordedSecondPoint.ClusterSnapshots.Append(new ClusterSnapshot()
+            {
+                ClusterId = 2,
+                ClusterCount = 3
+            });
+
+            recordedThirdPoint.ClusterSnapshots.Append(new ClusterSnapshot()
+            {
+                ClusterId = 2,
+                ClusterCount = 3
+            });
             
             // TODO: figure out how to clone the modeled points above
             var expectedRecordedClusters = new List<Cluster<ClusteredPoint>>()
@@ -178,8 +199,22 @@ namespace CalcTests
                 new Cluster<ClusteredPoint>()
                 {
                     ClusterId = 1,
+                    Points = new List<ClusteredPoint>()
+                    {
+                        recordedFirstPoint, recordedSecondPoint   
+                        
+                    }
+                },
+                new Cluster<ClusteredPoint>()
+                {
+                    ClusterId = 2,
+                    Points = new List<ClusteredPoint>()
+                    {
+                        recordedThirdPoint
+                    }
                 }
             };
+            
             Assert.IsTrue(ListComparer.Compare(actualRecordedClusters, expectedRecordedClusters));
         }
         
