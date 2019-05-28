@@ -91,6 +91,7 @@ namespace WebApplication
             services.AddScoped<FileHandlerService, FileHandlerService>();
             services
                 .AddScoped<AgglomerativeHierarchicalClusteringService, AgglomerativeHierarchicalClusteringService>();
+            services.AddScoped<OrderingService, OrderingService>();
             services.AddScoped<AuthService, AuthService>();
             services.AddScoped<UserItemService, UserItemService>();
             services.AddScoped<ItemService, ItemService>();

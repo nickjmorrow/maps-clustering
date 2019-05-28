@@ -16,9 +16,11 @@ export interface ClusteredPoint extends IPoint {
 	clusterSnapshots: ClusterSnapshot[];
 }
 
+// TODO: calculate orderId correctly
 export interface ClusterSnapshot {
 	clusterCount: number;
 	clusterId: number;
+	orderId: number;
 }
 
 export interface IClusterOption extends IOption {
@@ -32,14 +34,14 @@ export interface IPointsGroup {
 	averageVerticalDisplacement: number;
 	points: IPoint[];
 	itemPermissionType: ItemPermissionType;
-	clusteringOutput: ClusteringOutput;
+	calculationOutput: CalculationOutput;
 	isActive: boolean;
 	pointsColors: string[];
 	clusterCount: number;
 }
 
-export interface ClusteringOutput {
-	clusteredPoints: ClusteredPoint[];
+export interface CalculationOutput {
+	orderedPoints: ClusteredPoint[];
 	clusteringSummaries: ClusteringSummary[];
 }
 interface ClusteringSummary {

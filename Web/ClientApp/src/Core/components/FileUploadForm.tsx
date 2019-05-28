@@ -42,7 +42,7 @@ export class FileUploadFormInternal extends React.PureComponent<
 						{"Upload Points Group"}
 					</Typography>
 				</TitleWrapper>
-				<FileInput onChange={this.handleFileChange} useMargin={false} />
+				<FileInput labelOnUpload={'Upload'} onChange={this.handleFileChange} useMargin={false} />
 			</>
 		);
 	}

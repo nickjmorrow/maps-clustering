@@ -16,6 +16,6 @@ namespace WebApplication.Models.DTOs
         public double AverageVerticalDisplacement { get; set; }
         public IEnumerable<PointDto> Points { get; set; }
         public ItemPermissionType ItemPermissionType { get; set; }
-        public ClusteringOutputDto ClusteringOutput { get; set; }
+        public CalculationOutputModel CalculationOutput { get; set; }
     }
 }

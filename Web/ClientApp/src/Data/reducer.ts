@@ -6,6 +6,7 @@ import * as actions from "./actions";
 import { dataTypeKeys } from "./actions";
 import { clusterTypes } from "./constants";
 import { IPointsGroup } from "./types";
+import { css } from 'react-select/lib/components/SingleValue';
 
 export interface IDataState {
 	readonly error: string;
@@ -152,6 +153,19 @@ const withColors = (pg: IPointsGroup): IPointsGroup => ({
 	...pg,
 	pointsColors: pg.pointsColors || getColors(pg.points.length)
 });
+
+const withOrderId = (pg: IPointsGroup) : IPointsGroup => ({
+	...pg,
+	calculationOutput: {
+		...pg.calculationOutput,
+		orderedPoints: pg.calculationOutput.orderedPoints.map(cp => ({
+			...cp, 
+			clusterSnapshots: cp.clusterSnapshots.map(cs => ({
+				...cs, orderId: cs.clusterId
+			}))
+		}))
+	}
+})
 
 const removeDuplicatePointsGroups = (
 	pointsGroup: IPointsGroup,

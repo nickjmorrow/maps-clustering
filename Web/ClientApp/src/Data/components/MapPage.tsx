@@ -1,7 +1,8 @@
 import {
 	IOption,
 	StyleConstant,
-	ThemeContext
+    ThemeContext,
+    LoadingIcon
 } from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -11,13 +12,20 @@ import { IReduxState } from "../../reducer";
 import { getActivePointsGroup } from "../selectors";
 import { IPointsGroup } from "../types";
 import { MapControls } from "./MapControls";
+import { FileUploadForm } from 'Core';
 
 export const MapPageInternal: React.SFC<IReduxProps> = ({
 	pointsGroups,
 	activePointsGroup,
 	currentClusterOption
 }) => {
-	const { colors } = React.useContext(ThemeContext);
+    const { colors } = React.useContext(ThemeContext);
+    if (!activePointsGroup) {
+        return <div style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: '0px', width: '100%'}}>
+        <LoadingIcon sizeVariant={4} />
+		<FileUploadForm />
+        </div>;
+    }
 	return (
 		<>
 			<Map activePointsGroup={activePointsGroup} />

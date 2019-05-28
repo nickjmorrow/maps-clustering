@@ -2,8 +2,8 @@ import { getIsAuthenticated } from "Auth/auth-helpers";
 import { AuthModal, LogOutModal } from "Auth/components";
 import {
 	Modal,
-	PopulatedAppBar as GenericAppBar,
-	Button
+	Button,
+	PopulatedAppBar
 } from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { useState } from "react";
@@ -67,7 +67,7 @@ export const AppBarInternal: React.FC<IProps> = ({
 	);
 	return (
 		<>
-			<GenericAppBar
+			<PopulatedAppBar
 				appName={appName}
 				styleVariant={"primary"}
 				rightComponents={rightComponents}

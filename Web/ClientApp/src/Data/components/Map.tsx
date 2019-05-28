@@ -4,7 +4,8 @@ import {
       withGoogleMap,
       withScriptjs,
       Marker,
-      MarkerProps
+      MarkerProps,
+	  Polyline
 } from "react-google-maps";
 import { compose, withProps } from "recompose";
 import { googleMapURL } from "../constants";
@@ -56,15 +57,48 @@ export const MapInternal: React.ComponentClass<Props & OtherProps> = compose<
       };
 
       const markers = getMarkers(activePointsGroup);
+	  const polylines = getPolylines(activePointsGroup);
+	  console.log(polylines);
       return (
             <GoogleMap
                   defaultZoom={13}
                   defaultCenter={defaultPosition}
                   center={defaultPosition}>
                   {markers && renderMarkers(markers)}
+				  {renderPolylines(polylines)}
             </GoogleMap>
       );
 });
+
+type PolylineInfo = Array<{
+	lat: number;
+	lng: number;
+	orderId: number;
+}>;
+
+const renderPolylines = (polylineProps: PolylineInfo[]) : React.ReactNode => {
+	return polylineProps.map((plp, i) => {
+		return <Polyline key={i} path={plp} options={{geodesic: true, strokeColor: '#FF0000', strokeOpacity: 1.0, strokeWeight: 2}} />
+	})
+}
+
+const getPolylines = (pointsGroup: IPointsGroup) : PolylineInfo[] => {
+	const { clusterCount } = pointsGroup;
+
+	// TODO: this type seems wrong
+	return pointsGroup.calculationOutput.orderedPoints.reduce<PolylineInfo[]>((agg, cur, index, arr) => {
+		const { clusterId, orderId } = cur.clusterSnapshots.find(cs => cs.clusterCount === clusterCount)!;
+		const latLng = {lat: cur.verticalDisplacement, lng: cur.horizontalDisplacement, orderId };
+		if (agg[clusterId]) {
+			agg[clusterId].push(latLng);
+		} else {
+			agg[clusterId] = [latLng]
+		}
+		return agg;
+	}, [])
+	.filter(p => p.length > 1)
+	.map(p => p.sort(x => x.orderId))
+}
 
 const renderMarkers = (markers: MarkerProps[]) =>
       markers.map((marker, index) => (
@@ -88,7 +122,7 @@ const renderMarkers = (markers: MarkerProps[]) =>
 
 const getMarkers = (activePointsGroup: IPointsGroup) => {
       const { clusterCount, pointsColors, points } = activePointsGroup;
-      return activePointsGroup.clusteringOutput.clusteredPoints.map(mp => {
+      return activePointsGroup.calculationOutput.orderedPoints.map(mp => {
             return {
                   position: {
                         lat: mp.verticalDisplacement,

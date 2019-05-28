@@ -30,7 +30,7 @@ export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 		.map((c: number) => {
 			const points = clusteredPoints.filter(p => p.clusterId === c);
 			const renderedPoints = points.map(asRenderedPoints);
-			const intraclusterDistances = activePointsGroup.clusteringOutput.clusteringSummaries[
+			const intraclusterDistances = activePointsGroup.calculationOutput.clusteringSummaries[
 				clusterCount - 1
 			].intraclusterDistances.find(icd => icd.clusterId === c);
 			const distance =
@@ -103,7 +103,7 @@ const getClusters = (
 	activePointsGroup: IPointsGroup
 ): ClusterPoint[] => {
 	const {
-		clusteringOutput: { clusteredPoints }
+		calculationOutput: { orderedPoints: clusteredPoints }
 	} = activePointsGroup;
 	return clusteredPoints.map(ahc => ({
 		...ahc,

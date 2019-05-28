@@ -4,7 +4,7 @@ import {
 	IDataState
 } from "../reducer";
 import { ItemPermissionType } from "../../Core";
-import { IPointsGroup, IPoint, ClusteringOutput } from "../types";
+import { IPointsGroup, IPoint, CalculationOutput } from "../types";
 import {
 	deletePointsGroup,
 	getPointsGroups,
@@ -23,7 +23,7 @@ const getFakePointsGroup = (id: number): IPointsGroup => ({
 	points: (null as unknown) as IPoint[],
 	pointsColors: [""],
 	isActive: false,
-	clusteringOutput: (null as unknown) as ClusteringOutput,
+	calculationOutput: (null as unknown) as CalculationOutput,
 	itemPermissionType: ItemPermissionType.Private,
 	clusterCount: id
 });

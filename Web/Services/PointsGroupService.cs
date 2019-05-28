@@ -87,7 +87,7 @@ namespace Web.Services
             await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
             await this._context.SaveChangesAsync();
 
-            pointsGroup.ClusteringOutputJson = JsonConvert.SerializeObject(this.GetClusteringOutputDto(pointsGroup.Points));
+            pointsGroup.ClusteringOutputJson = JsonConvert.SerializeObject(this.GetCalculationOutputModel(pointsGroup.Points));
             
             this._context.Update(pointsGroup);
             await this._context.SaveChangesAsync();
@@ -153,6 +153,7 @@ namespace Web.Services
             });
         }
 
+        // TODO: wtf is this used for?
         private IEnumerable<ClusterSnapshot> GetClusterInfos(
             IEnumerable<ClusterSnapshot> ahcClusterInfos)
         {
@@ -176,7 +177,7 @@ namespace Web.Services
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
                 ItemPermissionType = item.ItemPermissionTypeId,
-                ClusteringOutput = JsonConvert.DeserializeObject<ClusteringOutputDto>(pointsGroup.ClusteringOutputJson)
+                CalculationOutput = JsonConvert.DeserializeObject<CalculationOutputModel>(pointsGroup.ClusteringOutputJson)
             };
         }
         
@@ -193,25 +194,26 @@ namespace Web.Services
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
                 Points = pointsGroup.Points,
                 ItemPermissionType = ItemPermissionType.Public,
-                ClusteringOutput = this.GetClusteringOutputDto(pointsGroup.Points)
+                CalculationOutput = this.GetCalculationOutputModel(pointsGroup.Points)
             };
         }
 
-        private ClusteringOutputDto GetClusteringOutputDto(IEnumerable<PointDto> points)
+        private CalculationOutputModel GetCalculationOutputModel(IEnumerable<PointDto> points)
         {
             var calcPoints = this.GetCalcPoints(points);
-            var clusteringOutput = this._clusteringService.GetClusteringOutput(calcPoints);
-            var ahcPointDtos = clusteringOutput.AgglomerativeHierarchicalClusterPoints.Select(ahcp => new ClusteredPoint
+            var clusteringOutput = this._clusteringService.GetCalculationOutput(calcPoints);
+            var orderedPoints = clusteringOutput.OrderedPoints.Select(ahcp => new OrderedPoint()
             {
                 PointId = ahcp.PointId,
                 Name = ahcp.Name,
                 HorizontalDisplacement = ahcp.HorizontalDisplacement,
                 VerticalDisplacement = ahcp.VerticalDisplacement,
-                ClusterSnapshots = this.GetClusterInfos(ahcp.ClusterSnapshots)
+                ClusterSnapshots = this.GetClusterInfos(ahcp.ClusterSnapshots),
+                OrderingSnapshots = ahcp.OrderingSnapshots
             });
-            return new ClusteringOutputDto
+            return new CalculationOutputModel
             {
-                ClusteredPoints = ahcPointDtos,
+                OrderedPoints = orderedPoints,
                 ClusteringSummaries = clusteringOutput.ClusteringSummaries.Select(GetClusteringSummaryDto)
             };
 

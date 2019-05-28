@@ -6,7 +6,7 @@ namespace Calc
 {
     public class ClusteringOutput
     {
-        public IEnumerable<ClusteredPoint> AgglomerativeHierarchicalClusterPoints { get; set; }
+        public IEnumerable<ClusteredPoint> ClusteredPoints { get; set; }
         public IEnumerable<ClusteringSummary> ClusteringSummaries { get; set; }
     }
 }

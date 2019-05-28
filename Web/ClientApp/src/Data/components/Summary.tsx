@@ -17,7 +17,7 @@ export const SummaryInternal: React.SFC<ReturnType<typeof mapStateToProps>> = ({
 		return null;
 	}
 	const clusteringSummary =
-		activePointsGroup.clusteringOutput.clusteringSummaries[
+		activePointsGroup.calculationOutput.clusteringSummaries[
 			activePointsGroup.clusterCount - 1
 		];
 	const {
