@@ -1,13 +1,21 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Calc.Models;
 using Calc.Models.AgglomerativeHierarchicalClustering;
+using Calc.Services;
 
 namespace Calc
 {
     public class OrderingService
     {
+        private static readonly int MaxClusterSize = 10;
+        private TourBridge _tourBridge;
+
+        public OrderingService(TourBridge tourBridge)
+        {
+            this._tourBridge = tourBridge;
+        }
+
         public IEnumerable<OrderedPoint> OrderPoints(IEnumerable<ClusteredPoint> clusteredPoints)
         {
             var maxClusterCount = clusteredPoints.First().ClusterSnapshots.Count();
@@ -118,66 +126,33 @@ namespace Calc
         /// <returns></returns>
         public IEnumerable<OrderPoint> GetOrderPoints(IEnumerable<Point> points)
         {
-            
-            var orderedPoints = new List<OrderPoint>() { };
-            var firstPoint = points.First();
-            orderedPoints.Add(new OrderPoint()
+            if (points.Count() > MaxClusterSize)
             {
-                PointId = firstPoint.PointId,
-                Name = firstPoint.Name,
-                HorizontalDisplacement = firstPoint.HorizontalDisplacement,
-                VerticalDisplacement = firstPoint.VerticalDisplacement,
-                OrderId = 1
-            });
-
-            while (orderedPoints.Count() < points.Count())
-            {
-                var mostRecentlyOrderedPoint = orderedPoints.Last();
-                var eligiblePoints = points.Where(p => !orderedPoints.Any(op => op.PointId == p.PointId)).ToList();
-                var closestPoint = this.GetClosestPoint(mostRecentlyOrderedPoint, eligiblePoints);
-                orderedPoints.Add(new OrderPoint()
+                return points.Select((p, i) => new OrderPoint()
                 {
-                    PointId = closestPoint.PointId,
-                    HorizontalDisplacement = closestPoint.HorizontalDisplacement,
-                    VerticalDisplacement = closestPoint.VerticalDisplacement,
-                    Name = closestPoint.Name,
-                    OrderId = mostRecentlyOrderedPoint.OrderId + 1
+                    PointId = p.PointId,
+                    Name = p.Name,
+                    HorizontalDisplacement = p.HorizontalDisplacement,
+                    VerticalDisplacement = p.VerticalDisplacement,
+                    OrderId = i
                 });
             }
-
-            return orderedPoints;
-//            return points.Select((p, i) => new OrderPoint()
-//            {
-//                PointId = p.PointId,
-//                Name = p.Name,
-//                HorizontalDisplacement = p.HorizontalDisplacement,
-//                VerticalDisplacement = p.VerticalDisplacement,
-//                OrderId = i // TODO: get actual orderId
-//            });
-        }
-        
-        public Point GetClosestPoint(Point point, IReadOnlyList<Point> surroundingPoints)
-        {
-            var closestPoint = surroundingPoints
-                .Select(sp => new
-                {
-                    Distance = this.GetDistance(point, sp),
-                    Point = sp
-                })
-                .OrderBy(p => p.Distance)
-                .First()
-                .Point;
-            return closestPoint;
-        }
-
-        private Double GetDistance(Point startingPoint, Point endingPoint)
-        {
-            return Math.Pow(startingPoint.VerticalDisplacement - endingPoint.VerticalDisplacement, 2)
-                   + Math.Pow(startingPoint.HorizontalDisplacement + endingPoint.HorizontalDisplacement, 2);
+            var vertices = this._tourBridge.GetVertices(points);
+            var matrix = this._tourBridge.GetMatrix(points);
+            
+            var tourProvider = new TourProvider(vertices, matrix);
+            var solvedVertices = tourProvider.Solve(out var cost);
+            var orderedPoints = this._tourBridge.GetPoints(points, solvedVertices);
+            return orderedPoints.Select((p, i) => new OrderPoint()
+            {
+                PointId = p.PointId,
+                Name = p.Name,
+                HorizontalDisplacement = p.HorizontalDisplacement,
+                VerticalDisplacement = p.VerticalDisplacement,
+                OrderId = i
+            });
         }
     }
-    
-    
 
     public class OrderPoint : Point
     {

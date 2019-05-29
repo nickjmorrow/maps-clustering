@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Text;
 using Calc;
 using Calc.Models;
+using Calc.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -102,6 +103,8 @@ namespace WebApplication
             services.AddScoped<ClusteringSummaryService, ClusteringSummaryService>();
             services.AddScoped<DistanceService, DistanceService>();
             services.AddScoped<DatabaseSettingService, DatabaseSettingService>();
+            services.AddScoped<TourBridge, TourBridge>();
+            services.AddScoped<TourProvider, TourProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
