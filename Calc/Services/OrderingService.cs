@@ -118,16 +118,66 @@ namespace Calc
         /// <returns></returns>
         public IEnumerable<OrderPoint> GetOrderPoints(IEnumerable<Point> points)
         {
-            return points.Select((p, i) => new OrderPoint()
+            
+            var orderedPoints = new List<OrderPoint>() { };
+            var firstPoint = points.First();
+            orderedPoints.Add(new OrderPoint()
             {
-                PointId = p.PointId,
-                Name = p.Name,
-                HorizontalDisplacement = p.HorizontalDisplacement,
-                VerticalDisplacement = p.VerticalDisplacement,
-                OrderId = i // TODO: get actual orderId
+                PointId = firstPoint.PointId,
+                Name = firstPoint.Name,
+                HorizontalDisplacement = firstPoint.HorizontalDisplacement,
+                VerticalDisplacement = firstPoint.VerticalDisplacement,
+                OrderId = 1
             });
+
+            while (orderedPoints.Count() < points.Count())
+            {
+                var mostRecentlyOrderedPoint = orderedPoints.Last();
+                var eligiblePoints = points.Where(p => !orderedPoints.Any(op => op.PointId == p.PointId)).ToList();
+                var closestPoint = this.GetClosestPoint(mostRecentlyOrderedPoint, eligiblePoints);
+                orderedPoints.Add(new OrderPoint()
+                {
+                    PointId = closestPoint.PointId,
+                    HorizontalDisplacement = closestPoint.HorizontalDisplacement,
+                    VerticalDisplacement = closestPoint.VerticalDisplacement,
+                    Name = closestPoint.Name,
+                    OrderId = mostRecentlyOrderedPoint.OrderId + 1
+                });
+            }
+
+            return orderedPoints;
+//            return points.Select((p, i) => new OrderPoint()
+//            {
+//                PointId = p.PointId,
+//                Name = p.Name,
+//                HorizontalDisplacement = p.HorizontalDisplacement,
+//                VerticalDisplacement = p.VerticalDisplacement,
+//                OrderId = i // TODO: get actual orderId
+//            });
+        }
+        
+        public Point GetClosestPoint(Point point, IReadOnlyList<Point> surroundingPoints)
+        {
+            var closestPoint = surroundingPoints
+                .Select(sp => new
+                {
+                    Distance = this.GetDistance(point, sp),
+                    Point = sp
+                })
+                .OrderBy(p => p.Distance)
+                .First()
+                .Point;
+            return closestPoint;
+        }
+
+        private Double GetDistance(Point startingPoint, Point endingPoint)
+        {
+            return Math.Pow(startingPoint.VerticalDisplacement - endingPoint.VerticalDisplacement, 2)
+                   + Math.Pow(startingPoint.HorizontalDisplacement + endingPoint.HorizontalDisplacement, 2);
         }
     }
+    
+    
 
     public class OrderPoint : Point
     {
