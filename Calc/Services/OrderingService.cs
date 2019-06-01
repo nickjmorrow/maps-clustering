@@ -141,7 +141,7 @@ namespace Calc
             var matrix = this._tourBridge.GetMatrix(points);
             
             var tourProvider = new TourProvider(vertices, matrix);
-            var solvedVertices = tourProvider.Solve(out var cost);
+            var solvedVertices = tourProvider.Solve();
             var orderedPoints = this._tourBridge.GetPoints(points, solvedVertices);
             return orderedPoints.Select((p, i) => new OrderPoint()
             {

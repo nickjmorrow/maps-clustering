@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Calc.Helpers;
 using Calc.Services;
 using NUnit.Framework;
 
@@ -11,8 +12,7 @@ namespace CalcTests
         [Test]
         public void SolveTest()
         {
-            //Arrange
-            var vertics = new int[4] { 0, 1, 2, 3 };
+            var vertices = new [] { 0, 1, 2, 3 };
             var matrix = new double[4, 4]
             {
                 {0, 10, 15, 20},
@@ -21,34 +21,12 @@ namespace CalcTests
                 {8, 8, 9, 0}
             };
             var expectedCost = 35.0;
-            var expectedRoute = new int[5] { 0, 1, 3, 2, 0 };
+            var expectedRoute = new [] { 0, 1, 3, 2, 0 };
 
-            //Act
-            var DynamicProgramming = new TourProvider(vertics, matrix);
-            double cost;
-            IEnumerable<int> route = DynamicProgramming.Solve(out cost);
+            var DynamicProgramming = new TourProvider(vertices, matrix);
+            IEnumerable<int> route = DynamicProgramming.Solve();
 
-            //Assert
-            Assert.AreEqual(expectedCost, cost);
-            Assert.IsTrue(CheckArraysAreEqual(expectedRoute, route.ToArray()), "Routes not equal");
-        }
-
-        private bool CheckArraysAreEqual(int[] expectedRoute, int[] actual)
-        {
-            if (expectedRoute.Length != actual.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < expectedRoute.Length; i++)
-            {
-                if (expectedRoute[i] != actual[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            Assert.IsTrue(ListComparer.Compare(expectedRoute, route.ToArray()));
         }
     }
 }

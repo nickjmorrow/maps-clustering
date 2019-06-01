@@ -6,59 +6,38 @@ namespace Calc.Services
 {
     public class TourProvider
     {
-        private class Node
-        {
-            public int Value { get; set; }
-            public Node[] ChildNodes { get; set; }
-            public bool Selected { get; set; }
-        }
-
-        #region Member Variables
-
         private readonly double[,] _adjacencyMatrix;
         private readonly IEnumerable<int> _vertices;
 
-        #endregion
-
-        #region Constructor
 
         public TourProvider(IEnumerable<int> vertices, double[,] matrix)
         {
-            _vertices = vertices;
-            _adjacencyMatrix = matrix;
+            this._vertices = vertices;
+            this._adjacencyMatrix = matrix;
         }
 
-        #endregion
-
-        #region Public Methods
-
-        public IEnumerable<int> Solve(out double cost)
+        public IEnumerable<int> Solve()
         {
-            var startVertex = _vertices.First();//source node is assumed to be the first
-            var set = new HashSet<int>(_vertices);
+            var startVertex = this._vertices.First();
+            var set = new HashSet<int>(this._vertices);
             set.Remove(startVertex);
 
             var root = new Node();
-            cost = GetMinimumCostRoute(startVertex, set, root);
+            this.GetMinimumCostRoute(startVertex, set, root);
             return TraverseTree(root, startVertex);
         }
-
-        #endregion
-
-        #region Private Methods
 
         private double GetMinimumCostRoute(int startVertex, HashSet<int> set, Node root)
         {
             if (!set.Any())
             {
-                //source node is assumed to be the first
-                root.ChildNodes = new Node[1] { new Node { Value = _vertices.First(), Selected = true } };
+                root.ChildNodes = new [] { new Node { Value = this._vertices.First(), Selected = true } };
                 return _adjacencyMatrix[startVertex, 0];
             }
 
-            double totalCost = double.MaxValue;
-            int i = 0;
-            int selectedIdx = i;
+            var totalCost = double.MaxValue;
+            var i = 0;
+            var currentVertex = i;
             root.ChildNodes = new Node[set.Count()];
 
             foreach (var destination in set)
@@ -75,13 +54,13 @@ namespace Calc.Services
                 if (totalCost > currentCost)
                 {
                     totalCost = currentCost;
-                    selectedIdx = i;
+                    currentVertex = i;
                 }
 
                 i++;
             }
 
-            root.ChildNodes[selectedIdx].Selected = true;
+            root.ChildNodes[currentVertex].Selected = true;
 
             return totalCost;
 
@@ -111,7 +90,12 @@ namespace Calc.Services
                 }
             }
         }
-
-        #endregion
+    }
+    
+    public class Node
+    {
+        public int Value { get; set; }
+        public Node[] ChildNodes { get; set; }
+        public bool Selected { get; set; }
     }
 }
