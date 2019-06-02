@@ -1,18 +1,14 @@
-import {
-	IOption,
-	StyleConstant,
-    ThemeContext,
-    LoadingIcon
-} from "@nickjmorrow/react-component-library";
+import { IOption, LoadingIcon, StyleConstant, ThemeContext } from "@nickjmorrow/react-component-library";
 import * as React from "react";
 import { connect } from "react-redux";
+import { Route } from 'react-router';
 import styled from "styled-components";
 import { Map } from "../";
 import { IReduxState } from "../../reducer";
+import { About } from '../components/About';
 import { getActivePointsGroup } from "../selectors";
 import { IPointsGroup } from "../types";
 import { MapControls } from "./MapControls";
-import { FileUploadForm } from 'Core';
 
 export const MapPageInternal: React.SFC<IReduxProps> = ({
 	pointsGroups,
@@ -23,21 +19,29 @@ export const MapPageInternal: React.SFC<IReduxProps> = ({
     if (!activePointsGroup) {
         return <div style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: '0px', width: '100%'}}>
         <LoadingIcon sizeVariant={4} />
-		<FileUploadForm />
         </div>;
     }
-	return (
+
+	const Main = () => (
 		<>
-			<Map activePointsGroup={activePointsGroup} />
+		<Map activePointsGroup={activePointsGroup} />
 			<Divider colors={colors} />
 			<MapControls
 				pointsGroups={pointsGroups}
 				activePointsGroup={activePointsGroup}
 				currentClusterOption={currentClusterOption}
 			/>
+			</>
+	);
+	return (
+		<>
+			<Route path={'/about'} component={About} />
+			<Route path={'/'} component={Main} exact={true} />
 		</>
 	);
 };
+
+
 
 // redux
 const mapStateToProps = (state: IReduxState): IReduxProps => ({
