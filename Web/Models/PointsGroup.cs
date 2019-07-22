@@ -19,6 +19,6 @@ namespace WebApplication.Models
         public int ItemId { get; set; }
         public string ClusteringOutputJson { get; set; }
         
-        public ICollection<PointModel> Points { get; set; }
+        public IReadOnlyList<PointModel> Points { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using WebApplication.Enums;
 namespace WebApplication.Models
 {
     [Table("items", Schema="mapClustering")]
-    public class Item : IItemBound
+    public class Item : IItemBound, IDeletable
     {
         [Key] 
         public int ItemId { get; set; }

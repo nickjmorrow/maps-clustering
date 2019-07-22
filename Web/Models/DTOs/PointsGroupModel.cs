@@ -12,9 +12,10 @@ namespace WebApplication.Models.DTOs
     {
         public int PointsGroupId { get; set; }
         public string Name { get; set; }
+        public int ItemId { get; set; }
         public double AverageHorizontalDisplacement { get; set; }
         public double AverageVerticalDisplacement { get; set; }
-        public IEnumerable<PointModel> Points { get; set; }
+        public IReadOnlyList<PointModel> Points { get; set; }
         public ItemPermissionType ItemPermissionType { get; set; }
         public CalculationOutputModel CalculationOutput { get; set; }
     }

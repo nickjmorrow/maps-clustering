@@ -45,9 +45,11 @@ namespace Web.Services
         }
 
         private IReadOnlyList<T> GetNotDeletedItems<T>(IReadOnlyList<T> items)
-            where T : IItemBound, IDeletable
+            where T : IItemBound
         {
-            var notDeletedItems = items.Where(i => !i.DateDeleted.HasValue);
+            var notDeletedItems = this._context.Items.Where(i => items.Any(item => item.ItemId == i.ItemId))
+                .Where(i => !i.DateDeleted.HasValue);
+            
             return items
                 .Where(i => notDeletedItems.Any(ndi => ndi.ItemId == i.ItemId))
                 .ToList();

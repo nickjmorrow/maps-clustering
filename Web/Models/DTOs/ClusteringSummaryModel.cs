@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Web.Services
 {
-        public class ClusteringSummaryDto
+        public class ClusteringSummaryModel
         {
             public int ClusterCount { get; set; }
             public string InterclusterDistance { get; set; }

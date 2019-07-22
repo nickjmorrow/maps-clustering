@@ -21,11 +21,11 @@ namespace Web.Services
     [Authorize]
     public  class PointsGroupService
     {
-        private DatabaseContext _context;
-        private ItemService _itemService;
-        private ItemFilterer _itemFilterer;
-        private FileHandlerService _fileHandlerService;
-        private ClusteringService _clusteringService;
+        private readonly DatabaseContext _context;
+        private readonly ItemService _itemService;
+        private readonly ItemFilterer _itemFilterer;
+        private readonly FileHandlerService _fileHandlerService;
+        private readonly ClusteringService _clusteringService;
 
         public PointsGroupService(DatabaseContext context, 
             ItemService itemService, 
@@ -39,15 +39,6 @@ namespace Web.Services
             this._fileHandlerService = fileHandlerService;
             this._clusteringService = clusteringService;
         }
-
-        // TODO: should think in terms of 'points groups', and users can be permissioned to whole groups
-        // it does'nt make sense to keep track of permissioning on a points-level
-        
-        // TODO: let me upload a file to replace a pointsGroup
-        
-        // TODO: let me rename a pointsGroup
-        
-        // TODO: add tests here
 
         public IReadOnlyList<PointsGroupModel> GetPointsGroups(int? userId)
         {
@@ -67,32 +58,8 @@ namespace Web.Services
 
         public async Task<PointsGroupModel> AddPointsGroupAsync(int userId, IFormFile file)
         {
-            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroupModel(file);
-            return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
-        }
-
-        /// <summary>
-        /// Create a <see cref="PointsGroup"/> and persist it to the database.
-        /// </summary>
-        /// <returns></returns>
-        private async Task<PointsGroupModel> AddPointsGroupAsyncInternal(int userId, PointsGroup pointsGroup)
-        {
-            // create itemId for pointsGroup
-            var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
-            pointsGroup.ItemId = itemId;
-            
-            await this._context.PointsGroups.AddAsync(pointsGroup);
-            await this._context.SaveChangesAsync();
-            
-            await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
-            await this._context.SaveChangesAsync();
-
-            pointsGroup.ClusteringOutputJson = JsonConvert.SerializeObject(this.GetCalculationOutputModel(pointsGroup.Points));
-            
-            this._context.Update(pointsGroup);
-            await this._context.SaveChangesAsync();
-
-            return this.GetPointsGroupModel(pointsGroup, this._context.Items.Single(i => i.ItemId == itemId));
+            var pointsGroupModel = this._fileHandlerService.ConvertFileToPointsGroupModel(file);
+            return (await this.AddPointsGroupInternalAsync(userId, pointsGroupModel));
         }
 
         public async Task<int> DeletePointsGroupAsync(int pointsGroupId)
@@ -108,49 +75,52 @@ namespace Web.Services
         /// Create a <see cref="PointsGroupModel"/> from a file.
         /// </summary>
         public PointsGroupModel CreatePointsGroupAsync(IFormFile file)
-        {
-            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroupModel(file);
-            pointsGroup.Points = pointsGroup.Points.Select((p, i) =>
-            {
-                p.PointId = i + 1;
-                return p;
-            }).ToList();
-
-            var pointsGroupDto = this.GetPointsGroupDto(pointsGroup); 
-            return pointsGroupDto;
-        }
+            => this._fileHandlerService.ConvertFileToPointsGroupModel(file);
+        
 
         /// <summary>
         /// Persist a <see cref="PointsGroup"/> to the database. 
         /// </summary>
         public async Task<PointsGroupModel> SavePointsGroupAsync(int userId, PointsGroupModel pointsGroupModel)
+            => await this.AddPointsGroupInternalAsync(userId, pointsGroupModel);
+        
+        /// <summary>
+        /// Create a <see cref="PointsGroup"/> and persist it to the database.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<PointsGroupModel> AddPointsGroupInternalAsync(int userId, PointsGroupModel pointsGroupModel)
         {
-            var pointsGroup = new PointsGroup
-            {
-                Name = pointsGroupModel.Name,
-                AverageHorizontalDisplacement = pointsGroupModel.AverageHorizontalDisplacement,
-                AverageVerticalDisplacement = pointsGroupModel.AverageVerticalDisplacement,
-                Points = pointsGroupModel.Points.Select(p => new PointModel
-                    {
-                        HorizontalDisplacement = p.HorizontalDisplacement,
-                        VerticalDisplacement = p.VerticalDisplacement,
-                        Name = p.Name
-                    }
-                ).ToList()
-            };
+            var pointsGroup = ConvertToPointsGroup(pointsGroupModel);
+            
+            // create itemId for pointsGroup
+            var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
+            pointsGroup.ItemId = itemId;
 
-            return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
+            
+            await this._context.PointsGroups.AddAsync(ConvertToPointsGroup(pointsGroupModel));
+            await this._context.SaveChangesAsync();
+            
+            await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
+            await this._context.SaveChangesAsync();
+
+            pointsGroup.ClusteringOutputJson = JsonConvert.SerializeObject(this.GetCalculationOutputModel(pointsGroupModel.Points));
+            
+            this._context.Update(pointsGroupModel);
+            await this._context.SaveChangesAsync();
+
+            return this.GetPointsGroupModel(pointsGroup, this._context.Items.Single(i => i.ItemId == itemId));
         }
+        
 
-        private IEnumerable<PointModel> GetCalcPoints(IEnumerable<PointModel> points)
+        private IReadOnlyList<PointModel> GetCalcPoints(IReadOnlyList<PointModel> pointModels)
         {
-            return points.Select(p => new PointModel
+            return pointModels.Select(p => new PointModel
             {
                 PointId = p.PointId,
                 Name = p.Name,
                 HorizontalDisplacement = p.HorizontalDisplacement,
                 VerticalDisplacement = p.VerticalDisplacement
-            });
+            }).ToList();
         }
 
         // TODO: wtf is this used for?
@@ -180,28 +150,45 @@ namespace Web.Services
                 CalculationOutput = JsonConvert.DeserializeObject<CalculationOutputModel>(pointsGroup.ClusteringOutputJson)
             };
         }
+
+        private PointsGroup ConvertToPointsGroup(PointsGroupModel pointsGroupModel)
+        {
+            return new PointsGroup()
+            {
+                PointsGroupId = pointsGroupModel.PointsGroupId,
+                Name = pointsGroupModel.Name,
+                Points = pointsGroupModel.Points,
+                AverageHorizontalDisplacement = pointsGroupModel.AverageHorizontalDisplacement,
+                AverageVerticalDisplacement = pointsGroupModel.AverageVerticalDisplacement,
+                ClusteringOutputJson = JsonConvert.SerializeObject(pointsGroupModel.CalculationOutput.ClusteringSummaries)
+            };
+        }
         
         /// <summary>
         /// Used to get <see cref="PointsGroupModel"/> from <see cref="PointsGroup"/>
         /// that is not associated with a user and has not yet been persisted.
         /// </summary>
-        private PointsGroupModel GetPointsGroupDto(PointsGroup pointsGroup)
+        private PointsGroupModel ConvertToPointsGroupModel(PointsGroup pointsGroup)
         {
-            return new PointsGroupModel
+            var pointsGroupModel = new PointsGroupModel
             {
                 Name = pointsGroup.Name,
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
-                Points = pointsGroup.Points,
+                Points = pointsGroup.Points.ToList(),
                 ItemPermissionType = ItemPermissionType.Public,
-                CalculationOutput = this.GetCalculationOutputModel(pointsGroup.Points)
             };
+
+            var calculationOutput = this.GetCalculationOutputModel(pointsGroupModel.Points);
+            pointsGroupModel.CalculationOutput = calculationOutput;
+
+            return pointsGroupModel;
         }
 
-        private CalculationOutputModel GetCalculationOutputModel(IEnumerable<PointModel> points)
+        private CalculationOutputModel GetCalculationOutputModel(IReadOnlyList<PointModel> points)
         {
-            var calcPoints = this.GetCalcPoints(points);
-            var clusteringOutput = this._clusteringService.GetCalculationOutput(calcPoints);
+            var clusteringOutput = this._clusteringService.GetCalculationOutput(points);
+            
             var orderedPoints = clusteringOutput.OrderedPoints.Select(ahcp => new OrderedPoint()
             {
                 PointId = ahcp.PointId,
@@ -211,17 +198,17 @@ namespace Web.Services
                 ClusterSnapshots = this.GetClusterInfos(ahcp.ClusterSnapshots),
                 OrderingSnapshots = ahcp.OrderingSnapshots
             });
+            
             return new CalculationOutputModel
             {
                 OrderedPoints = orderedPoints,
-                ClusteringSummaries = clusteringOutput.ClusteringSummaries.Select(GetClusteringSummaryDto)
+                ClusteringSummaries = clusteringOutput.ClusteringSummaries.Select(GetClusteringSummaryModel)
             };
-
         }
         
-        private ClusteringSummaryDto GetClusteringSummaryDto(ClusteringSummary clusteringSummary)
+        private ClusteringSummaryModel GetClusteringSummaryModel(ClusteringSummary clusteringSummary)
         {
-            return new ClusteringSummaryDto()
+            return new ClusteringSummaryModel()
             {
                 ClusterCount = clusteringSummary.ClusterCount,
                 InterclusterDistance = clusteringSummary.InterclusterDistance.ToMask(),

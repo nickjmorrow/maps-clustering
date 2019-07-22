@@ -25,11 +25,11 @@ namespace WebApplication.Services
         public PointsGroupModel ConvertFileToPointsGroupModel(IFormFile file)
         {
             var json = this._fileConversionService.ConvertFileToJson(file);
-            var points = this.ParseJsonToPointModels(json);
-            return this.BuildPointsGroupModel(points, FormatFileName(file.FileName));
+            var points = ParseJsonToPointModels(json);
+            return BuildPointsGroupModel(points, FormatFileName(file.FileName));
         }
         
-        private PointsGroupModel BuildPointsGroupModel(IReadOnlyList<PointModel> points, string fileName)
+        private static PointsGroupModel BuildPointsGroupModel(IReadOnlyList<PointModel> points, string fileName)
         {
             var averageHorizontalDisplacement = points
                 .Select(p => p.HorizontalDisplacement)
@@ -39,7 +39,7 @@ namespace WebApplication.Services
                 .Select(p => p.VerticalDisplacement)
                 .Average();
 
-            return new PointsGroupModel()
+            return new PointsGroupModel
             {
                 Name = fileName,
                 Points = points.ToList(),
@@ -48,14 +48,15 @@ namespace WebApplication.Services
             };
         }
 
-        private IReadOnlyList<PointModel> ParseJsonToPointModels(JObject json)
+        private static IReadOnlyList<PointModel> ParseJsonToPointModels(JObject json)
         {
             return json["kml"]["Document"]["Folder"]["Placemark"].Select((p, i) =>
             {
                 var name = p["name"].ToString();
                 var coordinates = p["Point"]["coordinates"].ToString().Trim().Split(",");
-                return new PointModel()
+                return new PointModel
                 {
+                    PointId = i + 1,
                     Name = name,
                     HorizontalDisplacement = Convert.ToDouble(coordinates[0]),
                     VerticalDisplacement = Convert.ToDouble(coordinates[1]),

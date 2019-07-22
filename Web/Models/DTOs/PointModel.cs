@@ -10,7 +10,6 @@ namespace WebApplication.Models.DTOs
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override int PointId { get; set; }
         
-        [ForeignKey("PointsGroup")]
         public int PointsGroupId { get; set; }
         
         public PointsGroup PointsGroup { get; set; }
