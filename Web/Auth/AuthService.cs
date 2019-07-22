@@ -153,7 +153,6 @@ namespace WebApplication.Services
                 new Claim(ClaimTypes.Name, user.UserId.ToString())
             };
             
-            // TODO: test expiration logic
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),

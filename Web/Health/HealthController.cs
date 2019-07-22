@@ -13,13 +13,6 @@ namespace WebApplication.Controllers
     [Route("api/[controller]")]
     public class TestController : Controller
     {
-        private DatabaseContext _context;
-
-        public TestController(DatabaseContext context)
-        {
-            this._context = context;
-        }
-
         [HttpGet("[action]")]
         public int GetVersion()
         {

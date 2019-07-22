@@ -7,23 +7,23 @@ namespace WebApplication.Controllers
     [Route("api/[controller]")]
     public class DatabaseSettingController : Controller
     {
-        private readonly DatabaseSettingService _databaseSettingService;
+        private readonly DatabaseSettingProvider _databaseSettingProvider;
 
-        public DatabaseSettingController(DatabaseSettingService databaseSettingService)
+        public DatabaseSettingController(DatabaseSettingProvider databaseSettingProvider)
         {
-            this._databaseSettingService = databaseSettingService;
+            this._databaseSettingProvider = databaseSettingProvider;
         }
 
         [HttpGet("[action]/{settingId}")]
         public IActionResult GetSettingValue(string settingId)
         {
-            return Ok(this._databaseSettingService.GetSettingValue(settingId));
+            return Ok(this._databaseSettingProvider.GetSettingValue(settingId));
         }
 
         [HttpGet("[action]")]
         public IActionResult GetDatabaseSettings()
         {
-            return Ok(this._databaseSettingService.GetDatabaseSettings());
+            return Ok(this._databaseSettingProvider.GetDatabaseSettings());
         }
     }
 }

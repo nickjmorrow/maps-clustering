@@ -102,7 +102,7 @@ namespace WebApplication
             services.AddScoped<ClusteringService, ClusteringService>();
             services.AddScoped<ClusteringSummaryService, ClusteringSummaryService>();
             services.AddScoped<DistanceService, DistanceService>();
-            services.AddScoped<DatabaseSettingService, DatabaseSettingService>();
+            services.AddScoped<DatabaseSettingProvider, DatabaseSettingProvider>();
             services.AddScoped<TourBridge, TourBridge>();
             services.AddScoped<TourProvider, TourProvider>();
         }

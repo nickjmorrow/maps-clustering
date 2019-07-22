@@ -2,7 +2,7 @@ using System;
 
 namespace WebApplication
 {
-    public static class PersonalExtensions
+    public static class StringExtensions
     {
         public static string ToMask(this Double num)
         {

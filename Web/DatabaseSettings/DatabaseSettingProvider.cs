@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Web.Models;
 using WebApplication;
 
 namespace Web.Services
 {
-    public class DatabaseSettingService
+    public class DatabaseSettingProvider
     {
-        private DatabaseContext _context;
+        private readonly DatabaseContext _context;
 
-        public DatabaseSettingService(DatabaseContext context)
+        public DatabaseSettingProvider(DatabaseContext context)
         {
             this._context = context;
         }
@@ -19,6 +18,7 @@ namespace Web.Services
         public string GetSettingValue(string settingId)
         {
             var databaseSetting = this._context.DatabaseSettings.SingleOrDefault(ds => ds.SettingId == settingId);
+            
             if (databaseSetting == null)
             {
                 throw new Exception($"Could not find settingValue for settingId {settingId}");
