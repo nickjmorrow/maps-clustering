@@ -1,6 +1,6 @@
 namespace WebApplication.Enums
 {
-    public enum ItemType
+    public enum ItemTypeModel
     {
         PointsGroup = 1
     }

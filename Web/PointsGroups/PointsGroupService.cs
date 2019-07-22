@@ -14,7 +14,6 @@ using WebApplication.Enums;
 using WebApplication.Models;
 using WebApplication.Models.DTOs;
 using WebApplication.Services;
-using ItemType = WebApplication.Enums.ItemType;
 
 namespace Web.Services
 {
@@ -93,7 +92,7 @@ namespace Web.Services
             var pointsGroup = ConvertToPointsGroup(pointsGroupModel);
             
             // create itemId for pointsGroup
-            var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
+            var itemId = await this._itemService.AddItemAsync((int) ItemTypeModel.PointsGroup);
             pointsGroup.ItemId = itemId;
 
             
@@ -213,7 +212,7 @@ namespace Web.Services
                 ClusterCount = clusteringSummary.ClusterCount,
                 InterclusterDistance = clusteringSummary.InterclusterDistance.ToMask(),
                 IntraclusterDistances = clusteringSummary.IntraclusterDistances.Select(icd =>
-                    new IntraclusterDistanceDto()
+                    new IntraclusterDistanceModel()
                     {
                         ClusterId = icd.ClusterId,
                         Distance = icd.Distance.ToMask()
