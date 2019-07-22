@@ -16,7 +16,7 @@ namespace WebApplication
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<UserFavoriteItem> UserFavoriteItems { get; set; }
-        public DbSet<PointDto> Points { get; set; }
+        public DbSet<PointModel> Points { get; set; }
         public DbSet<PointsGroup> PointsGroups { get; set; }
         public DbSet<DatabaseSetting> DatabaseSettings { get; set; }
 

@@ -8,6 +8,7 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
     <OutputType>WinExe</OutputType>
       <GenerateProgramFile>false</GenerateProgramFile>
+      <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="dbup4-core" Version="4.0.0-beta0003" />
@@ -30,9 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="ClientApp\public\manifest.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ClientApp\src\components" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Calc\Calc.csproj" />

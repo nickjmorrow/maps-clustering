@@ -32,7 +32,7 @@ namespace WebApplication.Controllers
                 return BadRequest();
             }
 
-            return Ok(this._fileHandlerService.ConvertFileToPointsGroup(file));
+            return Ok(this._fileHandlerService.ConvertFileToPointsGroupModel(file));
         }
     }
 }

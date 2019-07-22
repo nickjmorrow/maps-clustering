@@ -49,25 +49,25 @@ namespace Web.Services
         
         // TODO: add tests here
 
-        public IEnumerable<PointsGroupDto> GetPointsGroups(int? userId)
+        public IReadOnlyList<PointsGroupModel> GetPointsGroups(int? userId)
         {
             var allPointsGroups = this._context.PointsGroups
-                .Include(pg => pg.Points);
-            
+                .Include(pg => pg.Points)
+                .ToList();
+
             return this._itemFilterer
                 .GetValidItems(userId, allPointsGroups)
-                .Select(pg => 
+                .Select(pg =>
                 {
                     var item = this._context.Items.Single(i => i.ItemId == pg.ItemId);
-                    return this.GetPointsGroupDto(pg, item);
-
+                    return this.GetPointsGroupModel(pg, item);
                 })
                 .ToList();
         }
 
-        public async Task<PointsGroupDto> AddPointsGroupAsync(int userId, IFormFile file)
+        public async Task<PointsGroupModel> AddPointsGroupAsync(int userId, IFormFile file)
         {
-            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
+            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroupModel(file);
             return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
         }
 
@@ -75,7 +75,7 @@ namespace Web.Services
         /// Create a <see cref="PointsGroup"/> and persist it to the database.
         /// </summary>
         /// <returns></returns>
-        public async Task<PointsGroupDto> AddPointsGroupAsyncInternal(int userId, PointsGroup pointsGroup)
+        private async Task<PointsGroupModel> AddPointsGroupAsyncInternal(int userId, PointsGroup pointsGroup)
         {
             // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync((int) ItemType.PointsGroup);
@@ -92,7 +92,7 @@ namespace Web.Services
             this._context.Update(pointsGroup);
             await this._context.SaveChangesAsync();
 
-            return this.GetPointsGroupDto(pointsGroup, this._context.Items.Single(i => i.ItemId == itemId));
+            return this.GetPointsGroupModel(pointsGroup, this._context.Items.Single(i => i.ItemId == itemId));
         }
 
         public async Task<int> DeletePointsGroupAsync(int pointsGroupId)
@@ -105,11 +105,11 @@ namespace Web.Services
         }
 
         /// <summary>
-        /// Create a <see cref="PointsGroupDto"/> from a file.
+        /// Create a <see cref="PointsGroupModel"/> from a file.
         /// </summary>
-        public PointsGroupDto CreatePointsGroupAsync(IFormFile file)
+        public PointsGroupModel CreatePointsGroupAsync(IFormFile file)
         {
-            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroup(file);
+            var pointsGroup = this._fileHandlerService.ConvertFileToPointsGroupModel(file);
             pointsGroup.Points = pointsGroup.Points.Select((p, i) =>
             {
                 p.PointId = i + 1;
@@ -123,14 +123,14 @@ namespace Web.Services
         /// <summary>
         /// Persist a <see cref="PointsGroup"/> to the database. 
         /// </summary>
-        public async Task<PointsGroupDto> SavePointsGroupAsync(int userId, PointsGroupDto pointsGroupDto)
+        public async Task<PointsGroupModel> SavePointsGroupAsync(int userId, PointsGroupModel pointsGroupModel)
         {
             var pointsGroup = new PointsGroup
             {
-                Name = pointsGroupDto.Name,
-                AverageHorizontalDisplacement = pointsGroupDto.AverageHorizontalDisplacement,
-                AverageVerticalDisplacement = pointsGroupDto.AverageVerticalDisplacement,
-                Points = pointsGroupDto.Points.Select(p => new PointDto
+                Name = pointsGroupModel.Name,
+                AverageHorizontalDisplacement = pointsGroupModel.AverageHorizontalDisplacement,
+                AverageVerticalDisplacement = pointsGroupModel.AverageVerticalDisplacement,
+                Points = pointsGroupModel.Points.Select(p => new PointModel
                     {
                         HorizontalDisplacement = p.HorizontalDisplacement,
                         VerticalDisplacement = p.VerticalDisplacement,
@@ -142,9 +142,9 @@ namespace Web.Services
             return (await this.AddPointsGroupAsyncInternal(userId, pointsGroup));
         }
 
-        private IEnumerable<PointDto> GetCalcPoints(IEnumerable<PointDto> points)
+        private IEnumerable<PointModel> GetCalcPoints(IEnumerable<PointModel> points)
         {
-            return points.Select(p => new PointDto
+            return points.Select(p => new PointModel
             {
                 PointId = p.PointId,
                 Name = p.Name,
@@ -165,11 +165,11 @@ namespace Web.Services
         } 
         
         /// <summary>
-        /// Used to get <see cref="PointsGroupDto"/> from a persisted <see cref="PointsGroup"/>.
+        /// Used to get <see cref="PointsGroupModel"/> from a persisted <see cref="PointsGroup"/>.
         /// </summary>
-        private PointsGroupDto GetPointsGroupDto(PointsGroup pointsGroup, Item item)
+        private PointsGroupModel GetPointsGroupModel(PointsGroup pointsGroup, Item item)
         {
-            return new PointsGroupDto()
+            return new PointsGroupModel()
             {
                 PointsGroupId = pointsGroup.PointsGroupId,
                 Name = pointsGroup.Name,
@@ -182,12 +182,12 @@ namespace Web.Services
         }
         
         /// <summary>
-        /// Used to get <see cref="PointsGroupDto"/> from <see cref="PointsGroup"/>
+        /// Used to get <see cref="PointsGroupModel"/> from <see cref="PointsGroup"/>
         /// that is not associated with a user and has not yet been persisted.
         /// </summary>
-        private PointsGroupDto GetPointsGroupDto(PointsGroup pointsGroup)
+        private PointsGroupModel GetPointsGroupDto(PointsGroup pointsGroup)
         {
-            return new PointsGroupDto
+            return new PointsGroupModel
             {
                 Name = pointsGroup.Name,
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
@@ -198,7 +198,7 @@ namespace Web.Services
             };
         }
 
-        private CalculationOutputModel GetCalculationOutputModel(IEnumerable<PointDto> points)
+        private CalculationOutputModel GetCalculationOutputModel(IEnumerable<PointModel> points)
         {
             var calcPoints = this.GetCalcPoints(points);
             var clusteringOutput = this._clusteringService.GetCalculationOutput(calcPoints);

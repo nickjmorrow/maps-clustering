@@ -1,3 +1,5 @@
+using System;
+
 namespace Web.Models
 {
     public interface IItemBound

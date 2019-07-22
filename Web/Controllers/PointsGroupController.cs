@@ -51,9 +51,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> SavePointsGroup([FromBody] PointsGroupDto pointsGroupDto)
+        public async Task<IActionResult> SavePointsGroup([FromBody] PointsGroupModel pointsGroupModel)
         {
-            return Ok(await this._pointsGroupService.SavePointsGroupAsync(this._userId, pointsGroupDto));
+            return Ok(await this._pointsGroupService.SavePointsGroupAsync(this._userId, pointsGroupModel));
         }
 
         [HttpDelete("[action]/{pointsGroupId}")]

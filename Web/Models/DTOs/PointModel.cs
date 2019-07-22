@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace WebApplication.Models.DTOs
 {
     [Table("points", Schema="mapClustering")]
-    public class PointDto : Calc.Models.Point
+    public class PointModel : Calc.Models.Point
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

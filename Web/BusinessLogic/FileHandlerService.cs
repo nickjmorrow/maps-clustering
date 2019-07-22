@@ -15,21 +15,21 @@ namespace WebApplication.Services
 {
     public class FileHandlerService
     {
-        private FileConversionService _fileConversionService { get; set; }
+        private readonly FileConversionService _fileConversionService;
 
         public FileHandlerService(FileConversionService fileConversionService)
         {
             this._fileConversionService = fileConversionService;
         }
 
-        public PointsGroup ConvertFileToPointsGroup(IFormFile file)
+        public PointsGroupModel ConvertFileToPointsGroupModel(IFormFile file)
         {
             var json = this._fileConversionService.ConvertFileToJson(file);
-            var points = this.ParseJsonToPoints(json);
-            return this.BuildPointsGroup(points, this.FormatFileName(file.FileName));
+            var points = this.ParseJsonToPointModels(json);
+            return this.BuildPointsGroupModel(points, FormatFileName(file.FileName));
         }
         
-        private PointsGroup BuildPointsGroup(IEnumerable<PointDto> points, string fileName)
+        private PointsGroupModel BuildPointsGroupModel(IReadOnlyList<PointModel> points, string fileName)
         {
             var averageHorizontalDisplacement = points
                 .Select(p => p.HorizontalDisplacement)
@@ -39,7 +39,7 @@ namespace WebApplication.Services
                 .Select(p => p.VerticalDisplacement)
                 .Average();
 
-            return new PointsGroup()
+            return new PointsGroupModel()
             {
                 Name = fileName,
                 Points = points.ToList(),
@@ -48,23 +48,22 @@ namespace WebApplication.Services
             };
         }
 
-        private IEnumerable<PointDto> ParseJsonToPoints(JObject json)
+        private IReadOnlyList<PointModel> ParseJsonToPointModels(JObject json)
         {
             return json["kml"]["Document"]["Folder"]["Placemark"].Select((p, i) =>
             {
                 var name = p["name"].ToString();
                 var coordinates = p["Point"]["coordinates"].ToString().Trim().Split(",");
-                return new PointDto()
+                return new PointModel()
                 {
                     Name = name,
                     HorizontalDisplacement = Convert.ToDouble(coordinates[0]),
                     VerticalDisplacement = Convert.ToDouble(coordinates[1]),
                 };
-            });
-            
+            }).ToList();
         }
         
-        private string FormatFileName(string initialFileName)
+        private static string FormatFileName(string initialFileName)
         {
             return initialFileName.Split(".")[0];
         }

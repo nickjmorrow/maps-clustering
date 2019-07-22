@@ -10,8 +10,8 @@ namespace Web.Services
 {
     public class ItemService
     {
-        private DatabaseContext _context;
-        private ItemFilterer _itemFilterer;
+        private readonly DatabaseContext _context;
+        private readonly ItemFilterer _itemFilterer;
 
         public ItemService(DatabaseContext context, ItemFilterer itemFilterer)
         {
@@ -34,14 +34,8 @@ namespace Web.Services
             return item.ItemId;
         }
 
-        public IEnumerable<Item> GetItems(int? userId)
-        {
-            return this._itemFilterer.GetValidItems<Item>(userId, this._context.Items).Select(i => new Item()
-            {
-                ItemId = i.ItemId,
-                ItemPermissionTypeId = i.ItemPermissionTypeId,
-                DateCreated = i.DateCreated
-            });
-        }
+        public IReadOnlyList<Item> GetItems(int? userId) =>
+            this._itemFilterer.GetValidItems(userId, this._context.Items.ToList());
+        
     }
 }
