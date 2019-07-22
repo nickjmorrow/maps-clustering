@@ -15,8 +15,6 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="dbup-core" Version="4.2.0" />
-      <PackageReference Include="dbup-sqlserver" Version="4.2.0" />
       <PackageReference Include="System.Data.SqlClient" Version="4.7.0-preview.18571.3" />
     </ItemGroup>
     

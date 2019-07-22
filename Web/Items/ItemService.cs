@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using WebApplication;
 using WebApplication.Enums;
 using WebApplication.Models;
+using ItemType = WebApplication.Enums.ItemType;
 
 namespace Web.Services
 {
@@ -19,12 +20,12 @@ namespace Web.Services
             this._itemFilterer = itemFilterer;
         }
 
-        public async Task<int> AddItemAsync(int itemTypeId, 
-            ItemPermissionType itemPermissionType = ItemPermissionType.Private)
+        public async Task<int> AddItemAsync(ItemType itemType, 
+            ItemPermissionType itemPermissionType)
         {
-            var item = new Item()
+            var item = new Item
             {
-                ItemTypeId = itemTypeId,
+                ItemTypeId = (int) itemType,
                 DateCreated = DateTime.Now,
                 DateDeleted = null,
                 ItemPermissionTypeId = itemPermissionType

@@ -9,12 +9,6 @@ namespace Calc
     public class OrderingService
     {
         private const int MaxClusterSize = 10;
-        private readonly TourBridge _tourBridge;
-
-        public OrderingService(TourBridge tourBridge)
-        {
-            this._tourBridge = tourBridge;
-        }
 
         public IEnumerable<OrderedPoint> OrderPoints(IEnumerable<ClusteredPoint> clusteredPoints)
         {

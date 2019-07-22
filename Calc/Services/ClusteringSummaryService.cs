@@ -29,7 +29,7 @@ namespace Calc
 
                     if (clusterSnapshot == null)
                     {
-                        throw new Exception($"No clusterId found in ahcInfos for clusterCount {currentClusterCount}");
+                        throw new InvalidOperationException($"No clusterId found in ahcInfos for clusterCount {currentClusterCount}");
                     } 
                     return new ClusterPoint()
                     {

@@ -14,6 +14,7 @@ using WebApplication.Enums;
 using WebApplication.Models;
 using WebApplication.Models.DTOs;
 using WebApplication.Services;
+using ItemType = WebApplication.Enums.ItemType;
 
 namespace Web.Services
 {
@@ -92,14 +93,14 @@ namespace Web.Services
             var pointsGroup = ConvertToPointsGroup(pointsGroupModel);
             
             // create itemId for pointsGroup
-            var itemId = await this._itemService.AddItemAsync((int) ItemTypeModel.PointsGroup);
+            var itemId = await this._itemService.AddItemAsync(ItemType.PointsGroup, ItemPermissionType.Private);
             pointsGroup.ItemId = itemId;
 
             
             await this._context.PointsGroups.AddAsync(ConvertToPointsGroup(pointsGroupModel));
             await this._context.SaveChangesAsync();
             
-            await this._context.UserItems.AddAsync(new UserItem() {UserId = userId, ItemId = itemId});
+            await this._context.UserItems.AddAsync(new UserItem {UserId = userId, ItemId = itemId});
             await this._context.SaveChangesAsync();
 
             pointsGroup.ClusteringOutputJson = JsonConvert.SerializeObject(this.GetCalculationOutputModel(pointsGroupModel.Points));
@@ -109,20 +110,7 @@ namespace Web.Services
 
             return this.GetPointsGroupModel(pointsGroup, this._context.Items.Single(i => i.ItemId == itemId));
         }
-        
 
-        private IReadOnlyList<PointModel> GetCalcPoints(IReadOnlyList<PointModel> pointModels)
-        {
-            return pointModels.Select(p => new PointModel
-            {
-                PointId = p.PointId,
-                Name = p.Name,
-                HorizontalDisplacement = p.HorizontalDisplacement,
-                VerticalDisplacement = p.VerticalDisplacement
-            }).ToList();
-        }
-
-        // TODO: wtf is this used for?
         private IEnumerable<ClusterSnapshot> GetClusterInfos(
             IEnumerable<ClusterSnapshot> ahcClusterInfos)
         {
@@ -138,7 +126,7 @@ namespace Web.Services
         /// </summary>
         private PointsGroupModel GetPointsGroupModel(PointsGroup pointsGroup, Item item)
         {
-            return new PointsGroupModel()
+            return new PointsGroupModel
             {
                 PointsGroupId = pointsGroup.PointsGroupId,
                 Name = pointsGroup.Name,
@@ -150,9 +138,9 @@ namespace Web.Services
             };
         }
 
-        private PointsGroup ConvertToPointsGroup(PointsGroupModel pointsGroupModel)
+        private static PointsGroup ConvertToPointsGroup(PointsGroupModel pointsGroupModel)
         {
-            return new PointsGroup()
+            return new PointsGroup
             {
                 PointsGroupId = pointsGroupModel.PointsGroupId,
                 Name = pointsGroupModel.Name,
@@ -161,27 +149,6 @@ namespace Web.Services
                 AverageVerticalDisplacement = pointsGroupModel.AverageVerticalDisplacement,
                 ClusteringOutputJson = JsonConvert.SerializeObject(pointsGroupModel.CalculationOutput.ClusteringSummaries)
             };
-        }
-        
-        /// <summary>
-        /// Used to get <see cref="PointsGroupModel"/> from <see cref="PointsGroup"/>
-        /// that is not associated with a user and has not yet been persisted.
-        /// </summary>
-        private PointsGroupModel ConvertToPointsGroupModel(PointsGroup pointsGroup)
-        {
-            var pointsGroupModel = new PointsGroupModel
-            {
-                Name = pointsGroup.Name,
-                AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
-                AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
-                Points = pointsGroup.Points.ToList(),
-                ItemPermissionType = ItemPermissionType.Public,
-            };
-
-            var calculationOutput = this.GetCalculationOutputModel(pointsGroupModel.Points);
-            pointsGroupModel.CalculationOutput = calculationOutput;
-
-            return pointsGroupModel;
         }
 
         private CalculationOutputModel GetCalculationOutputModel(IReadOnlyList<PointModel> points)
@@ -205,7 +172,7 @@ namespace Web.Services
             };
         }
         
-        private ClusteringSummaryModel GetClusteringSummaryModel(ClusteringSummary clusteringSummary)
+        private static ClusteringSummaryModel GetClusteringSummaryModel(ClusteringSummary clusteringSummary)
         {
             return new ClusteringSummaryModel()
             {

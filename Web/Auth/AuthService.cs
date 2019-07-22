@@ -38,7 +38,7 @@ namespace WebApplication.Services
 
             if (!this.DoesPasswordMatch(authInfo, user))
             {
-                return new AuthResponse() {ErrorText = "User with that email and password cannot be found."};
+                return new AuthResponse {ErrorText = "User with that email and password cannot be found."};
             }
 
             user.Token = this.GetToken(user);

@@ -34,7 +34,7 @@ namespace Warlock.Services
 
         public UserItem AddUserItem(int userId, int itemId)
         {
-            var userItem = new UserItem() {UserId = userId, ItemId = itemId};
+            var userItem = new UserItem {UserId = userId, ItemId = itemId};
             using (var context = this._context)
             {
                 if (context.UserItems.SingleOrDefault(ui => ui == userItem) != null)
