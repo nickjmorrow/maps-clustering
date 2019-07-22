@@ -8,7 +8,7 @@ namespace Calc
 {
     public class ClusteringSummaryService
     {
-        private DistanceService _distanceService;
+        private readonly DistanceService _distanceService;
 
         public ClusteringSummaryService(DistanceService distanceService)
         {
@@ -41,9 +41,9 @@ namespace Calc
                 });
                 var interclusterDistance = this.GetInterclusterDistance(clusterPoints);
                 var intraclusterDistances = this.GetIntraclusterDistances(clusterPoints);
-                var avgClusterSize = this.GetAverageClusterSize(clusterPoints);
+                var avgClusterSize = GetAverageClusterSize(clusterPoints);
                 var avgIntraclusterDistance = intraclusterDistances.Average(icd => icd.Distance);
-                return new ClusteringSummary()
+                return new ClusteringSummary
                 {
                     ClusterCount = currentClusterCount,
                     InterclusterDistance = interclusterDistance,
@@ -54,13 +54,7 @@ namespace Calc
             });
             return clusterCountToSummaries;
         }
-
-        internal double GetAverageClusterSize(IEnumerable<ClusterPoint> clusterPoints)
-        {
-            var groupedClusters = clusterPoints.GroupBy(cp => cp.ClusterId); 
-            return Convert.ToDouble(groupedClusters.Sum(gc => gc.Count())) / groupedClusters.Count();
-        }
-
+        
         internal double GetInterclusterDistance(
             IEnumerable<ClusterPoint> clusterPoints)
         {
@@ -74,18 +68,6 @@ namespace Calc
             return this.GetAverageDistanceToCenter(clusterCenters);
         }
 
-        internal double GetAverageDistanceToCenter(IEnumerable<Point> points)
-        {
-            var center = new Cluster<Point>()
-            {
-                Points = points
-            }.GetCenter();
-
-            var totalDistanceFromPointsToCenter =
-                points.Select(p => this._distanceService.GetDistance(p, center)).Sum(); 
-            return totalDistanceFromPointsToCenter / points.Count();
-        }
-
         internal IEnumerable<IntraclusterDistance> GetIntraclusterDistances(
             IEnumerable<ClusterPoint> clusteredPoints)
         {
@@ -96,6 +78,24 @@ namespace Calc
                     ClusterId = c.Key,
                     Distance = GetAverageDistanceToCenter(c)
                 });
+        }
+
+        private static double GetAverageClusterSize(IEnumerable<ClusterPoint> clusterPoints)
+        {
+            var groupedClusters = clusterPoints.GroupBy(cp => cp.ClusterId); 
+            return Convert.ToDouble(groupedClusters.Sum(gc => gc.Count())) / groupedClusters.Count();
+        }
+        
+        private double GetAverageDistanceToCenter(IEnumerable<Point> points)
+        {
+            var center = new Cluster<Point>()
+            {
+                Points = points
+            }.GetCenter();
+
+            var totalDistanceFromPointsToCenter =
+                points.Select(p => this._distanceService.GetDistance(p, center)).Sum(); 
+            return totalDistanceFromPointsToCenter / points.Count();
         }
     }
 }

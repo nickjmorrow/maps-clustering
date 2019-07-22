@@ -19,72 +19,24 @@ namespace CalcTests
             var secondPoint = new Point {PointId = 2, HorizontalDisplacement = 0, VerticalDisplacement = 2};
             var thirdPoint = new Point {PointId = 3, HorizontalDisplacement = 3, VerticalDisplacement = 3};
 
-            var firstModeledPoint = new ClusteredPoint()
+            var firstModeledPoint = new ClusteredPoint
             {
                 PointId  = firstPoint.PointId,
                 HorizontalDisplacement = firstPoint.HorizontalDisplacement,
                 VerticalDisplacement = firstPoint.VerticalDisplacement,
-                ClusterSnapshots = new List<ClusterSnapshot>()
+                ClusterSnapshots = new List<ClusterSnapshot>
                 {
-                    new ClusterSnapshot()
+                    new ClusterSnapshot
                        {
                         ClusterId = 1,
                         ClusterCount = 3
                     },
-                    new ClusterSnapshot()
+                    new ClusterSnapshot
                     {
                         ClusterId = 1,
                         ClusterCount = 2
                     },
-                    new ClusterSnapshot()
-                    {
-                        ClusterId = 1,
-                        ClusterCount = 1
-                    },
-                }
-            };
-            var secondModeledPoint = new ClusteredPoint()
-            {
-                PointId = secondPoint.PointId,
-                HorizontalDisplacement = secondPoint.HorizontalDisplacement,
-                VerticalDisplacement = secondPoint.VerticalDisplacement,
-                ClusterSnapshots = new List<ClusterSnapshot>()
-                {
-                    new ClusterSnapshot()
-                    {
-                        ClusterId = 2,
-                        ClusterCount = 3
-                    },
-                    new ClusterSnapshot()
-                    {
-                        ClusterId = 1,
-                        ClusterCount = 2
-                    },
-                    new ClusterSnapshot()
-                    {
-                        ClusterId = 1,
-                        ClusterCount = 1
-                    },
-                }
-            };
-            var thirdModeledPoint = new ClusteredPoint()
-            {
-                PointId = thirdPoint.PointId,
-                HorizontalDisplacement = thirdPoint.HorizontalDisplacement,
-                VerticalDisplacement = thirdPoint.VerticalDisplacement,
-                ClusterSnapshots = new List<ClusterSnapshot>()
-                {
-                    new ClusterSnapshot()
-                    {
-                        ClusterId = 3,
-                        ClusterCount = 3
-                    },
-                    new ClusterSnapshot()
-                    {
-                        ClusterId = 3,
-                        ClusterCount = 2
-                    },
-                    new ClusterSnapshot()
+                    new ClusterSnapshot
                     {
                         ClusterId = 1,
                         ClusterCount = 1
@@ -92,11 +44,61 @@ namespace CalcTests
                 }
             };
             
-            var modeledPoints = new AgglomerativeHierarchicalClusteringService(this._distanceService).GetModel(new List<Point>()
+            var secondModeledPoint = new ClusteredPoint
+            {
+                PointId = secondPoint.PointId,
+                HorizontalDisplacement = secondPoint.HorizontalDisplacement,
+                VerticalDisplacement = secondPoint.VerticalDisplacement,
+                ClusterSnapshots = new List<ClusterSnapshot>
+                {
+                    new ClusterSnapshot
+                    {
+                        ClusterId = 2,
+                        ClusterCount = 3
+                    },
+                    new ClusterSnapshot
+                    {
+                        ClusterId = 1,
+                        ClusterCount = 2
+                    },
+                    new ClusterSnapshot
+                    {
+                        ClusterId = 1,
+                        ClusterCount = 1
+                    },
+                }
+            };
+            
+            var thirdModeledPoint = new ClusteredPoint
+            {
+                PointId = thirdPoint.PointId,
+                HorizontalDisplacement = thirdPoint.HorizontalDisplacement,
+                VerticalDisplacement = thirdPoint.VerticalDisplacement,
+                ClusterSnapshots = new List<ClusterSnapshot>
+                {
+                    new ClusterSnapshot
+                    {
+                        ClusterId = 3,
+                        ClusterCount = 3
+                    },
+                    new ClusterSnapshot
+                    {
+                        ClusterId = 3,
+                        ClusterCount = 2
+                    },
+                    new ClusterSnapshot
+                    {
+                        ClusterId = 1,
+                        ClusterCount = 1
+                    },
+                }
+            };
+            
+            var modeledPoints = new AgglomerativeHierarchicalClusteringService(this._distanceService).GetModel(new List<Point>
             {
                 firstPoint, secondPoint, thirdPoint
             });
-            var expectedModeledPoints = new List<ClusteredPoint>()
+            var expectedModeledPoints = new List<ClusteredPoint>
             {
                 firstModeledPoint, secondModeledPoint, thirdModeledPoint
             };
@@ -106,12 +108,12 @@ namespace CalcTests
         [Test]
         public void RecordClustersTest()
         {
-            var firstPoint = new ClusteredPoint()
+            var firstPoint = new ClusteredPoint
             {
                 PointId = 1,
                 HorizontalDisplacement = 2,
                 VerticalDisplacement = 3,
-                ClusterSnapshots = new List<ClusterSnapshot>()
+                ClusterSnapshots = new List<ClusterSnapshot>
                 {
                     new ClusterSnapshot()
                     {
@@ -125,7 +127,7 @@ namespace CalcTests
                 PointId = 2,
                 HorizontalDisplacement = 4,
                 VerticalDisplacement = 5,
-                ClusterSnapshots = new List<ClusterSnapshot>()
+                ClusterSnapshots = new List<ClusterSnapshot>
                 {
                     new ClusterSnapshot()
                     {
@@ -134,14 +136,14 @@ namespace CalcTests
                     }
                 }
             };
-            var thirdPoint = new ClusteredPoint()
+            var thirdPoint = new ClusteredPoint
             {
                 PointId = 3,
                 HorizontalDisplacement = 6,
                 VerticalDisplacement = 7,
-                ClusterSnapshots = new List<ClusterSnapshot>()
+                ClusterSnapshots = new List<ClusterSnapshot>
                 {
-                    new ClusterSnapshot()
+                    new ClusterSnapshot
                     {
                         ClusterCount = 4,
                         ClusterId = 1
@@ -149,21 +151,21 @@ namespace CalcTests
                 }
             };
             
-            var clusters = new List<Cluster<ClusteredPoint>>()
+            var clusters = new List<Cluster<ClusteredPoint>>
             {
-                new Cluster<ClusteredPoint>()
+                new Cluster<ClusteredPoint>
                 {
                     ClusterId = 1,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
                         firstPoint, secondPoint   
                         
                     }
                 },
-                new Cluster<ClusteredPoint>()
+                new Cluster<ClusteredPoint>
                 {
                     ClusterId = 2,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
                         thirdPoint
                     }
@@ -175,40 +177,39 @@ namespace CalcTests
             var recordedSecondPoint = secondPoint.GetShallowCopy();
             var recordedThirdPoint = thirdPoint.GetShallowCopy();
 
-            recordedFirstPoint.ClusterSnapshots.Append(new ClusterSnapshot()
+            recordedFirstPoint.ClusterSnapshots.Append(new ClusterSnapshot
             {
                 ClusterId = 1,
                 ClusterCount = 3
             });
 
-            recordedSecondPoint.ClusterSnapshots.Append(new ClusterSnapshot()
+            recordedSecondPoint.ClusterSnapshots.Append(new ClusterSnapshot
             {
                 ClusterId = 2,
                 ClusterCount = 3
             });
 
-            recordedThirdPoint.ClusterSnapshots.Append(new ClusterSnapshot()
+            recordedThirdPoint.ClusterSnapshots.Append(new ClusterSnapshot
             {
                 ClusterId = 2,
                 ClusterCount = 3
             });
             
-            // TODO: figure out how to clone the modeled points above
-            var expectedRecordedClusters = new List<Cluster<ClusteredPoint>>()
+            var expectedRecordedClusters = new List<Cluster<ClusteredPoint>>
             {
-                new Cluster<ClusteredPoint>()
+                new Cluster<ClusteredPoint>
                 {
                     ClusterId = 1,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
                         recordedFirstPoint, recordedSecondPoint   
                         
                     }
                 },
-                new Cluster<ClusteredPoint>()
+                new Cluster<ClusteredPoint>
                 {
                     ClusterId = 2,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
                         recordedThirdPoint
                     }
@@ -219,14 +220,14 @@ namespace CalcTests
         }
         
         [Test]
-        public void MergeClusterTest()
+        public static void MergeClusterTest()
         {
-            var firstCluster = new Cluster<ClusteredPoint>()
+            var firstCluster = new Cluster<ClusteredPoint>
             {
                 ClusterId = 1,
-                Points = new List<ClusteredPoint>()
+                Points = new List<ClusteredPoint>
                 {
-                    new ClusteredPoint()
+                    new ClusteredPoint
                     {
                         PointId = 10,
                         HorizontalDisplacement = 1,
@@ -234,12 +235,12 @@ namespace CalcTests
                     }
                 }
             };
-            var secondCluster = new Cluster<ClusteredPoint>()
+            var secondCluster = new Cluster<ClusteredPoint>
             {
                 ClusterId = 2,
-                Points = new List<ClusteredPoint>()
+                Points = new List<ClusteredPoint>
                 {
-                    new ClusteredPoint()
+                    new ClusteredPoint
                     {
                         PointId = 20,
                         HorizontalDisplacement = 3,
@@ -247,12 +248,12 @@ namespace CalcTests
                     }
                 }
             };
-            var thirdCluster = new Cluster<ClusteredPoint>()
+            var thirdCluster = new Cluster<ClusteredPoint>
             {
                 ClusterId = 3,
-                Points = new List<ClusteredPoint>()
+                Points = new List<ClusteredPoint>
                 {
-                    new ClusteredPoint()
+                    new ClusteredPoint
                     {
                         PointId = 30,
                         HorizontalDisplacement = 5,
@@ -260,25 +261,24 @@ namespace CalcTests
                     }
                 }
             };
-            var clusters = new List<Cluster<ClusteredPoint>>()
+            var clusters = new List<Cluster<ClusteredPoint>>
             {
                 firstCluster, secondCluster, thirdCluster
             };
 
-            var mergedClusters = new
-                AgglomerativeHierarchicalClusteringService(this._distanceService)
+            var mergedClusters = AgglomerativeHierarchicalClusteringService
                     .MergeClusters<Cluster<ClusteredPoint>, ClusteredPoint>(clusters,
                         secondCluster, thirdCluster)
                     .ToList();
 
-            var expectedMergedClusters = new List<Cluster<ClusteredPoint>>()
+            var expectedMergedClusters = new List<Cluster<ClusteredPoint>>
             {
-                new Cluster<ClusteredPoint>()
+                new Cluster<ClusteredPoint>
                 {
                     ClusterId = 1,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
-                        new ClusteredPoint()
+                        new ClusteredPoint
                         {
                             PointId = 10,
                             HorizontalDisplacement = 1,
@@ -286,18 +286,18 @@ namespace CalcTests
                         }
                     }
                 },
-                new Cluster<ClusteredPoint>()
+                new Cluster<ClusteredPoint>
                 {
                     ClusterId = 2,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
-                        new ClusteredPoint()
+                        new ClusteredPoint
                         {
                             PointId = 20,
                             HorizontalDisplacement = 3,
                             VerticalDisplacement = 4
                         },
-                        new ClusteredPoint()
+                        new ClusteredPoint
                         {
                             PointId = 30,
                             HorizontalDisplacement = 5,
@@ -313,36 +313,36 @@ namespace CalcTests
         [Test]
         public void GetClusterDistancesTest()
         {
-            var firstCluster = new Cluster<ClusteredPoint>()
+            var firstCluster = new Cluster<ClusteredPoint>
                 {
                     ClusterId = 1,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
-                        new ClusteredPoint()
+                        new ClusteredPoint
                         {
                             HorizontalDisplacement = 0,
                             VerticalDisplacement = 0
                         }
                     }
                 };
-            var secondCluster = new Cluster<ClusteredPoint>()
+            var secondCluster = new Cluster<ClusteredPoint>
             {
                 ClusterId = 2,
-                Points = new List<ClusteredPoint>()
+                Points = new List<ClusteredPoint>
                 {
-                    new ClusteredPoint()
+                    new ClusteredPoint
                     {
                         HorizontalDisplacement = 3,
                         VerticalDisplacement = 3
                     }
                 }
             };
-            var thirdCluster = new Cluster<ClusteredPoint>()
+            var thirdCluster = new Cluster<ClusteredPoint>
             {
                 ClusterId = 3,
-                Points = new List<ClusteredPoint>()
+                Points = new List<ClusteredPoint>
                 {
-                    new ClusteredPoint()
+                    new ClusteredPoint
                     {
                         HorizontalDisplacement = -1,
                         VerticalDisplacement = -2
@@ -352,26 +352,26 @@ namespace CalcTests
 
             var actualClusterDistances = new AgglomerativeHierarchicalClusteringService(this._distanceService)
                 .GetClusterDistances<Cluster<ClusteredPoint>, ClusteredPoint>(
-                    new List<Cluster<ClusteredPoint>>()
+                    new List<Cluster<ClusteredPoint>>
                     {
                         firstCluster, secondCluster, thirdCluster
                     }).ToList();
 
-            var expectedClusterDistances = new List<ClusterDistance<Cluster<ClusteredPoint>, ClusteredPoint>>()
+            var expectedClusterDistances = new List<ClusterDistance<Cluster<ClusteredPoint>, ClusteredPoint>>
             {
-                new ClusterDistance<Cluster<ClusteredPoint>, ClusteredPoint>()
+                new ClusterDistance<Cluster<ClusteredPoint>, ClusteredPoint>
                 {
                     StartingCluster = firstCluster,
                     EndingCluster = secondCluster,
                     Distance = 4.243,
                 },
-                new ClusterDistance<Cluster<ClusteredPoint>, ClusteredPoint>()
+                new ClusterDistance<Cluster<ClusteredPoint>, ClusteredPoint>
                 {
                     StartingCluster = firstCluster,
                     EndingCluster = thirdCluster,
                     Distance = 2.236,
                 },
-                new ClusterDistance<Cluster<ClusteredPoint>, ClusteredPoint>()
+                new ClusterDistance<Cluster<ClusteredPoint>, ClusteredPoint>
                 {
                     StartingCluster = secondCluster,
                     EndingCluster = thirdCluster,
@@ -393,24 +393,24 @@ namespace CalcTests
                 new Point() {HorizontalDisplacement = 2, VerticalDisplacement = 3},
             };
 
-            var actualClusters = new AgglomerativeHierarchicalClusteringService(this._distanceService).ConvertPointsToClusters(points).ToList();
-            var expectedClusters = new List<Cluster<ClusteredPoint>>()
+            var actualClusters = AgglomerativeHierarchicalClusteringService.ConvertPointsToClusters(points).ToList();
+            var expectedClusters = new List<Cluster<ClusteredPoint>>
             {
-                new Cluster<ClusteredPoint>()
+                new Cluster<ClusteredPoint>
                 {
                     ClusterId = 1,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
-                        new ClusteredPoint()
+                        new ClusteredPoint
                             {HorizontalDisplacement = 1, VerticalDisplacement = 1}
                     }
                 },
-                new Cluster<ClusteredPoint>()
+                new Cluster<ClusteredPoint>
                 {
                     ClusterId = 2,
-                    Points = new List<ClusteredPoint>()
+                    Points = new List<ClusteredPoint>
                     {
-                        new ClusteredPoint()
+                        new ClusteredPoint
                             {HorizontalDisplacement = 2, VerticalDisplacement = 3}
                     }
                 }
@@ -433,13 +433,13 @@ namespace CalcTests
             double secondVerticalDisplacement,
             double expectedDistance)
         {
-            var startingPoint = new Point()
+            var startingPoint = new Point
             {
                 HorizontalDisplacement = firstHorizontalDisplacement,
                 VerticalDisplacement = firstVerticalDisplacement
             };
 
-            var endingPoint = new Point()
+            var endingPoint = new Point
             {
                 HorizontalDisplacement = secondHorizontalDisplacement,
                 VerticalDisplacement = secondVerticalDisplacement

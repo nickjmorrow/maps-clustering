@@ -8,7 +8,7 @@ namespace Calc
 {
     public class AgglomerativeHierarchicalClusteringService
     {
-        private DistanceService _distanceService;
+        private readonly DistanceService _distanceService;
 
         public AgglomerativeHierarchicalClusteringService(DistanceService distanceService)
         {
@@ -34,8 +34,7 @@ namespace Calc
         {
             // calculate distance between each pair of clusters by their centers
             var clusterDistances =
-                GetClusterDistances<Cluster<ClusteredPoint>, ClusteredPoint>(
-                    initialClusters);
+                GetClusterDistances<Cluster<ClusteredPoint>, ClusteredPoint>(initialClusters);
             
             // determine closest clusters
             var minimumDistance = clusterDistances.Min(cd => cd.Distance);
@@ -62,19 +61,19 @@ namespace Calc
             IEnumerable<Cluster<ClusteredPoint>> clusters)
         {
             var clusterCount = clusters.Count();
-            return clusters.Select(c => new Cluster<ClusteredPoint>()
+            return clusters.Select(c => new Cluster<ClusteredPoint>
             {
                 ClusterId = c.ClusterId,
-                Points = c.Points.Select(p => new ClusteredPoint()
+                Points = c.Points.Select(p => new ClusteredPoint
                     {
                         PointId = p.PointId,
                         Name = p.Name,
                         HorizontalDisplacement = p.HorizontalDisplacement,
                         VerticalDisplacement = p.VerticalDisplacement,
                         ClusterSnapshots = p.ClusterSnapshots.Concat(
-                            new List<ClusterSnapshot>()
+                            new List<ClusterSnapshot>
                             {
-                                new ClusterSnapshot()
+                                new ClusterSnapshot
                                 {
                                     ClusterCount = clusterCount,
                                     ClusterId = c.ClusterId
@@ -85,7 +84,7 @@ namespace Calc
             });
         }
 
-        internal IEnumerable<T> MergeClusters<T, U>(
+        internal static IEnumerable<T> MergeClusters<T, U>(
             IEnumerable<T> unmergedClusters,
             T clusterOne,
             T clusterTwo) 
@@ -112,7 +111,7 @@ namespace Calc
             return clusters
                 .SelectMany(c => clusters, (c1, c2) => new {c1, c2})
                 .Where(c => c.c1.ClusterId != c.c2.ClusterId)
-                .Select(c => new ClusterDistance<T, U>()
+                .Select(c => new ClusterDistance<T, U>
                 {
                     StartingCluster = c.c1,
                     EndingCluster = c.c2,
@@ -122,24 +121,24 @@ namespace Calc
                 .Select(c => c.First());
         }
         
-        internal IEnumerable<Cluster<ClusteredPoint>> ConvertPointsToClusters(
+        internal static IEnumerable<Cluster<ClusteredPoint>> ConvertPointsToClusters(
             IEnumerable<Point> points)
         {
             var clusterCount = points.Count();
             return points.Select((p, index) => new Cluster<ClusteredPoint>()
             {
                 ClusterId = index + 1,
-                Points = new List<ClusteredPoint>()
+                Points = new List<ClusteredPoint>
                 {
-                    new ClusteredPoint()
+                    new ClusteredPoint
                     {
                         HorizontalDisplacement = p.HorizontalDisplacement,
                         VerticalDisplacement = p.VerticalDisplacement,
                         PointId = p.PointId,
                         Name = p.Name,
-                        ClusterSnapshots = new List<ClusterSnapshot>()
+                        ClusterSnapshots = new List<ClusterSnapshot>
                         {
-                            new ClusterSnapshot()
+                            new ClusterSnapshot
                             {
                                 ClusterId = index + 1,
                                 ClusterCount = clusterCount

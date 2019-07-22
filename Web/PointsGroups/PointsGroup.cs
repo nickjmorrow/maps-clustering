@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Web.Models;
-using WebApplication.Enums;
 using WebApplication.Models.DTOs;
 
 namespace WebApplication.Models

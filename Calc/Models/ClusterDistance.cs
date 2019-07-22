@@ -2,9 +2,10 @@
 
 namespace Calc.Models
 {
-    public class ClusterDistance<T, U> 
+    public class ClusterDistance<T, U>
         where T : Cluster<U>
         where U : Point
+    
     {
         public T StartingCluster { get; set; }
         public T EndingCluster { get; set; }
