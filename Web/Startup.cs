@@ -1,15 +1,11 @@
-using System;
-using System.ComponentModel;
 using System.Text;
 using Calc;
-using Calc.Models;
 using Calc.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,22 +13,20 @@ using Microsoft.IdentityModel.Tokens;
 using Warlock.Services;
 using Web.Services;
 using WebApplication.Helpers;
-using WebApplication.Models;
 using WebApplication.Services;
 
 namespace WebApplication
 {
     public class Startup
     {
+        private IConfiguration Configuration { get; }
+        private IHostingEnvironment Environment { get; }
+        
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
             Environment = environment;
-
         }
-
-        public IConfiguration Configuration { get; }
-        public IHostingEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -121,8 +115,6 @@ namespace WebApplication
             }
 
             app.UseHttpsRedirection();
-            // app.UseStaticFiles();
-            // app.UseSpaStaticFiles();
             app.UseAuthentication();
             
             app.UseMvc(routes =>

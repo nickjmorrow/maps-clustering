@@ -115,21 +115,21 @@ namespace CalcTests
                 VerticalDisplacement = 3,
                 ClusterSnapshots = new List<ClusterSnapshot>
                 {
-                    new ClusterSnapshot()
+                    new ClusterSnapshot
                     {
                         ClusterCount = 2,
                         ClusterId = 1
                     }
                 }
             };
-            var secondPoint = new ClusteredPoint()
+            var secondPoint = new ClusteredPoint
             {
                 PointId = 2,
                 HorizontalDisplacement = 4,
                 VerticalDisplacement = 5,
                 ClusterSnapshots = new List<ClusterSnapshot>
                 {
-                    new ClusterSnapshot()
+                    new ClusterSnapshot
                     {
                         ClusterCount = 3,
                         ClusterId = 2
@@ -220,7 +220,7 @@ namespace CalcTests
         }
         
         [Test]
-        public static void MergeClusterTest()
+        public void MergeClusterTest()
         {
             var firstCluster = new Cluster<ClusteredPoint>
             {

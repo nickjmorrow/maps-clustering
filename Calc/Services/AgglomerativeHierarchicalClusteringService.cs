@@ -125,7 +125,7 @@ namespace Calc
             IEnumerable<Point> points)
         {
             var clusterCount = points.Count();
-            return points.Select((p, index) => new Cluster<ClusteredPoint>()
+            return points.Select((p, index) => new Cluster<ClusteredPoint>
             {
                 ClusterId = index + 1,
                 Points = new List<ClusteredPoint>

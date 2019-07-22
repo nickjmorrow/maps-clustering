@@ -25,7 +25,7 @@ namespace Calc
             var clusteringSummaries = this._clusteringSummaryService.GetClusteringSummaries(clusteredPoints);
             var orderedPoints = this._orderingService.OrderPoints(clusteredPoints);
             
-            return new CalculationOutput()
+            return new CalculationOutput
             {
                 OrderedPoints = orderedPoints,
                 ClusteringSummaries = clusteringSummaries

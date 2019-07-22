@@ -6,9 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using WebApplication.Helpers;
@@ -18,8 +16,8 @@ namespace WebApplication.Services
 {
     public class AuthService
     {
-        private DatabaseContext _context;
-        private AppSettings _appSettings;
+        private readonly DatabaseContext _context;
+        private readonly AppSettings _appSettings;
 
         public AuthService(DatabaseContext context, IOptions<AppSettings> appSettings)
         {
@@ -36,7 +34,7 @@ namespace WebApplication.Services
                 return new AuthResponse() {ErrorText = $"No user could be found with the email: {authInfo.Email}"};
             }
 
-            if (!this.DoesPasswordMatch(authInfo, user))
+            if (!DoesPasswordMatch(authInfo, user))
             {
                 return new AuthResponse {ErrorText = "User with that email and password cannot be found."};
             }
@@ -91,36 +89,36 @@ namespace WebApplication.Services
                     };
                 }
 
-                user.Password = this.EncryptPassword(user.Password);
+                user.Password = EncryptPassword(user.Password);
                 context.Users.Add(user);
                 context.SaveChanges();
 
                 var persistedUser = context.Users.SingleOrDefault(u => u.Email == user.Email);
                 if (persistedUser == null)
                 {
-                    throw new Exception("User could not be found after persistence to database.");
+                    throw new InvalidOperationException("User could not be found after persistence to database.");
                 }
 
                 return persistedUser;
             }
         }
 
-        private string EncryptPassword(string plainTextPassword)
+        private static string EncryptPassword(string plainTextPassword)
         {
-            byte[] salt;
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+            var salt = new byte[16];
+            new RNGCryptoServiceProvider().GetBytes(salt);
 
             var pbkdf2 = new Rfc2898DeriveBytes(plainTextPassword, salt, 10000);
-            byte[] hash = pbkdf2.GetBytes(20);
+            var hash = pbkdf2.GetBytes(20);
 
-            byte[] hashBytes = new byte[36];
+            var hashBytes = new byte[36];
             Array.Copy(salt, 0, hashBytes, 0, 16);
             Array.Copy(hash, 0, hashBytes, 16, 20);
             return Convert.ToBase64String(hashBytes);
 
         }
 
-        private bool DoesPasswordMatch(AuthInfo authInfo, User user)
+        private static bool DoesPasswordMatch(AuthInfo authInfo, User user)
         {
             var plainTextPassword = authInfo.Password;
             var encryptedPassword = user.Password;

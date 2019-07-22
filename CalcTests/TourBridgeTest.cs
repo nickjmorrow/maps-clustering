@@ -27,7 +27,7 @@ namespace CalcTests
                 }
             };
             var vertices = TourBridge.GetVertices(points).ToList();
-            var expectedVertices = new List<int>()
+            var expectedVertices = new List<int>
             {
                 0, 1
             };

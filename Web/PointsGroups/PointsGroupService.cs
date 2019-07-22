@@ -59,7 +59,7 @@ namespace Web.Services
         public async Task<PointsGroupModel> AddPointsGroupAsync(int userId, IFormFile file)
         {
             var pointsGroupModel = this._fileHandlerService.ConvertFileToPointsGroupModel(file);
-            return (await this.AddPointsGroupInternalAsync(userId, pointsGroupModel));
+            return (await this.AddPointsGroupInternalAsync(userId, pointsGroupModel).ConfigureAwait(false));
         }
 
         public async Task<int> DeletePointsGroupAsync(int pointsGroupId)
@@ -82,7 +82,7 @@ namespace Web.Services
         /// Persist a <see cref="PointsGroup"/> to the database. 
         /// </summary>
         public async Task<PointsGroupModel> SavePointsGroupAsync(int userId, PointsGroupModel pointsGroupModel)
-            => await this.AddPointsGroupInternalAsync(userId, pointsGroupModel);
+            => await this.AddPointsGroupInternalAsync(userId, pointsGroupModel).ConfigureAwait(false);
         
         /// <summary>
         /// Create a <see cref="PointsGroup"/> and persist it to the database.

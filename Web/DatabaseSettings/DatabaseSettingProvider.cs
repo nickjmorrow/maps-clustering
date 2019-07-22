@@ -21,7 +21,7 @@ namespace Web.Services
             
             if (databaseSetting == null)
             {
-                throw new Exception($"Could not find settingValue for settingId {settingId}");
+                throw new InvalidOperationException($"Could not find settingValue for settingId {settingId}");
             }
 
             return databaseSetting.SettingValue;

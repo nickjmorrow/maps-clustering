@@ -31,7 +31,7 @@ namespace Calc
                     {
                         throw new InvalidOperationException($"No clusterId found in ahcInfos for clusterCount {currentClusterCount}");
                     } 
-                    return new ClusterPoint()
+                    return new ClusterPoint
                     {
                         ClusterId = clusterSnapshot.ClusterId,
                         HorizontalDisplacement = ahc.HorizontalDisplacement,
