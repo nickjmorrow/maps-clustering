@@ -57,7 +57,7 @@ namespace Calc
             return GetModelInternal(recordedClusters, minimumClusters);
         }
 
-        internal IEnumerable<Cluster<ClusteredPoint>> RecordClusters(
+        internal static IEnumerable<Cluster<ClusteredPoint>> RecordClusters(
             IEnumerable<Cluster<ClusteredPoint>> clusters)
         {
             var clusterCount = clusters.Count();

@@ -8,8 +8,8 @@ namespace Calc
 {
     public class OrderingService
     {
-        private static readonly int MaxClusterSize = 10;
-        private TourBridge _tourBridge;
+        private const int MaxClusterSize = 10;
+        private readonly TourBridge _tourBridge;
 
         public OrderingService(TourBridge tourBridge)
         {
@@ -21,14 +21,14 @@ namespace Calc
             var maxClusterCount = clusteredPoints.First().ClusterSnapshots.Count();
             var clusterCounts = Enumerable.Range(1, maxClusterCount);
 
-            var initialOrderedPoints = clusteredPoints.Select(cp => new OrderedPoint()
+            var initialOrderedPoints = clusteredPoints.Select(cp => new OrderedPoint
             {
                 PointId = cp.PointId,
                 ClusterSnapshots = cp.ClusterSnapshots,
                 Name = cp.Name,
                 HorizontalDisplacement = cp.HorizontalDisplacement,
                 VerticalDisplacement = cp.VerticalDisplacement,
-                OrderingSnapshots = new List<OrderingSnapshot>() { }
+                OrderingSnapshots = new List<OrderingSnapshot>()
             });
             
             // iterate through clusterCounts
@@ -37,7 +37,7 @@ namespace Calc
                 // get the clusters associated with some clusterCount
                 var clusterPoints = clusteredPoints.Select(cp =>
                 {
-                    return new ClusterPoint()
+                    return new ClusterPoint
                     {
                         PointId = cp.PointId,
                         HorizontalDisplacement = cp.HorizontalDisplacement,
@@ -59,7 +59,7 @@ namespace Calc
                         .Single(iop => iop.PointId == clusteredOrderedPoint.PointId);
                     var newOrderingSnapshots = existingPoint
                         .OrderingSnapshots
-                        .Append(new OrderingSnapshot()
+                        .Append(new OrderingSnapshot
                         {
                             ClusterCount = clusterCount,
                             ClusterId = clusteredOrderedPoint.ClusterId,
@@ -70,7 +70,7 @@ namespace Calc
                     existingPoint.OrderingSnapshots = newOrderingSnapshots;
 
                     initialOrderedPoints = initialOrderedPoints.Select(iop =>
-                        iop.PointId == existingPoint.PointId ? new OrderedPoint()
+                        iop.PointId == existingPoint.PointId ? new OrderedPoint
                         {
                             PointId = iop.PointId,
                             Name = iop.Name,
@@ -78,7 +78,7 @@ namespace Calc
                             VerticalDisplacement = iop.VerticalDisplacement,
                             ClusterSnapshots = iop.ClusterSnapshots,
                             OrderingSnapshots = newOrderingSnapshots
-                        } : new OrderedPoint()
+                        } : new OrderedPoint
                         {
                             PointId = iop.PointId,
                             Name = iop.Name,
@@ -99,15 +99,14 @@ namespace Calc
         /// </summary>
         /// <param name="clusterPoints"></param>
         /// <returns></returns>
-        public IEnumerable<ClusteredOrderedPoint> GetClusteredOrderedPoints(IEnumerable<ClusterPoint> clusterPoints)
+        private IEnumerable<ClusteredOrderedPoint> GetClusteredOrderedPoints(IEnumerable<ClusterPoint> clusterPoints)
         {
             var clusterIds = clusterPoints.Select(cp => cp.ClusterId).Distinct();
             return clusterIds.Select(clusterId =>
             {
-                // TODO: naming
                 var specificClusterPoints = clusterPoints.Where(cp => cp.ClusterId == clusterId);
                 var orderPoints = this.GetOrderPoints(specificClusterPoints);
-                return orderPoints.Select(op => new ClusteredOrderedPoint()
+                return orderPoints.Select(op => new ClusteredOrderedPoint
                 {
                     PointId = op.PointId,
                     ClusterId = clusterId,
@@ -124,7 +123,7 @@ namespace Calc
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public IEnumerable<OrderPoint> GetOrderPoints(IEnumerable<Point> points)
+        private IEnumerable<OrderPoint> GetOrderPoints(IEnumerable<Point> points)
         {
             if (points.Count() > MaxClusterSize)
             {
@@ -137,12 +136,12 @@ namespace Calc
                     OrderId = i
                 });
             }
-            var vertices = this._tourBridge.GetVertices(points);
-            var matrix = this._tourBridge.GetMatrix(points);
+            var vertices = TourBridge.GetVertices(points);
+            var matrix = TourBridge.GetMatrix(points);
             
             var tourProvider = new TourProvider(vertices, matrix);
             var solvedVertices = tourProvider.Solve();
-            var orderedPoints = this._tourBridge.GetPoints(points, solvedVertices);
+            var orderedPoints = TourBridge.GetPoints(points, solvedVertices);
             return orderedPoints.Select((p, i) => new OrderPoint()
             {
                 PointId = p.PointId,
@@ -152,16 +151,5 @@ namespace Calc
                 OrderId = i
             });
         }
-    }
-
-    public class OrderPoint : Point
-    {
-        public int OrderId { get; set; }        
-    }
-
-    public class ClusteredOrderedPoint : Point
-    {
-        public int OrderId { get; set; }
-        public int ClusterId { get; set; }
     }
 }

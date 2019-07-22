@@ -11,23 +11,22 @@ namespace CalcTests
         [Test]
         public void GetVerticesTest()
         {
-            var tourBridge = new TourBridge();
-            var points = new List<Point>()
+            var points = new List<Point>
             {
-                new Point()
+                new Point
                 {
                     PointId = 1,
                     HorizontalDisplacement = 2,
                     VerticalDisplacement = 3
                 },
-                new Point()
+                new Point
                 {
                     PointId = 2,
                     HorizontalDisplacement = 3,
                     VerticalDisplacement = 4
                 }
             };
-            var vertices = tourBridge.GetVertices(points).ToList();
+            var vertices = TourBridge.GetVertices(points).ToList();
             var expectedVertices = new List<int>()
             {
                 0, 1
@@ -38,22 +37,21 @@ namespace CalcTests
         [Test]
         public void GetMatrixTest()
         {
-            var tourBridge = new TourBridge();
-            var points = new List<Point>()
+            var points = new List<Point>
             {
-                new Point()
+                new Point
                 {
                     PointId = 1,
                     HorizontalDisplacement = 0,
                     VerticalDisplacement = 0
                 },
-                new Point()
+                new Point
                 {
                     PointId = 2,
                     HorizontalDisplacement = 0,
                     VerticalDisplacement = 1
                 },
-                new Point()
+                new Point
                 {
                     PointId = 3,
                     HorizontalDisplacement = 0,
@@ -72,32 +70,31 @@ namespace CalcTests
             expectedDistances[2, 0] = 9;
             expectedDistances[2, 1] = 4;
             expectedDistances[2, 2] = 0;
-            var distances = tourBridge.GetMatrix(points);
+            var distances = TourBridge.GetMatrix(points);
             Assert.AreEqual(expectedDistances, distances);
         }
 
         [Test]
         public void GetPointsTest()
         {
-            var tourBridge = new TourBridge();
-            var unorderedPoints = new List<Point>()
+            var unorderedPoints = new List<Point>
             {
-                new Point()
+                new Point
                 {
                     PointId = 1,
                     HorizontalDisplacement = 1,
                     VerticalDisplacement = 1
                 },
-                new Point()
+                new Point
                 {
                     PointId = 2,
                     HorizontalDisplacement = 2,
                     VerticalDisplacement = 2
                 }
             };
-            var vertices = new List<int>() {1, 0};
-            var expectedPoints = new List<Point>() {unorderedPoints[1], unorderedPoints[0]};
-            var points = tourBridge.GetPoints(unorderedPoints, vertices);
+            var vertices = new List<int> {1, 0};
+            var expectedPoints = new List<Point> {unorderedPoints[1], unorderedPoints[0]};
+            var points = TourBridge.GetPoints(unorderedPoints, vertices);
             Assert.AreEqual(expectedPoints, points);
         }
     }

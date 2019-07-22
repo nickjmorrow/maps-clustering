@@ -1,5 +1,4 @@
 CREATE SCHEMA mapClustering;
-GO
 
 CREATE TABLE mapClustering.Users (
     userId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,

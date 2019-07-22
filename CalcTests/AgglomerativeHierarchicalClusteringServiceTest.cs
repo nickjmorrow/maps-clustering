@@ -172,7 +172,7 @@ namespace CalcTests
                 }
             };
 
-            var actualRecordedClusters = new AgglomerativeHierarchicalClusteringService(this._distanceService).RecordClusters(clusters);
+            var actualRecordedClusters = AgglomerativeHierarchicalClusteringService.RecordClusters(clusters);
             var recordedFirstPoint = firstPoint.GetShallowCopy();
             var recordedSecondPoint = secondPoint.GetShallowCopy();
             var recordedThirdPoint = thirdPoint.GetShallowCopy();
