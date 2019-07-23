@@ -27,7 +27,7 @@ class ParametersInternal extends React.PureComponent<IProps, IState> {
 
 		const { clusterCount } = activePointsGroup;
 
-		const { points } = activePointsGroup;
+		const points = activePointsGroup.calculationOutput.orderedPoints;
 		const minClusters = 1;
 		const maxClusters = points.length;
 

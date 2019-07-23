@@ -16,7 +16,5 @@ namespace WebApplication.Models
         public double AverageVerticalDisplacement { get; set; }
         public int ItemId { get; set; }
         public string ClusteringOutputJson { get; set; }
-        
-        public IReadOnlyList<PointModel> Points { get; set; }
     }
 }

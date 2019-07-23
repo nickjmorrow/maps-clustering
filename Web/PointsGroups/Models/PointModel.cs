@@ -3,15 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models.DTOs
 {
-    [Table("points", Schema="mapClustering")]
     public class PointModel : Calc.Models.Point
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override int PointId { get; set; }
-        
-        public int PointsGroupId { get; set; }
-        
-        public PointsGroup PointsGroup { get; set; }
     }
 }

@@ -43,7 +43,6 @@ namespace Web.Services
         public IReadOnlyList<PointsGroupModel> GetPointsGroups(int? userId)
         {
             var allPointsGroups = this._context.PointsGroups
-                .Include(pg => pg.Points)
                 .ToList();
 
             return this._itemFilterer
@@ -75,9 +74,12 @@ namespace Web.Services
         /// Create a <see cref="PointsGroupModel"/> from a file.
         /// </summary>
         public PointsGroupModel CreatePointsGroupAsync(IFormFile file)
-            => this._fileHandlerService.ConvertFileToPointsGroupModel(file);
-        
-
+        {
+            var intermediatePointsGroup = this._fileHandlerService.ConvertFileToPointsGroupModel(file);
+            intermediatePointsGroup.CalculationOutput = this.GetCalculationOutputModel(intermediatePointsGroup.Points);
+            return intermediatePointsGroup;
+        }
+            
         /// <summary>
         /// Persist a <see cref="PointsGroup"/> to the database. 
         /// </summary>
@@ -95,7 +97,6 @@ namespace Web.Services
             // create itemId for pointsGroup
             var itemId = await this._itemService.AddItemAsync(ItemType.PointsGroup, ItemPermissionType.Private);
             pointsGroup.ItemId = itemId;
-
             
             await this._context.PointsGroups.AddAsync(ConvertToPointsGroup(pointsGroupModel));
             await this._context.SaveChangesAsync();
@@ -105,7 +106,7 @@ namespace Web.Services
 
             pointsGroup.ClusteringOutputJson = JsonConvert.SerializeObject(this.GetCalculationOutputModel(pointsGroupModel.Points));
             
-            this._context.Update(pointsGroupModel);
+            this._context.Update(pointsGroup);
             await this._context.SaveChangesAsync();
 
             return this.GetPointsGroupModel(pointsGroup, this._context.Items.Single(i => i.ItemId == itemId));
@@ -130,7 +131,6 @@ namespace Web.Services
             {
                 PointsGroupId = pointsGroup.PointsGroupId,
                 Name = pointsGroup.Name,
-                Points = pointsGroup.Points,
                 AverageHorizontalDisplacement = pointsGroup.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroup.AverageVerticalDisplacement,
                 ItemPermissionType = item.ItemPermissionTypeId,
@@ -144,10 +144,9 @@ namespace Web.Services
             {
                 PointsGroupId = pointsGroupModel.PointsGroupId,
                 Name = pointsGroupModel.Name,
-                Points = pointsGroupModel.Points,
                 AverageHorizontalDisplacement = pointsGroupModel.AverageHorizontalDisplacement,
                 AverageVerticalDisplacement = pointsGroupModel.AverageVerticalDisplacement,
-                ClusteringOutputJson = JsonConvert.SerializeObject(pointsGroupModel.CalculationOutput.ClusteringSummaries)
+                ClusteringOutputJson = JsonConvert.SerializeObject(pointsGroupModel.CalculationOutput)
             };
         }
 

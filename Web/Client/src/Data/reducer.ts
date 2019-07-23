@@ -136,7 +136,7 @@ const ensureActivePointsGroup = (pointsGroups: IPointsGroup[]) => {
 				.map(withFirstPointsGroupActive);
 	return pointsGroupsWithActive.map(pg => {
 		if (!pg.clusterCount) {
-			pg.clusterCount = pg.points.length;
+			pg.clusterCount = pg.calculationOutput.orderedPoints.length;
 		}
 		return pg;
 	});
@@ -151,7 +151,7 @@ const defaultsAreLastAndDefaultsAreFirst = (pg: IPointsGroup) =>
 
 const withColors = (pg: IPointsGroup): IPointsGroup => ({
 	...pg,
-	pointsColors: pg.pointsColors || getColors(pg.points.length)
+	pointsColors: pg.pointsColors || getColors(pg.calculationOutput.orderedPoints.length)
 });
 
 const withOrderId = (pg: IPointsGroup) : IPointsGroup => ({

@@ -56,22 +56,23 @@ export const AppBarInternal: React.FC<IProps> = ({
     );
 
 	// TODO: add about page
-    // const rightComponents = isAuthenticated ? (
-    //     <>
-    //         <AppBarButton onClick={handleToggleLogoutModal}>
-    //             Log Out
-    //         </AppBarButton>
-    //     </>
-    // ) : (
-    //     <>
-    //         <AppBarButton onClick={handleToggleAuthModal}>Sign In</AppBarButton>
-    //     </>
-    // );
+    const rightComponents = isAuthenticated ? (
+        <>
+            <AppBarButton onClick={handleToggleLogoutModal}>
+                Log Out
+            </AppBarButton>
+        </>
+    ) : (
+        <>
+            <AppBarButton onClick={handleToggleAuthModal}>Sign In</AppBarButton>
+        </>
+    );
     return (
         <>
             <PopulatedAppBar
                 appName={appName}
-                styleVariant={"primary"}
+				styleVariant={"primary"}
+				rightComponents={rightComponents}
             />
             <AuthModal
                 isOpen={isAuthModalOpen}
