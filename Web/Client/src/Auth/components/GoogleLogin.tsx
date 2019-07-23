@@ -23,9 +23,6 @@ const renderButton:
 	| undefined = renderProps => (
 	<Button
 		style={{ width: "100%" }}
-		backgroundColorActive={"#AC1F24"}
-		backgroundColorHover={"#E15E63"}
-		backgroundColor={"#E62C33"}
 		onClick={renderProps!.onClick}>
 		<Typography
 			style={{ textTransform: "capitalize" }}
