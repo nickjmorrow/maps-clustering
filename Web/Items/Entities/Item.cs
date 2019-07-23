@@ -11,9 +11,22 @@ namespace WebApplication.Models
     {
         [Key] 
         public int ItemId { get; set; }
-        public int ItemTypeId { get; set; }
+        public Enums.ItemType ItemTypeId { get; set; }
         public ItemPermissionType ItemPermissionTypeId { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateDeleted { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var otherItem = (Item) obj;
+            if (otherItem == null)
+            {
+                return false;
+            }
+            
+            return this.ItemId == otherItem.ItemId
+                && this.ItemTypeId == otherItem.ItemTypeId
+                && this.ItemPermissionTypeId == otherItem.ItemPermissionTypeId;
+        }
     }
 }

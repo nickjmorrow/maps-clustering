@@ -7,9 +7,9 @@ namespace Calc
     {
         public virtual double GetDistance(Point startingPoint, Point endingPoint)
         {
-            var sCoord = new GeoCoordinate(startingPoint.VerticalDisplacement, startingPoint.HorizontalDisplacement);
-            var eCoord = new GeoCoordinate(endingPoint.VerticalDisplacement, endingPoint.HorizontalDisplacement);
-            return sCoord.GetDistanceTo(eCoord);
+            var sCoordinate = new GeoCoordinate(startingPoint.VerticalDisplacement, startingPoint.HorizontalDisplacement);
+            var eCoordinate = new GeoCoordinate(endingPoint.VerticalDisplacement, endingPoint.HorizontalDisplacement);
+            return sCoordinate.GetDistanceTo(eCoordinate);
         }
     }
 }

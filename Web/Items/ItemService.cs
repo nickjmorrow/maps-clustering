@@ -25,7 +25,7 @@ namespace Web.Services
         {
             var item = new Item
             {
-                ItemTypeId = (int) itemType,
+                ItemTypeId = itemType,
                 DateCreated = DateTime.Now,
                 DateDeleted = null,
                 ItemPermissionTypeId = itemPermissionType

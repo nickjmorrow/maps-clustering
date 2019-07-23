@@ -4,9 +4,9 @@ using WebApplication.Models;
 
 namespace WebApplication
 {
-    public abstract class DatabaseContext : DbContext
+    public class DatabaseContext : DbContext
     {
-        protected DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
         }
 
