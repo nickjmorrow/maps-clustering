@@ -28,5 +28,10 @@ namespace WebApplication.Models
                 && this.ItemTypeId == otherItem.ItemTypeId
                 && this.ItemPermissionTypeId == otherItem.ItemPermissionTypeId;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
