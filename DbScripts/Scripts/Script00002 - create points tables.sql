@@ -1,17 +1,21 @@
-CREATE TABLE mapClustering.pointsGroups (
-    pointsGroupId INT NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-    name VARCHAR(255) not null,
-    averageHorizontalDisplacement FLOAT NOT NULL,
-    averageVerticalDisplacement FLOAT NOT NULL,
-    ahcInfoJson VARCHAR(MAX) NULL,
-    clusteringOutputJson VARCHAR(MAX) NULL,
-    itemId INT NULL
-)
+START TRANSACTION;
 
-CREATE TABLE mapClustering.points (
-    pointId iNT NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+CREATE TABLE mc.points_groups (
+    points_group_id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(255) NOT NULL,
-    horizontalDisplacement FLOAT NOT NULL,
-    verticalDisplacement FLOAT NOT NULL,
-    pointsGroupId INT NOT NULL FOREIGN KEY REFERENCES mapClustering.pointsGroups(pointsGroupId)
-)
+    average_horizontal_displacement FLOAT NOT NULL,
+    average_vertical_displacement FLOAT NOT NULL,
+    ahc_info_json VARCHAR NULL,
+    clustering_output_json VARCHAR NULL,
+    item_id INT NULL
+);
+
+CREATE TABLE mc.points (
+    point_id iNT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(255) NOT NULL,
+    horizontal_displacement FLOAT NOT NULL,
+    vertical_displacement FLOAT NOT NULL,
+    points_group_id INT NOT NULL REFERENCES mc.points_groups(points_group_id)
+);
+
+COMMIT;

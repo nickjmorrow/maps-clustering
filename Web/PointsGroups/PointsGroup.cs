@@ -6,7 +6,7 @@ using WebApplication.Models.DTOs;
 
 namespace WebApplication.Models
 {
-    [Table("pointsGroups", Schema="mc")]
+    [Table("points_groups", Schema="mc")]
     public class PointsGroup : IItemBound
     {
         [Key]

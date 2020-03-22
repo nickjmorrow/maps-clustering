@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models
 {
-    [Table("itemTypes", Schema="mc")]
+    [Table("item_types", Schema="mc")]
     public class ItemType
     {
         [Key]

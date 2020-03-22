@@ -1,7 +1,11 @@
-CREATE TABLE mapClustering.databaseSettings (
-    settingId VARCHAR(100) NOT NULL
-    , settingValue VARCHAR(255) NOT NULL
-)
+START TRANSACTION;
 
-INSERT INTO mapClustering.databaseSettings (settingId, settingValue)
-SELECT 'appName', 'Map Clustering'
+CREATE TABLE mc.database_settings (
+    setting_id VARCHAR(100) NOT NULL
+    , setting_value VARCHAR(255) NOT NULL
+);
+
+INSERT INTO mc.database_settings (setting_id, setting_value)
+SELECT 'appName', 'Map Clustering';
+
+COMMIT;

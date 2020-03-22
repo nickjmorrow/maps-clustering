@@ -3,11 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Models
 {
-    [Table("databaseSettings", Schema="mc")]
+    [Table("database_settings", Schema="mc")]
     public class DatabaseSetting
     {
-        [Key]
+        [Key, Column("setting_id")]
         public string SettingId { get; set; }
+        [Column("setting_value")]
         public string SettingValue { get; set; }
     }
 }

@@ -23,26 +23,26 @@ CREATE TABLE mc.itemPermissionTypes (
     description VARCHAR(100) NOT NULL
 );
 
-INSERT INTO mc.itemPermissionTypes
+INSERT INTO mc.itemPermissionTypes (description)
 SELECT 'Private' AS description UNION
 SELECT 'Public' AS description;
 
 CREATE TABLE mc.items (
     itemId INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    itemTypeId INT NOT NULL FOREIGN KEY REFERENCES mc.itemTypes(itemTypeId),
-    itemPermissionTypeId INT NOT NULL FOREIGN KEY REFERENCES mc.itemPermissionTypes(itemPermissionTypeId),
-    dateCreated DATETIME NOT NULL DEFAULT GETDATE(),
-    dateDeleted DATETIME NULL
+    itemTypeId INT NOT NULL REFERENCES mc.itemTypes(itemTypeId),
+    itemPermissionTypeId INT NOT NULL REFERENCES mc.itemPermissionTypes(itemPermissionTypeId),
+    dateCreated DATE NOT NULL DEFAULT CURRENT_DATE,
+    dateDeleted DATE NULL
 );
 
 CREATE TABLE mc.userItems (
-    userId INT NOT NULL FOREIGN KEY REFERENCES mc.users(userId),
-    itemId iNT NOT NULL FOREIGN KEY REFERENCES mc.items(itemId)
+    userId INT NOT NULL REFERENCES mc.users(userId),
+    itemId iNT NOT NULL REFERENCES mc.items(itemId)
 );
 
 CREATE TABLE mc.userFavorites (
-    userId iNT NOT NULL FOREIGN KEY REFERENCES mc.users(userId),
-    itemId INT NOT NULL FOREIGN KEY REFERENCES mc.items(itemId)
+    userId iNT NOT NULL REFERENCES mc.users(userId),
+    itemId INT NOT NULL REFERENCES mc.items(itemId)
 );
 
 COMMIT;
