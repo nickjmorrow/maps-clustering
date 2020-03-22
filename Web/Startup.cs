@@ -1,19 +1,14 @@
-using System.Text;
 using Calc;
 using Calc.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Cors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Warlock.Services;
 using Web.Services;
-using WebApplication.Helpers;
 using WebApplication.Services;
 
 namespace WebApplication
@@ -52,13 +47,6 @@ namespace WebApplication
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
             
-            // custom
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-
             var connectionStringEnvironmentVariableKey =
                 Environment.IsDevelopment() ? DEV_CONNECTION_STRING : PROD_CONNECTION_STRING;
             
