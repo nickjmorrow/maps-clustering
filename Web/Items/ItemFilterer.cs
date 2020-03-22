@@ -16,43 +16,13 @@ namespace Web.Services
             this._context = context;
         }
 
-        public IReadOnlyList<T> GetValidItems<T>(int? userId, IReadOnlyList<T> items)
-        where T : IItemBound
+        public IReadOnlyList<Item> GetValidItems<T>(int? userId, IReadOnlyList<T> items)
         { 
-            var userPermissionedItems = this.GetPermissionedItems(userId, items);
-            var validItems = this.GetNotDeletedItems(userPermissionedItems);
-            
-            return validItems;
-        }
-
-        private IReadOnlyList<T> GetPermissionedItems<T>(int? userId, IReadOnlyList<T> items)
-            where T : IItemBound
-        {
             var publicItems = this._context.Items
-                .Where(i => i.ItemPermissionTypeId == ItemPermissionType.Public);
-            
-            var userItems = userId.HasValue
-                ? this._context.UserItems
-                    .Where(ui => ui.UserId == userId)
-                    .ToList()
-                : new List<UserItem>();
-
-
-            return items
-                .Where(i => userItems.Any(ui => ui.ItemId == i.ItemId)
-                            || publicItems.Any(pi => pi.ItemId == i.ItemId))
+                .Where(i => i.ItemPermissionTypeId == ItemPermissionType.Public)
                 .ToList();
-        }
 
-        private IReadOnlyList<T> GetNotDeletedItems<T>(IReadOnlyList<T> items)
-            where T : IItemBound
-        {
-            var notDeletedItems = this._context.Items.Where(i => items.Any(item => item.ItemId == i.ItemId))
-                .Where(i => !i.DateDeleted.HasValue);
-            
-            return items
-                .Where(i => notDeletedItems.Any(ndi => ndi.ItemId == i.ItemId))
-                .ToList();
+            return publicItems;
         }
     }
 }

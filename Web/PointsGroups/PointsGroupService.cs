@@ -47,10 +47,10 @@ namespace Web.Services
 
             return this._itemFilterer
                 .GetValidItems(userId, allPointsGroups)
-                .Select(pg =>
+                .Select(item =>
                 {
-                    var item = this._context.Items.Single(i => i.ItemId == pg.ItemId);
-                    return this.GetPointsGroupModel(pg, item);
+                    var pointsGroup = this._context.PointsGroups.Single(pg => pg.ItemId == item.ItemId);
+                    return this.GetPointsGroupModel(pointsGroup, item);
                 })
                 .ToList();
         }
