@@ -71,7 +71,7 @@ export const AppBarInternal: React.FC<IProps> = ({
         <>
             <PopulatedAppBar
                 appName={appName}
-				styleVariant={"primary"}
+				styleVariant={1}
 				rightComponents={rightComponents}
             />
             <AuthModal

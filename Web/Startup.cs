@@ -1,11 +1,10 @@
 using System.Text;
 using Calc;
 using Calc.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
+using Microsoft.AspNetCore.Mvc.Cors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,11 +30,14 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(
-                    options => options
-                        .SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                );
+            services.AddMvc(c =>
+            {
+                c.EnableEndpointRouting = false;
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                // .AddJsonOptions(
+                //     options => options
+                //         .SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                // );
 
             // CORS
             services.AddCors(options => { options.AddPolicy("AllowMyOrigin", 
@@ -43,10 +45,10 @@ namespace WebApplication
                     .WithOrigins("*")
                     .WithMethods("*")
                     .WithHeaders("*")); });
-            
-            services.Configure<MvcOptions>(options =>
+
+            services.AddCors(c =>
             {
-                options.Filters.Add(new CorsAuthorizationFilterFactory("AllowMyOrigin"));
+                c.AddPolicy("AllowMyOrigin", options => options.AllowAnyOrigin());
             });
 
             // In production, the React files will be served from this directory
@@ -58,31 +60,10 @@ namespace WebApplication
             var appSettings = appSettingsSection.Get<AppSettings>();
             
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                }).AddGoogle(googleOptions =>
-                {
-                    googleOptions.ClientId = appSettings.GoogleClientId;
-                    googleOptions.ClientSecret = appSettings.GoogleClientSecret;
-                });
 
             var connectionString = Environment.IsDevelopment() ? appSettings.DevelopmentConnectionString : appSettings.ProductionConnectionString;
             
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(connectionString));
             services.AddScoped<FileHandlerService, FileHandlerService>();
             services
                 .AddScoped<AgglomerativeHierarchicalClusteringService, AgglomerativeHierarchicalClusteringService>();

@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using WebApplication.Helpers;
 using WebApplication.Models;
 
+
 namespace WebApplication.Services
 {
     public class AuthService
@@ -144,22 +145,7 @@ namespace WebApplication.Services
         
         private string GetToken(User user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(this._appSettings.Secret);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, user.UserId.ToString())
-            };
-            
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
+            throw new NotImplementedException();
         }
     }
 }

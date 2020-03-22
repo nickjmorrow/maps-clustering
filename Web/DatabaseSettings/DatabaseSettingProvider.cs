@@ -27,7 +27,7 @@ namespace Web.Services
             return databaseSetting.SettingValue;
         }
 
-        public IEnumerable<DatabaseSetting> GetDatabaseSettings()
+        public IReadOnlyList<DatabaseSetting> GetDatabaseSettings()
         {
             return this._context.DatabaseSettings.ToList();
         }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Models
 {
-    [Table("databaseSettings", Schema="mapClustering")]
+    [Table("databaseSettings", Schema="mc")]
     public class DatabaseSetting
     {
         [Key]
