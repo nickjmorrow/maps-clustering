@@ -39,15 +39,14 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult CreatePointsGroup(IFormFile file)
+        public async Task<IActionResult> CreatePointsGroup(IFormFile file)
         {
             if (file.Length == 0)
             {
                 return BadRequest("The file did not exist.");
             }
-
-            var createdPointsGroup = this._pointsGroupService.CreatePointsGroupAsync(file); 
-            return Ok(createdPointsGroup);
+            
+            return Ok(await this._pointsGroupService.AddPointsGroupAsync(this._userId, file));
         }
 
         [HttpPost("[action]")]

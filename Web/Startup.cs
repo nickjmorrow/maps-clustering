@@ -23,6 +23,8 @@ namespace WebApplication
         private IConfiguration Configuration { get; }
         private IWebHostEnvironment Environment { get; }
         private readonly string AllowOrigins = "ALLOW_ORIGINS";
+        private const string DEV_CONNECTION_STRING = "DEV_CONNECTION_STRING";
+        private const string PROD_CONNECTION_STRING = "PROD_CONNECTION_STRING";
         
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
@@ -57,7 +59,11 @@ namespace WebApplication
             
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
-            var connectionString = Environment.IsDevelopment() ? appSettings.DevelopmentConnectionString : appSettings.ProductionConnectionString;
+            var connectionStringEnvironmentVariableKey =
+                Environment.IsDevelopment() ? DEV_CONNECTION_STRING : PROD_CONNECTION_STRING;
+            
+            var connectionString = System.Environment.GetEnvironmentVariable(connectionStringEnvironmentVariableKey);
+
             
             services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(connectionString));
             services.AddScoped<FileHandlerService, FileHandlerService>();

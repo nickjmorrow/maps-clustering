@@ -92,6 +92,7 @@ namespace Web.Services
         /// <returns></returns>
         private async Task<PointsGroupModel> AddPointsGroupInternalAsync(int userId, PointsGroupModel pointsGroupModel)
         {
+            userId = 1;
             var pointsGroup = ConvertToPointsGroup(pointsGroupModel);
             
             // create itemId for pointsGroup

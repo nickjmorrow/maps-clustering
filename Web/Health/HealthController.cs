@@ -16,7 +16,7 @@ namespace WebApplication.Controllers
         [HttpGet("[action]")]
         public int GetVersion()
         {
-            return 5;
+            return 6;
         }
     }
 }
