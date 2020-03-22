@@ -6,8 +6,9 @@ namespace WebApplication.Models
     [Table("item_types", Schema="mc")]
     public class ItemType
     {
-        [Key]
+        [Key, Column("item_type_id")]
         public int ItemTypeId { get; set; }
+        [Column("name")]
         public string Name { get; set; }
     }
 }

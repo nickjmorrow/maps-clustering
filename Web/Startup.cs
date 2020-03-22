@@ -2,12 +2,14 @@ using System.Text;
 using Calc;
 using Calc.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Warlock.Services;
 using Web.Services;
@@ -19,9 +21,10 @@ namespace WebApplication
     public class Startup
     {
         private IConfiguration Configuration { get; }
-        private IHostingEnvironment Environment { get; }
+        private IWebHostEnvironment Environment { get; }
+        private readonly string AllowOrigins = "ALLOW_ORIGINS";
         
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
             Environment = environment;
@@ -33,22 +36,15 @@ namespace WebApplication
             services.AddMvc(c =>
             {
                 c.EnableEndpointRouting = false;
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-                // .AddJsonOptions(
-                //     options => options
-                //         .SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                // );
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // CORS
-            services.AddCors(options => { options.AddPolicy("AllowMyOrigin", 
-                policyBuilder => policyBuilder
-                    .WithOrigins("*")
-                    .WithMethods("*")
-                    .WithHeaders("*")); });
-
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowMyOrigin", options => options.AllowAnyOrigin());
+                c.AddPolicy(AllowOrigins, options => options
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
             });
 
             // In production, the React files will be served from this directory
@@ -83,7 +79,7 @@ namespace WebApplication
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -95,6 +91,12 @@ namespace WebApplication
                 app.UseHsts();
             }
 
+            app.UseRouting();
+
+            app.UseCors(AllowOrigins);
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers().RequireCors(AllowOrigins); });
+            
             app.UseHttpsRedirection();
             app.UseAuthentication();
             
@@ -104,8 +106,6 @@ namespace WebApplication
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
-
-            app.UseCors("AllowMyOrigin");
         }
     }
 }

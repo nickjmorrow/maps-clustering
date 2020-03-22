@@ -9,11 +9,15 @@ namespace WebApplication.Models
     [Table("items", Schema="mc")]
     public class Item : IItemBound, IDeletable
     {
-        [Key] 
+        [Key, Column("item_id")]
         public int ItemId { get; set; }
+        [Column("item_type_id")]
         public Enums.ItemType ItemTypeId { get; set; }
+        [Column("item_permission_type_id")]
         public ItemPermissionType ItemPermissionTypeId { get; set; }
+        [Column("date_created")]
         public DateTime DateCreated { get; set; }
+        [Column("date_deleted")]
         public DateTime? DateDeleted { get; set; }
 
         public override bool Equals(object obj)
