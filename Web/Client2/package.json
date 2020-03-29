@@ -2,7 +2,6 @@
   "name": "maps-clustering",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://nickjmorrow.github.io/maps-clustering",
   "dependencies": {
     "@nickjmorrow/react-component-library": "0.0.55",
     "@testing-library/jest-dom": "^4.2.4",
