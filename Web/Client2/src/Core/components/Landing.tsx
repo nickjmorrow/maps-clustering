@@ -39,7 +39,7 @@ export class LandingInternal extends React.PureComponent<IProps> {
 	render() {
 		return (
 			<Wrapper>
-				{/* <AppBar isAuthenticated={true} appName={'App Name'} /> */}
+				<AppBar isAuthenticated={true} appName={'App Name'} />
 				<MapPage />
 				<Footer />
 			</Wrapper>
