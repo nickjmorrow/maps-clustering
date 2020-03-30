@@ -4,9 +4,8 @@ import './index.css';
 import { App } from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import axios from 'axios';
-import { Router } from 'react-router';
-import { createBrowserHistory } from 'history';
+// import axios from 'axios';
+// import { Router } from 'react-router';
 import { store } from './store';
 
 console.log('rendering');

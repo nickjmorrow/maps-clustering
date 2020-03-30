@@ -8,13 +8,13 @@ import { Footer } from 'Core/components/Footer';
 
 export const Landing: React.SFC = () => {
 	const dispatch = useDispatch();
-	const handleGetPointsGroups = () => dispatch(getPointsGroups.request());
-	const handleGetDatabaseSettings = () => dispatch(getDatabaseSettings.request());
+	const handleGetPointsGroups = React.useCallback(() => dispatch(getPointsGroups.request()), [dispatch]);
+	const handleGetDatabaseSettings = React.useCallback(() => dispatch(getDatabaseSettings.request()), [dispatch]);
 
 	React.useEffect(() => {
 		handleGetDatabaseSettings();
 		handleGetPointsGroups();
-	}, []);
+	}, [handleGetDatabaseSettings, handleGetPointsGroups]);
 
 	return (
 		<Wrapper>

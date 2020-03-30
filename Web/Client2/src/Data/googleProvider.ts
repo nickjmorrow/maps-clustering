@@ -1,7 +1,7 @@
 export const getCircle = () => {
 	let circle = '';
 	// @ts-ignore
-	if (google == undefined) {
+	if (google === undefined) {
 		circle = '';
 	} else {
 		// @ts-ignore
