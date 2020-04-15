@@ -8,8 +8,6 @@ import { Code } from './Code';
 import { Paper } from './Paper';
 
 export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
-	const { spacing } = React.useContext(ThemeContext);
-
 	if (!activePointsGroup) {
 		return null;
 	}
@@ -43,9 +41,7 @@ export const Clusters: React.SFC<IOwnProps> = ({ activePointsGroup }) => {
 						justifyContent: 'space-between',
 					}}
 				>
-					<Cluster spacing={spacing} color={activePointsGroup.pointsColors[c]}>
-						{renderedPoints}
-					</Cluster>
+					<Cluster color={activePointsGroup.pointsColors[c]}>{renderedPoints}</Cluster>
 					{distance === '0m' ? '' : <Code>{distance}</Code>}
 				</div>
 			);
@@ -76,9 +72,9 @@ const Cluster = styled('div')<{
 	color: string;
 	spacing: StyleConstant<'spacing'>;
 }>`
-	border-left: ${p => p.spacing.ss2} solid ${props => props.color};
-	margin-bottom: ${p => p.spacing.ss2};
-	padding-left: ${p => p.spacing.ss2};
+	border-left: ${p => p.theme.njmTheme.spacing.ss2} solid ${props => props.color};
+	margin-bottom: ${p => p.theme.njmTheme.spacing.ss2};
+	padding-left: ${p => p.theme.njmTheme.spacing.ss2};
 `;
 
 const ClustersWrapper = styled.div`
