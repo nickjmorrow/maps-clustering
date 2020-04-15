@@ -4,6 +4,8 @@ import { getBaseUrl } from 'services';
 import { Landing } from 'Core';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeContext, getThemeFromNewInputs, ArgumentType } from '@nickjmorrow/react-component-library';
+import { ThemeProvider } from 'styled-components';
+
 axios.defaults.baseURL = getBaseUrl();
 
 const inputs: ArgumentType<typeof getThemeFromNewInputs>[0] = {
@@ -18,12 +20,15 @@ const inputs: ArgumentType<typeof getThemeFromNewInputs>[0] = {
 	},
 };
 
-console.log('loading app');
-
-export const App: React.SFC = () => (
-	<Router>
-		<ThemeContext.Provider value={getThemeFromNewInputs(inputs)}>
-			<Landing />
-		</ThemeContext.Provider>
-	</Router>
-);
+export const App: React.SFC = () => {
+	const theme = getThemeFromNewInputs(inputs);
+	return (
+		<Router>
+			<ThemeProvider theme={{ njmTheme: theme }}>
+				<ThemeContext.Provider value={theme}>
+					<Landing />
+				</ThemeContext.Provider>
+			</ThemeProvider>
+		</Router>
+	);
+};
