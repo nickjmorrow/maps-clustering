@@ -7,17 +7,50 @@ import { TitleWrapper } from '../../Core/components/TitleWrapper';
 import { getActivePointsGroup } from '../../Data/selectors';
 import { Code } from './Code';
 import { Header } from './Header';
+import { IPointsGroup } from 'Data/types';
+import { LoadingBar } from 'Data/components/LoadingBar';
 
 // TODO: relative imports
 
 export const Summary: React.SFC = () => {
 	const activePointsGroup = useSelector((state: IReduxState) => getActivePointsGroup(state));
-	if (!activePointsGroup) {
-		return null;
+	if (activePointsGroup) {
+		return <LoadedSummary activePointsGroup={activePointsGroup} />;
 	}
+
+	return <UnloadedSummary />;
+};
+
+const CustomLoadingBar = styled(LoadingBar)``;
+
+const UnloadedSummary: React.FC = () => {
+	return (
+		<TemplateSummary
+			interclusterDistance={<CustomLoadingBar style={{ width: '56px', height: '26px' }} />}
+			averageIntraclusterDistance={<CustomLoadingBar style={{ width: '27px', height: '26px' }} />}
+			averageClusterSize={<CustomLoadingBar style={{ width: '104px', height: '26px' }} />}
+		/>
+	);
+};
+
+const LoadedSummary: React.FC<{ activePointsGroup: IPointsGroup }> = ({ activePointsGroup }) => {
 	const clusteringSummary =
 		activePointsGroup.calculationOutput.clusteringSummaries[activePointsGroup.clusterCount - 1];
 	const { averageClusterSize, averageIntraclusterDistance, interclusterDistance } = clusteringSummary;
+	return (
+		<TemplateSummary
+			interclusterDistance={<Code>{interclusterDistance}</Code>}
+			averageIntraclusterDistance={<Code>{averageIntraclusterDistance}</Code>}
+			averageClusterSize={<Code>{averageClusterSize}</Code>}
+		/>
+	);
+};
+
+const TemplateSummary: React.FC<{
+	interclusterDistance: React.ReactNode;
+	averageIntraclusterDistance: React.ReactNode;
+	averageClusterSize: React.ReactNode;
+}> = ({ interclusterDistance, averageIntraclusterDistance, averageClusterSize }) => {
 	return (
 		<div>
 			<TitleWrapper>
@@ -26,15 +59,15 @@ export const Summary: React.SFC = () => {
 			<TextWrapper>
 				<Wrapper>
 					<Typography colorVariant={'secondaryDark'}>Average distance between clusters:</Typography>
-					<Code>{interclusterDistance}</Code>
+					{interclusterDistance}
 				</Wrapper>
 				<Wrapper>
 					<Typography colorVariant={'secondaryDark'}>Average distance within clusters:</Typography>
-					<Code>{averageIntraclusterDistance}</Code>
+					{averageIntraclusterDistance}
 				</Wrapper>
 				<Wrapper>
 					<Typography colorVariant={'secondaryDark'}>Average points per cluster:</Typography>
-					<Code>{averageClusterSize}</Code>
+					{averageClusterSize}
 				</Wrapper>
 			</TextWrapper>
 		</div>

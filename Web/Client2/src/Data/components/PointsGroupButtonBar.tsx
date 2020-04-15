@@ -62,11 +62,11 @@ const shouldShowDeleteButton = (pg: IPointsGroup, isHovering: boolean, isHoverin
 	(isHovering || pg.isActive || isHoveringOverDeleteButton);
 
 // types
-export interface IOwnProps {
+export interface OwnProps {
 	pointsGroup: IPointsGroup;
 }
 
-interface IDispatchProps {
+interface DispatchProps {
 	handleDeletePointsGroup: typeof deletePointsGroup.request;
 	handleSetActivePointsGroup: typeof setActivePointsGroup;
 }
@@ -80,6 +80,6 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 		dispatch,
 	);
 
-type IProps = IOwnProps & IDispatchProps;
+type IProps = OwnProps & DispatchProps;
 
 export const PointsGroupButtonBar = connect(null, mapDispatchToProps)(PointsGroupInternal);

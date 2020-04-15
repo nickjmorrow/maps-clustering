@@ -1,5 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
+import { shimmer } from 'Core/animations/shimmer';
 
 export const StyledPointsGroupButtonBar = styled('button')<{
 	isActive: boolean;
@@ -19,7 +20,6 @@ export const StyledPointsGroupButtonBar = styled('button')<{
 		p.isDisabled
 			? css`
 					cursor: not-allowed;
-					// background-color: ${p.theme.njmTheme.colors.neutral.cs3};
 					animation: ${shimmer} 1s linear infinite alternate;
 			  `
 			: css`
@@ -36,14 +36,4 @@ export const StyledPointsGroupButtonBar = styled('button')<{
 						transition: ${p.theme.njmTheme.transitions.fast};
 					}
 			  `}
-`;
-
-const shimmer = keyframes`
-	from {
-		background-color: hsl(0, 0%, 89.4%);
-	}
-
-	to {
-		background-color: hsl(0, 0%, 81.6%);
-	}
 `;

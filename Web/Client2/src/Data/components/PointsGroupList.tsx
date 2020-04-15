@@ -6,7 +6,7 @@ import { Header } from './Header';
 import { StyledPointsGroupButtonBar } from 'Data/components/StyledPointsGroupButtonBar';
 import { Typography } from '@nickjmorrow/react-component-library';
 
-export const PointsGroupList: React.SFC<IOwnProps> = ({ pointsGroups }) => {
+export const PointsGroupList: React.SFC<OwnProps> = ({ pointsGroups }) => {
 	return (
 		<div
 			style={{
@@ -27,9 +27,7 @@ export const PointsGroupList: React.SFC<IOwnProps> = ({ pointsGroups }) => {
 				}}
 			>
 				{pointsGroups.length === 0 ? (
-					<StyledPointsGroupButtonBar isActive={false} isDisabled={true}>
-						<Typography>Loading...</Typography>
-					</StyledPointsGroupButtonBar>
+					<StyledPointsGroupButtonBar isActive={false} isDisabled={true} />
 				) : (
 					pointsGroups.map(pg => <PointsGroupButtonBar key={pg.pointsGroupId || 0} pointsGroup={pg} />)
 				)}
@@ -38,6 +36,6 @@ export const PointsGroupList: React.SFC<IOwnProps> = ({ pointsGroups }) => {
 	);
 };
 // types
-interface IOwnProps {
+interface OwnProps {
 	pointsGroups: IPointsGroup[];
 }

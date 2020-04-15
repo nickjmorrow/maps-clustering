@@ -1,4 +1,4 @@
-export { Clusters } from './Clusters';
+export { ClustersList as Clusters } from './ClusterList';
 export { Map } from './Map';
 export { MapPage } from './MapPage';
 export { Parameters } from './Parameters';

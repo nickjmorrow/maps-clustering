@@ -42,12 +42,12 @@ const initialState = {
 	},
 };
 
-interface IDispatchProps {
+interface DispatchProps {
 	onCreatePointsGroup: typeof createPointsGroup.request;
 	onAddPointsGroup: typeof addPointsGroup.request;
 }
 
-type IProps = IDispatchProps;
+type IProps = DispatchProps;
 
 // redux
 const mapStateToProps = (state: IReduxState) => ({
