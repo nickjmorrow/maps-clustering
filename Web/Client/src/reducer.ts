@@ -1,14 +1,14 @@
-import { combineReducers } from "redux";
-import { routerReducer, RouterState } from "react-router-redux";
-import { dataReducer, IDataState } from "./Data";
-import { authReducer, AuthState } from "Auth/auth-helpers";
-import { coreReducer, ICoreState } from "./Core";
+import { combineReducers } from 'redux';
+import { routerReducer, RouterState } from 'react-router-redux';
+import { dataReducer, IDataState } from './Data';
+import { authReducer, AuthState } from 'Auth/auth-helpers';
+import { coreReducer, ICoreState } from './Core';
 
 export const rootReducer = combineReducers({
 	routing: routerReducer,
 	data: dataReducer,
 	auth: authReducer,
-	core: coreReducer
+	core: coreReducer,
 });
 
 export interface IReduxState {

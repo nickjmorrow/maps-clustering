@@ -1,14 +1,10 @@
-import * as React from "react";
-import styled from "styled-components";
-import { Clusters, Summary, IPointsGroup } from "Data";
-import { FileUploadForm } from "Core";
-import {
-	IOption,
-	ThemeContext,
-	StyleConstant
-} from "@nickjmorrow/react-component-library";
-import { PointsGroupControls } from "./PointsGroupControls";
-import { Paper } from "./Paper";
+import * as React from 'react';
+import styled from 'styled-components';
+import { Clusters, Summary, IPointsGroup } from 'Data';
+import { FileUploadForm } from 'Core';
+import { IOption, ThemeContext, StyleConstant } from '@nickjmorrow/react-component-library';
+import { PointsGroupControls } from './PointsGroupControls';
+import { Paper } from './Paper';
 
 export const MapControls: React.FC<{
 	pointsGroups: IPointsGroup[];
@@ -20,9 +16,8 @@ export const MapControls: React.FC<{
 		<Wrapper spacing={spacing}>
 			<PointsGroupControls />
 			<Clusters activePointsGroup={activePointsGroup} />
-			<div style={{ display: "flex", justifyContent: "center" }}>
-				<Paper
-					style={{ display: "flex", justifyContent: "flex-start" }}>
+			<div style={{ display: 'flex', justifyContent: 'center' }}>
+				<Paper style={{ display: 'flex', justifyContent: 'flex-start' }}>
 					<Summary />
 					<FileUploadForm />
 				</Paper>
@@ -44,7 +39,7 @@ export const MapControls: React.FC<{
 // 	width: 300px;
 // `;
 
-const Wrapper = styled("div")<{ spacing: StyleConstant<"spacing"> }>`
+const Wrapper = styled('div')<{ spacing: StyleConstant<'spacing'> }>`
 	display: grid;
 	grid-row-gap: ${p => p.spacing.ss6};
 	grid-auto-flow: row;

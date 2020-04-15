@@ -1,37 +1,21 @@
 {
 	"compilerOptions": {
-		"baseUrl": "src",
-		"outDir": "build/dist",
-		"module": "es2015",
-		"skipLibCheck": true,
-		"target": "es6",
-		"lib": ["dom", "es6"],
-		"sourceMap": true,
+		"target": "es5",
+		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
-		"jsx": "react",
-		"moduleResolution": "node",
-		"rootDir": "src",
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
 		"forceConsistentCasingInFileNames": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noImplicitAny": true,
-		"importHelpers": true,
-		"strictNullChecks": true,
-		"suppressImplicitAnyIndexErrors": true,
-		"noUnusedLocals": false,
-		"downlevelIteration": true,
-		"noUnusedParameters": false,
-		"paths": {
-			"Data/*": ["../../Data/*"],
-			"Core/*": ["../../Core/*"]
-		}
+		"module": "esnext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react",
+		"baseUrl": "src",
+		"downlevelIteration": true
 	},
-	"exclude": [
-		"node_modules",
-		"build",
-		"scripts",
-		"webpack",
-		"jest",
-		"../../setupTests.ts"
-	]
+	"include": ["src", "../server/src/components/vacationPlans/models/DateType.ts"]
 }
