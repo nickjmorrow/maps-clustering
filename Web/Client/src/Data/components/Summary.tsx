@@ -10,8 +10,6 @@ import { Header } from './Header';
 import { IPointsGroup } from 'Data/types';
 import { LoadingBar } from 'Data/components/LoadingBar';
 
-// TODO: relative imports
-
 export const Summary: React.SFC = () => {
 	const activePointsGroup = useSelector((state: IReduxState) => getActivePointsGroup(state));
 	if (activePointsGroup) {
@@ -82,15 +80,6 @@ const Wrapper = styled.div`
 	align-items: flex-start;
 	grid-area: summary;
 `;
-
-// const FlexCenter = styled.div`
-// 	display: flex;
-// 	align-items: center;
-// 	flex-direction: column;
-// 	@media (min-width: 800px) {
-// 		align-items: flex-start;
-// 	}
-// `;
 
 const TextWrapper = styled.div`
 	display: flex;

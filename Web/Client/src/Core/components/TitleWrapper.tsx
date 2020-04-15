@@ -4,5 +4,5 @@ export const TitleWrapper = styled.div`
 	display: flex;
 	justify-content: flex-start;
 	width: auto;
-	margin-bottom: 16px;
+	margin-bottom: 6px;
 `;

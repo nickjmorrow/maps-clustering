@@ -24,7 +24,9 @@ export class FileUploadFormInternal extends React.PureComponent<IProps, typeof i
 		return (
 			<>
 				<TitleWrapper>
-					<Typography sizeVariant={4}>{'Upload Points Group'}</Typography>
+					<Typography sizeVariant={4} style={{ marginBottom: '4px' }}>
+						{'Upload Points Group'}
+					</Typography>
 				</TitleWrapper>
 				<FileInput labelOnUpload={'Upload'} onChange={this.handleFileChange} useMargin={false} />
 			</>

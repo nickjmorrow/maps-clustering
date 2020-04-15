@@ -19,7 +19,9 @@ export const MapControls: React.FC<{
 			<div style={{ display: 'flex', justifyContent: 'center' }}>
 				<Paper style={{ display: 'flex', justifyContent: 'flex-start' }}>
 					<Summary />
-					<FileUploadForm />
+					<div style={{ marginTop: '16px' }}>
+						<FileUploadForm />
+					</div>
 				</Paper>
 			</div>
 		</Wrapper>
